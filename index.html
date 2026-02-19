@@ -3,159 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAEWON CHOI | Technical PM & Mobile Lead</title>
+    <title>JAEWON CHOI | Technical PM & Security Expert</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        .gradient-text { background: linear-gradient(90deg, #3b82f6, #2563eb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* FIDO Alliance 테마 컬러 정의 */
+        :root {
+            --fido-navy: #002B49;
+            --fido-gold: #FDB813;
+        }
+        body { font-family: 'Pretendard', sans-serif; }
+        .bg-fido-navy { background-color: var(--fido-navy); }
+        .text-fido-navy { color: var(--fido-navy); }
+        .bg-fido-gold { background-color: var(--fido-gold); }
+        .border-fido-gold { border-color: var(--fido-gold); }
+        .hover-gold:hover { color: var(--fido-gold); }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-gray-50 text-slate-800">
 
-    <nav class="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-            <span class="font-bold text-xl tracking-tight">JAEWON.CHOI</span>
-            <div class="space-x-6 text-sm font-medium">
-                <a href="#about" class="hover:text-blue-600 transition">About</a>
-                <a href="#projects" class="hover:text-blue-600 transition">Projects</a>
-                <a href="#skills" class="hover:text-blue-600 transition">Skills</a>
-                <a href="#contact" class="hover:text-blue-600 transition">Contact</a>
-            </div>
+    <header class="bg-fido-navy text-white py-6 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-5xl mx-auto px-6 flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-widest uppercase">Jaewon <span class="text-fido-gold">Choi</span></h1>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#about" class="hover-gold transition">ABOUT</a>
+                <a href="#experience" class="hover-gold transition">EXPERIENCE</a>
+                <a href="#skills" class="hover-gold transition">SKILLS</a>
+                <a href="#contact" class="hover-gold transition">CONTACT</a>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <section id="about" class="pt-32 pb-20 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-blue-600 font-semibold mb-2">Technical Project Manager</h2>
-            <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
-                비즈니스 가치를 시스템으로 <br><span class="gradient-text">증명하는 해결사</span>
-            </h1>
-            <p class="text-xl text-gray-600 max-w-2xl mb-8 leading-relaxed">
-                12년의 모바일 개발 경력을 가진 PM으로서, 코드 리뷰와 API 설계가 가능한 **기술 중심의 의사결정**을 주도합니다. 보안과 헬스케어 도메인에서 대규모 프로젝트를 완수해 왔습니다.
-            </p>
-            <div class="flex flex-wrap gap-4">
-                <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">#Mobile_Lead</span>
-                <span class="px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold">#Fintech_Security</span>
-                <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">#AI_Trading</span>
-            </div>
-        </div>
-    </section>
-
-    <section class="bg-slate-900 text-white py-16 px-6">
-        <div class="max-w-5xl mx-auto">
-            <div class="flex items-center gap-2 mb-4 text-blue-400">
-                <i class="fas fa-robot"></i>
-                <span class="font-bold tracking-widest uppercase text-sm">Active Project</span>
-            </div>
-            <h3 class="text-3xl font-bold mb-4">LLM 기반 주식 자동 매매 시스템 (POC)</h3>
-            <p class="text-gray-400 mb-6 max-w-3xl">
-                Gemini LLM과 한국투자증권 OpenAPI를 활용하여 감정을 배제한 시스템 트레이딩 환경을 구축 중입니다. 최신 AI 기술의 금융 도메인 타당성을 직접 검증합니다.
-            </p>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div class="border border-gray-700 p-4 rounded-lg text-center">
-                    <div class="text-blue-400 mb-1">Stack</div>
-                    <div>Gemini, Slack API</div>
+    <section id="about" class="bg-fido-navy text-white pt-20 pb-32 px-6">
+        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <div class="inline-block px-3 py-1 bg-fido-gold text-fido-navy font-bold text-xs mb-4 rounded">TECHNICAL PM</div>
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
+                    기술과 비즈니스를 연결하는 <br> 
+                    <span class="text-fido-gold">커뮤니케이션 허브</span>
+                </h2>
+                <p class="text-lg text-slate-300 leading-relaxed mb-8">
+                    12년의 Native 개발 경력을 기반으로, 복잡한 기술적 쟁점을 비즈니스 언어로 풀어냅니다. 삼성생명 '더헬스', GC케어 '어떠케어' 등 대규모 서비스의 성공적인 런칭을 리딩했습니다.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#experience" class="bg-fido-gold text-fido-navy px-6 py-3 rounded font-bold hover:bg-yellow-500 transition">경력 확인하기</a>
                 </div>
-                <div class="border border-gray-700 p-4 rounded-lg text-center">
-                    <div class="text-blue-400 mb-1">Focus</div>
-                    <div>자동화 & 모니터링</div>
+            </div>
+            <div class="hidden md:block">
+                <div class="w-full h-64 border-2 border-fido-gold rounded-xl flex items-center justify-center opacity-50">
+                    <i class="fas fa-shield-halved text-8xl text-fido-gold"></i>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="projects" class="py-20 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-3xl font-bold mb-12">Core Career</h2>
-            
-            <div class="mb-16 border-l-4 border-blue-500 pl-8 relative">
-                <span class="text-sm text-gray-500 font-mono">2021.04 - Present</span>
-                <h3 class="text-2xl font-bold mt-1">GC케어 | Senior Manager / PM & Lead</h3>
-                <ul class="mt-4 space-y-4 text-gray-700">
-                    <li>
-                        <strong>삼성생명 '더헬스' 구축 PM:</strong> 
-                        <span class="text-gray-600 italic">8억 규모 프로젝트 투입, 요구사항 정리 및 딜레이 없는 런칭 완수.</span>
-                    </li>
-                    <li>
-                        <strong>국내 1위 건강검진 앱 '어떠케어' 리딩:</strong> 
-                        <span class="text-gray-600">초기 기획부터 Hybrid 아키텍처 설계, Native 브릿지 정의 및 배포 프로세스 정립.</span>
-                    </li>
-                    <li>
-                        <strong>보안 아키텍처:</strong> 
-                        <span class="text-gray-600">PASS 인증 기반 가입 프로세스 및 자체 E2E 암호화 모듈 적용 주도.</span>
-                    </li>
-                </ul>
-            </div>
+    <section id="experience" class="py-20 px-6 max-w-5xl mx-auto">
+        <h3 class="text-3xl font-bold text-fido-navy mb-12 flex items-center">
+            <span class="w-10 h-1 bg-fido-gold mr-4"></span> EXPERIENCE
+        </h3>
 
-            <div class="mb-16 border-l-4 border-gray-300 pl-8 relative">
-                <span class="text-sm text-gray-500 font-mono">2015.07 - 2021.04</span>
-                <h3 class="text-2xl font-bold mt-1">한국전자인증 | Mobile Lead</h3>
-                <ul class="mt-4 space-y-4 text-gray-700">
-                    <li>
-                        <strong>금융권 FIDO 구축:</strong> 
-                        <span class="text-gray-600">TOSS, 국민은행, 국세청 등 주요 기관 FIDO 솔루션 적용 기술 지원.</span>
-                    </li>
-                    <li>
-                        <strong>글로벌 인증:</strong> 
-                        <span class="text-gray-600">FIDO UAF/FIDO2 L1 인증 심사 총괄 및 글로벌 테스트 통과.</span>
-                    </li>
-                    <li>
-                        <strong>규제 대응:</strong> 
-                        <span class="text-gray-600">ISMS-P, KISA 실질심사 대응 경험을 통한 안정적인 리스크 관리.</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" class="bg-gray-100 py-20 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-3xl font-bold mb-12 text-center">Technical Skills</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-2xl shadow-sm">
-                    <h4 class="font-bold text-blue-600 mb-4">Management</h4>
-                    <ul class="text-sm space-y-2 text-gray-600 font-medium">
-                        <li>Agile (Jira), Slack, GitLab</li>
-                        <li>배포 프로세스 정립</li>
-                        <li>Redmine, Sparrow</li>
-                    </ul>
+        <div class="space-y-12">
+            <div class="group relative pl-8 border-l-2 border-slate-200">
+                <div class="absolute -left-[9px] top-0 w-4 h-4 bg-white border-2 border-fido-gold rounded-full group-hover:bg-fido-gold transition"></div>
+                <div class="flex flex-col md:flex-row md:justify-between mb-2">
+                    <h4 class="text-xl font-bold text-fido-navy">GC케어 | Senior Manager (PM/Lead)</h4>
+                    <span class="text-slate-500 font-mono text-sm">2021.04 - 현재</span>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm">
-                    <h4 class="font-bold text-blue-600 mb-4">Mobile & Security</h4>
-                    <ul class="text-sm space-y-2 text-gray-600 font-medium">
-                        <li>iOS (Swift, Obj-C) / Android (Java)</li>
-                        <li>Hybrid App / Bridge 설계</li>
-                        <li>FIDO, PKI, E2EE 설계</li>
-                    </ul>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm">
-                    <h4 class="font-bold text-blue-600 mb-4">Data & AI</h4>
-                    <ul class="text-sm space-y-2 text-gray-600 font-medium">
-                        <li>Amplitude, AirBridge 분석</li>
-                        <li>Gemini LLM API</li>
-                        <li>Firebase, Swagger</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="py-20 px-6">
-        <div class="max-w-5xl mx-auto text-center">
-            <h2 class="text-3xl font-bold mb-8">Get In Touch</h2>
-            <div class="flex flex-col md:flex-row justify-center gap-8 text-lg">
-                <a href="mailto:kennethkarl.choi@gmail.com" class="hover:text-blue-600"><i class="fas fa-envelope mr-2"></i> kennethkarl.choi@gmail.com</a>
-                <span class="text-gray-400 hidden md:block">|</span>
-                <span><i class="fas fa-phone mr-2"></i> 010-2713-5533</span>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-10 text-center text-gray-400 text-xs border-t">
-        © 2026 JAEWON CHOI. Built with AI-Coding Collaboration.
-    </footer>
-
-</body>
-</html>
+                <p class="text-slate-600 mb-4 font-semibold italic">"삼성생명 더헬스 구축 및 어떠케어 서비스 리딩"</p>
+                <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm md:text-base">
+                    <li>하이브리드 앱 아키텍처 설계 및 네이티브 브릿지 인터페이스 정의</li>
+                    <li>삼성생명 건강
