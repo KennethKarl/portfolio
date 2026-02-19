@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | PM & Security Specialist</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            light: '#e2e8f0',
+                            accent: '#10b981', // Emerald green for security vibe
+                            secondary: '#3b82f6' // Blue for tech
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .reveal-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Data ---
+        const personalInfo = {
+            name: "Technical PM & Security Expert",
+            role: "Bridging Native Dev, Security & AI",
+            bio: "14년 차 네이티브 개발자(iOS/Android) 출신의 IT PM입니다. 강력한 보안(PKI/암호화) 지식과 개발 경험을 바탕으로, AI 시대의 안전하고 효율적인 프로덕트를 리딩합니다.",
+            email: "contact@example.com",
+            github: "https://github.com/yourusername",
+            linkedin: "https://linkedin.com/in/yourusername"
+        };
+
+        const skills = [
+            { category: "Management", items: ["IT Project Management", "Agile/Scrum", "Risk Management", "Tech Leadership"] },
+            { category: "Security & AI", items: ["PKI (Public Key Infrastructure)", "AES/RSA Encryption", "AI Integration", "Secure Coding"] },
+            { category: "Mobile Dev (Native)", items: ["iOS (Swift, Obj-C)", "Android (Kotlin, Java)", "System Architecture", "Legacy Migration"] },
+        ];
+
+        const experience = [
+            {
+                period: "2024 - Present",
+                role: "IT Project Manager",
+                company: "Current Company",
+                desc: "AI 기반 서비스 기획 및 개발 리딩. 보안 프로토콜 통합 프로젝트 관리 및 크로스 펑셔널 팀 조율."
+            },
+            {
+                period: "2010 - 2024",
+                role: "Senior Native Developer",
+                company: "Various Tech Companies",
+                desc: "14년간 iOS/Android 네이티브 앱 개발 주도. 금융권 수준의 암호화 모듈 개발 및 PKI 기반 인증 시스템 구축."
+            }
+        ];
+
+        const projects = [
+            {
+                title: "AI-Powered Security Solution",
+                tag: "PM & Architecture",
+                desc: "기존 레거시 인증 시스템에 AI 이상 탐지 기능을 도입하여 보안성을 40% 향상시킨 프로젝트.",
+                tech: ["Python", "TensorFlow", "PKI"]
+            },
+            {
+                title: "Secure Mobile Banking Core",
+                tag: "Native Development",
+                desc: "E2E 암호화가 적용된 모바일 뱅킹 코어 모듈 개발. iOS/Android 공통 암호화 라이브러리 설계.",
+                tech: ["Swift", "Kotlin", "C++", "OpenSSL"]
+            },
+            {
+                title: "Legacy Migration Initiative",
+                tag: "Technical Lead",
+                desc: "Objective-C 및 Java 기반의 레거시 코드를 Modern Swift/Kotlin으로 100% 마이그레이션 성공.",
+                tech: ["Refactoring", "Clean Architecture"]
+            }
+        ];
+
+        // --- Icons ---
+        const Icons = {
+            Github: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>,
+            Linkedin: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>,
+            Mail: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>,
+            Shield: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>,
+            Code: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>,
+            Cpu: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><path d="M15 2v2"></path><path d="M15 20v2"></path><path d="M2 15h2"></path><path d="M2 9h2"></path><path d="M20 15h2"></path><path d="M20 9h2"></path><path d="M9 2v2"></path><path d="M9 20v2"></path></svg>,
+            Briefcase: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>,
+            ChevronDown: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        };
+
+        // --- Components ---
+
+        const Nav = () => (
+            <nav className="fixed w-full z-50 glass-card border-b border-gray-800">
+                <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+                    <span className="text-xl font-bold font-mono text-brand-accent">&lt;PM_Dev /&gt;</span>
+                    <div className="hidden md:flex space-x-8 text-sm font-medium">
+                        <a href="#about" className="hover:text-brand-accent transition">About</a>
+                        <a href="#skills" className="hover:text-brand-accent transition">Skills</a>
+                        <a href="#experience" className="hover:text-brand-accent transition">Experience</a>
+                        <a href="#projects" className="hover:text-brand-accent transition">Projects</a>
+                    </div>
+                </div>
+            </nav>
+        );
+
+        const Hero = () => (
+            <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-secondary opacity-10 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-accent opacity-10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+                </div>
+
+                <div className="font-mono text-brand-accent mb-4 text-sm md:text-base tracking-widest uppercase">
+                    Since 2010 · Native Developer to PM
+                </div>
+                <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    Technical PM & <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-brand-secondary">
+                        Security Specialist
+                    </span>
+                </h1>
+                <p className="max-w-2xl text-lg text-gray-400 mb-10 leading-relaxed">
+                    {personalInfo.bio}
+                </p>
+                <div className="flex space-x-4">
+                    <a href="#projects" className="px-8 py-3 bg-brand-accent text-gray-900 font-bold rounded-lg hover:bg-emerald-400 transition shadow-lg shadow-emerald-900/20">
+                        View Projects
+                    </a>
+                    <a href="#contact" className="px-8 py-3 glass-card rounded-lg hover:bg-gray-800 transition border border-gray-700">
+                        Contact Me
+                    </a>
+                </div>
+                <div className="absolute bottom-10 animate-bounce text-gray-500">
+                    <Icons.ChevronDown />
+                </div>
+            </section>
+        );
+
+        const Skills = () => (
+            <section id="skills" className="py-24 px-6 bg-slate-900/50">
+                <div className="max-w-6xl mx-auto">
+                    <h2 className="text-3xl font-bold mb-16 flex items-center">
+                        <span className="text-brand-accent mr-3"><Icons.Cpu /></span> 
+                        Technical Arsenal
+                    </h2>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {skills.map((skillGroup, idx) => (
+                            <div key={idx} className="glass-card p-8 rounded-xl hover:border-brand-accent/50 transition duration-300">
+                                <h3 className="text-xl font-bold mb-6 text-brand-secondary">{skillGroup.category}</h3>
+                                <div className="flex flex-wrap gap-3">
+                                    {skillGroup.items.map((item, i) => (
+                                        <span key={i} className="px-3 py-1 bg-slate-800 rounded-full text-sm border border-slate-700 text-gray-300">
+                                            {item}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Experience = () => (
+            <section id="experience" className="py-24 px-6">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-bold mb-16 flex items-center">
+                        <span className="text-brand-accent mr-3"><Icons.Briefcase /></span>
+                        Professional Journey
+                    </h2>
+                    <div className="space-y-12 border-l-2 border-slate-800 ml-3 pl-8 relative">
+                        {experience.map((exp, idx) => (
+                            <div key={idx} className="relative">
+                                <div className="absolute -left-[41px] top-1 w-5 h-5 bg-brand-dark border-4 border-brand-accent rounded-full"></div>
+                                <div className="mb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                    <h3 className="text-2xl font-bold text-white">{exp.role}</h3>
+                                    <span className="font-mono text-sm text-brand-secondary">{exp.period}</span>
+                                </div>
+                                <h4 className="text-lg text-gray-400 mb-3">{exp.company}</h4>
+                                <p className="text-gray-300 leading-relaxed">{exp.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Projects = () => (
+            <section id="projects" className="py-24 px-6 bg-slate-900/50">
+                <div className="max-w-6xl mx-auto">
+                    <h2 className="text-3xl font-bold mb-16 flex items-center">
+                        <span className="text-brand-accent mr-3"><Icons.Code /></span>
+                        Key Projects
+                    </h2>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {projects.map((project, idx) => (
+                            <div key={idx} className="glass-card rounded-xl overflow-hidden group hover:-translate-y-2 transition duration-300">
+                                <div className="h-2 bg-gradient-to-r from-brand-accent to-brand-secondary"></div>
+                                <div className="p-8">
+                                    <div className="text-xs font-mono text-brand-accent mb-2">{project.tag}</div>
+                                    <h3 className="text-xl font-bold mb-4 group-hover:text-brand-secondary transition">{project.title}</h3>
+                                    <p className="text-gray-400 mb-6 text-sm leading-relaxed">
+                                        {project.desc}
+                                    </p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {project.tech.map((t, i) => (
+                                            <span key={i} className="text-xs px-2 py-1 bg-slate-800 rounded border border-slate-700 text-gray-400">
+                                                {t}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Footer = () => (
+            <footer id="contact" className="py-12 border-t border-slate-800 bg-brand-dark text-center">
+                <h2 className="text-2xl font-bold mb-8">Let's Connect</h2>
+                <div className="flex justify-center space-x-8 mb-8">
+                    <a href={personalInfo.github} target="_blank" className="hover:text-brand-accent transition transform hover:scale-110">
+                        <Icons.Github />
+                    </a>
+                    <a href={personalInfo.linkedin} target="_blank" className="hover:text-brand-secondary transition transform hover:scale-110">
+                        <Icons.Linkedin />
+                    </a>
+                    <a href={`mailto:${personalInfo.email}`} className="hover:text-white transition transform hover:scale-110 text-gray-400">
+                        <Icons.Mail />
+                    </a>
+                </div>
+                <p className="text-gray-600 text-sm">
+                    © 2026 Designed & Built by a Native Dev turned PM.
+                </p>
+            </footer>
+        );
+
+        const App = () => {
+            // Simple Intersection Observer effect for reveal animations
+            useEffect(() => {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.add('reveal-on-scroll');
+                    observer.observe(section);
+                });
+
+                return () => observer.disconnect();
+            }, []);
+
+            return (
+                <div className="antialiased text-slate-300 selection:bg-brand-accent selection:text-brand-dark">
+                    <Nav />
+                    <Hero />
+                    <Skills />
+                    <Experience />
+                    <Projects />
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
