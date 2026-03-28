@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoSDLC v5 — AI 기반 SDLC 자동화 프레임워크</title>
+<style>
+  /* ── Design Tokens ── */
+  :root {
+    --c-bg: #f5f6f8;
+    --c-bg2: #eceef2;
+    --c-bg3: #e3e6ec;
+    --c-surface: #ffffff;
+    --c-card: #f9fafb;
+    --c-border: #dfe2e8;
+    --c-border-h: #c5c9d4;
+    --c-text: #1c1e2a;
+    --c-text2: #555a6e;
+    --c-text3: #888da0;
+    --c-primary: #6366f1;
+    --c-primary-light: #818cf8;
+    --c-primary-dim: rgba(99,102,241,.08);
+    --c-primary-dim2: rgba(99,102,241,.14);
+    --c-accent: #10b981;
+    --c-accent-dim: rgba(16,185,129,.08);
+    --c-accent-dim2: rgba(16,185,129,.14);
+    --c-rose: #f43f5e;
+    --c-rose-dim: rgba(244,63,94,.07);
+    --c-amber: #f59e0b;
+    --c-amber-dim: rgba(245,158,11,.08);
+    --c-sky: #0ea5e9;
+    --c-sky-dim: rgba(14,165,233,.08);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-xs: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.06);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,.08);
+  }
+
+  /* ── Reset ── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, 'Pretendard', 'Segoe UI', system-ui, sans-serif;
+    background: var(--c-bg);
+    color: var(--c-text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: var(--c-primary); text-decoration: none; }
+
+  /* ── Utility ── */
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 1.5rem; }
+  .badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .72rem; font-weight: 700; letter-spacing: .5px;
+    padding: .3rem .75rem; border-radius: 50px;
+    text-transform: uppercase;
+  }
+  .badge-primary { background: var(--c-primary-dim2); color: var(--c-primary); border: 1px solid rgba(129,140,248,.25); }
+  .badge-accent { background: var(--c-accent-dim2); color: var(--c-accent); border: 1px solid rgba(52,211,153,.25); }
+  .badge-rose { background: var(--c-rose-dim); color: var(--c-rose); border: 1px solid rgba(251,113,133,.2); }
+  .badge-amber { background: var(--c-amber-dim); color: var(--c-amber); border: 1px solid rgba(251,191,36,.25); }
+  .badge-sky { background: var(--c-sky-dim); color: var(--c-sky); border: 1px solid rgba(56,189,248,.25); }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(245,246,248,.88);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid var(--c-border);
+  }
+  nav .container {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-brand {
+    font-weight: 800; font-size: 1.05rem;
+    background: linear-gradient(135deg, var(--c-primary), var(--c-accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a {
+    font-size: .85rem; font-weight: 500; color: var(--c-text2);
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--c-text); }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 6rem 1.5rem 4rem;
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, #eef0f5 0%, var(--c-bg) 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 50% 20%, rgba(99,102,241,.12), transparent),
+      radial-gradient(ellipse 500px 300px at 70% 70%, rgba(16,185,129,.08), transparent);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 720px; }
+  .hero h1 {
+    font-size: clamp(2.6rem, 6vw, 4.5rem);
+    font-weight: 800; letter-spacing: -1.5px;
+    line-height: 1.1; margin: 1.2rem 0 1rem;
+    background: linear-gradient(135deg, #1c1e2a 20%, var(--c-primary) 55%, var(--c-accent) 90%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--c-text2); max-width: 580px;
+    margin: 0 auto 2.5rem;
+  }
+  .hero-actions { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .75rem 1.6rem; border-radius: var(--radius-sm);
+    font-size: .9rem; font-weight: 600; border: none;
+    cursor: pointer; transition: all .2s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-fill {
+    background: var(--c-primary); color: #fff;
+    box-shadow: 0 4px 20px rgba(129,140,248,.3);
+  }
+  .btn-fill:hover { box-shadow: 0 6px 28px rgba(129,140,248,.45); }
+  .btn-ghost {
+    background: var(--c-surface); color: var(--c-text);
+    border: 1px solid var(--c-border);
+  }
+  .btn-ghost:hover { border-color: var(--c-border-h); }
+
+  /* ── Section ── */
+  section { padding: 7rem 0; }
+  .section-head { margin-bottom: 3.5rem; }
+  .section-head h2 {
+    font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+    font-weight: 700; letter-spacing: -.5px;
+    margin: .6rem 0 .8rem;
+  }
+  .section-head p { color: var(--c-text2); max-width: 580px; font-size: 1.05rem; }
+  .divider { border: none; border-top: 1px solid var(--c-border); margin: 0; }
+
+  /* ── Cards ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+  .card {
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 1.6rem;
+    box-shadow: var(--shadow);
+    transition: border-color .25s, box-shadow .25s, transform .2s;
+  }
+  .card:hover {
+    border-color: var(--c-border-h);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .card-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-xs);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem; margin-bottom: 1rem;
+  }
+  .card h3 { font-size: 1rem; font-weight: 600; margin-bottom: .4rem; }
+  .card p { font-size: .88rem; color: var(--c-text2); line-height: 1.6; }
+
+  /* ── Pipeline ── */
+  .pipeline-wrap {
+    background: var(--c-bg2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 2.5rem 2rem;
+    overflow-x: auto;
+  }
+  .pipeline { display: flex; gap: 0; min-width: 900px; align-items: flex-start; }
+  .pipe { flex: 1; text-align: center; position: relative; padding: 0 .4rem; }
+  .pipe:not(:last-child)::after {
+    content: '';
+    position: absolute; top: 24px;
+    left: calc(50% + 24px); right: calc(-50% + 24px);
+    height: 2px;
+    background: linear-gradient(90deg, var(--c-primary), var(--c-accent));
+    opacity: .3;
+  }
+  .pipe-n {
+    width: 48px; height: 48px;
+    border-radius: 50%; margin: 0 auto .7rem;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1rem;
+    position: relative; z-index: 1;
+    background: var(--c-surface);
+    border: 2px solid var(--c-border);
+    transition: border-color .25s, background .25s;
+  }
+  .pipe:hover .pipe-n {
+    border-color: var(--c-primary);
+    background: var(--c-primary-dim);
+  }
+  .pipe-label { font-weight: 700; font-size: .88rem; margin-bottom: .2rem; }
+  .pipe-sub { font-size: .75rem; color: var(--c-text3); line-height: 1.4; }
+  .pipe-pass {
+    display: inline-block;
+    margin-top: .4rem;
+    font-size: .65rem; font-weight: 700;
+    padding: .15rem .5rem;
+    border-radius: 50px;
+    background: var(--c-primary-dim2);
+    color: var(--c-primary);
+    border: 1px solid rgba(129,140,248,.25);
+  }
+  .pipe-loop-note {
+    text-align: center; margin-top: 1.5rem; padding-top: 1rem;
+    border-top: 1px dashed var(--c-border);
+  }
+  .pipe-loop-note span {
+    display: inline-block; background: var(--c-rose-dim);
+    border: 1px solid rgba(251,113,133,.2); color: var(--c-rose);
+    border-radius: var(--radius-xs); padding: .35rem .9rem;
+    font-size: .82rem; font-weight: 600;
+    margin: .25rem;
+  }
+
+  /* ── Multi-Pass Section ── */
+  .multipass-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+  .multipass-card {
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .multipass-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  }
+  .multipass-card.design::before { background: linear-gradient(90deg, var(--c-primary), var(--c-primary-light)); }
+  .multipass-card.review::before { background: linear-gradient(90deg, var(--c-amber), #fbbf24); }
+  .multipass-card.test::before { background: linear-gradient(90deg, var(--c-accent), #34d399); }
+  .multipass-header {
+    display: flex; align-items: center; gap: .8rem;
+    margin-bottom: 1.2rem;
+  }
+  .multipass-header h3 { font-size: 1.05rem; font-weight: 700; }
+  .pass-flow {
+    display: flex; flex-direction: column; gap: .6rem;
+    position: relative;
+    padding-left: 1.8rem;
+  }
+  .pass-flow::before {
+    content: '';
+    position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px;
+    background: var(--c-border);
+  }
+  .pass-item {
+    position: relative;
+    padding: .6rem .8rem;
+    background: var(--c-bg);
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--c-border);
+  }
+  .pass-item .pass-num {
+    position: absolute; left: -1.8rem; top: .6rem;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--c-surface);
+    border: 2px solid var(--c-primary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .55rem; font-weight: 800; color: var(--c-primary);
+    z-index: 1;
+  }
+  .pass-item .pass-persona {
+    font-size: .72rem; font-weight: 700; color: var(--c-primary);
+    margin-bottom: .2rem;
+  }
+  .pass-item .pass-desc {
+    font-size: .8rem; color: var(--c-text2); line-height: 1.5;
+  }
+  .pass-fail {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-size: .7rem; font-weight: 600; color: var(--c-rose);
+    margin-top: .3rem;
+  }
+  .pass-result {
+    margin-top: 1rem; padding-top: .8rem;
+    border-top: 1px dashed var(--c-border);
+    font-size: .8rem; color: var(--c-text2);
+  }
+  .pass-result strong { color: var(--c-text); }
+
+  /* ── Flow Diagram (SVG-like) ── */
+  .flow-wrap {
+    background: var(--c-bg2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 2.5rem 2rem;
+    margin-top: 2rem;
+    overflow-x: auto;
+  }
+  .flow-diagram {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: wrap;
+    min-width: 700px;
+  }
+  .flow-node {
+    padding: .6rem 1rem;
+    border-radius: var(--radius-xs);
+    font-size: .82rem; font-weight: 600;
+    text-align: center;
+    border: 2px solid;
+    background: var(--c-surface);
+    min-width: 90px;
+  }
+  .flow-node.s0 { border-color: var(--c-primary); color: var(--c-primary); }
+  .flow-node.s1 { border-color: var(--c-sky); color: var(--c-sky); }
+  .flow-node.s2 { border-color: var(--c-amber); color: var(--c-amber); }
+  .flow-node.s3 { border-color: var(--c-accent); color: var(--c-accent); }
+  .flow-node.s4 { border-color: #8b5cf6; color: #8b5cf6; }
+  .flow-node.s5 { border-color: var(--c-text3); color: var(--c-text3); }
+  .flow-node.s6 { border-color: var(--c-rose); color: var(--c-rose); }
+  .flow-arrow {
+    font-size: 1.2rem; color: var(--c-text3); padding: 0 .3rem;
+    display: flex; align-items: center;
+  }
+  .flow-arrow-label {
+    font-size: .6rem; color: var(--c-accent); font-weight: 700;
+    display: block; text-align: center; line-height: 1.2;
+  }
+  .flow-reject-label {
+    font-size: .6rem; color: var(--c-rose); font-weight: 700;
+    display: block; text-align: center; line-height: 1.2;
+  }
+
+  /* ── Screenshots Gallery ── */
+  .gallery-section h3 {
+    font-size: 1.05rem; font-weight: 600;
+    margin: 2.5rem 0 1.2rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.2rem;
+  }
+  .shot {
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: border-color .25s, transform .2s, box-shadow .25s;
+  }
+  .shot:hover {
+    border-color: var(--c-primary);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  .shot img {
+    width: 100%; height: auto;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .shot-body { padding: 1rem 1.2rem; }
+  .shot-body h4 { font-size: .9rem; font-weight: 600; margin: .4rem 0 .25rem; }
+  .shot-body p { font-size: .8rem; color: var(--c-text2); line-height: 1.5; }
+
+  /* ── Architecture Cards ── */
+  .arch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+  }
+  .arch-card {
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 1.6rem; position: relative;
+    border-top: 3px solid transparent;
+    box-shadow: var(--shadow);
+    transition: border-color .25s, box-shadow .25s;
+  }
+  .arch-card:hover { box-shadow: var(--shadow-md); }
+  .arch-card:nth-child(1) { border-top-color: var(--c-primary); }
+  .arch-card:nth-child(2) { border-top-color: var(--c-accent); }
+  .arch-card:nth-child(3) { border-top-color: var(--c-amber); }
+  .arch-card:nth-child(4) { border-top-color: var(--c-rose); }
+  .arch-card:nth-child(5) { border-top-color: var(--c-sky); }
+  .arch-card h3 { font-size: .95rem; font-weight: 600; margin-bottom: .8rem; }
+  .arch-list { list-style: none; font-size: .85rem; color: var(--c-text2); }
+  .arch-list li { padding: .3rem 0 .3rem 1.2rem; position: relative; }
+  .arch-list li::before {
+    content: ''; position: absolute;
+    left: 0; top: .65rem;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--c-text3);
+  }
+
+  /* ── Repo Tree ── */
+  .tree-wrap {
+    background: var(--c-bg2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    padding: 2rem;
+    margin-top: 1.5rem;
+    overflow-x: auto;
+  }
+  .tree-wrap pre {
+    margin: 0;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', monospace;
+    font-size: .82rem;
+    line-height: 1.9;
+    color: var(--c-text2);
+    white-space: pre;
+  }
+  .tree-wrap .dir { color: var(--c-primary); font-weight: 700; }
+  .tree-wrap .file { color: var(--c-text); }
+  .tree-wrap .cmt { color: var(--c-text3); font-style: italic; }
+
+  /* ── Comparison Table ── */
+  .cmp-table {
+    width: 100%; border-collapse: collapse;
+    font-size: .88rem; margin-top: 1.5rem;
+  }
+  .cmp-table th, .cmp-table td {
+    padding: .85rem 1rem; text-align: left;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .cmp-table th {
+    font-size: .75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .8px;
+    color: var(--c-text3);
+    background: var(--c-bg2);
+  }
+  .cmp-table td:first-child { font-weight: 600; color: var(--c-text); }
+  .cmp-table td { color: var(--c-text2); }
+  .cmp-table tr:hover td { background: rgba(99,102,241,.04); }
+  .tag-old { color: var(--c-rose); }
+  .tag-new { color: var(--c-accent); }
+
+  /* ── Steps ── */
+  .steps { position: relative; padding-left: 2.2rem; }
+  .steps::before {
+    content: ''; position: absolute;
+    left: 13px; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(180deg, var(--c-primary), var(--c-accent));
+    opacity: .3;
+  }
+  .step { position: relative; margin-bottom: 2.2rem; }
+  .step-dot {
+    position: absolute; left: -2.2rem; top: .15rem;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--c-surface); border: 2px solid var(--c-primary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 800; color: var(--c-primary);
+  }
+  .step h3 { font-size: 1rem; margin-bottom: .3rem; }
+  .step p { font-size: .9rem; color: var(--c-text2); }
+  .step code {
+    display: inline-block; background: var(--c-bg3);
+    border: 1px solid var(--c-border); border-radius: var(--radius-xs);
+    padding: .15rem .5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem; color: var(--c-primary);
+    margin-top: .3rem;
+  }
+
+  /* ── Stats ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.2rem; margin: 3rem 0;
+  }
+  .stat {
+    text-align: center; padding: 1.8rem 1rem;
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .stat-n {
+    font-size: 2.2rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--c-primary), var(--c-accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-l { font-size: .85rem; color: var(--c-text2); margin-top: .2rem; }
+
+  /* ── Tip Box ── */
+  .tip-box {
+    background: var(--c-accent-dim2);
+    border: 1px solid rgba(52,211,153,.3);
+    border-left: 4px solid var(--c-accent);
+    border-radius: var(--radius-xs);
+    padding: .9rem 1.1rem;
+    margin-top: .7rem;
+  }
+  .tip-box .tip-title {
+    font-size: .78rem; font-weight: 700;
+    color: var(--c-accent); margin-bottom: .35rem;
+  }
+  .tip-box p {
+    font-size: .82rem; color: var(--c-text2); line-height: 1.6; margin: 0;
+  }
+  .tip-box strong { color: var(--c-text); }
+
+  /* ── Inline Code ── */
+  .ic {
+    font-size: .78rem; background: var(--c-bg3);
+    border: 1px solid var(--c-border); border-radius: 4px;
+    padding: .1rem .4rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── Platform Cards ── */
+  .platform-cards {
+    display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .6rem;
+  }
+  .platform-card {
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    padding: .6rem 1rem; flex: 1; min-width: 180px;
+    box-shadow: var(--shadow);
+  }
+  .platform-card .label {
+    font-size: .72rem; font-weight: 600; margin-bottom: .3rem;
+  }
+
+  /* ── Flex Panel ── */
+  .flex-panel {
+    background: var(--c-bg2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius);
+    padding: 2.2rem; margin-top: 1rem;
+  }
+  .flex-panel-inner {
+    display: flex; align-items: flex-start; gap: 1.2rem; flex-wrap: wrap;
+  }
+  .flex-panel-icon {
+    flex: 0 0 56px; height: 56px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--c-primary-dim2), var(--c-accent-dim2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+  }
+  .flex-panel-body { flex: 1; min-width: 280px; }
+  .flex-panel-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .6rem; }
+  .flex-panel-body > p { font-size: .92rem; color: var(--c-text2); line-height: 1.7; margin-bottom: 1rem; }
+  .flex-panel-body strong { color: var(--c-text); }
+  .ai-badges { display: flex; gap: .8rem; flex-wrap: wrap; }
+  .ai-dep-table {
+    margin-top: 1.2rem; padding-top: 1rem;
+    border-top: 1px dashed var(--c-border);
+  }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center; padding: 3rem 1.5rem;
+    border-top: 1px solid var(--c-border);
+    color: var(--c-text3); font-size: .82rem;
+  }
+  footer strong { color: var(--c-text2); }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .pipeline { min-width: 700px; }
+    section { padding: 4.5rem 0; }
+    .gallery { grid-template-columns: 1fr; }
+    .platform-cards { flex-direction: column; }
+    .multipass-grid { grid-template-columns: 1fr; }
+    .flow-diagram { min-width: 500px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="container">
+    <span class="nav-brand">AutoSDLC v5</span>
+    <ul class="nav-links">
+      <li><a href="#problem">문제</a></li>
+      <li><a href="#pipeline">파이프라인</a></li>
+      <li><a href="#multipass">멀티패스</a></li>
+      <li><a href="#output">산출물</a></li>
+      <li><a href="#arch">아키텍처</a></li>
+      <li><a href="#start">시작하기</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="badge badge-primary">Powered by Claude AI</span>
+    <h1>아이디어에서 배포까지,<br>3중 검증.</h1>
+    <p>AI SDLC 자동화 프레임워크 &mdash; 7개 에이전트, 3-Pass 검증, 엔드투엔드 파이프라인.</p>
+    <div class="hero-actions">
+      <a href="#pipeline" class="btn btn-fill">파이프라인</a>
+      <a href="#multipass" class="btn btn-ghost">3-Pass 검증</a>
+      <a href="#start" class="btn btn-ghost">빠른 시작</a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== PROBLEM ===== -->
+<section id="problem">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-rose">문제</span>
+      <h2>AI는 코딩만 하는 게 아닙니다.</h2>
+      <p>코드 생성은 SDLC의 한 조각일 뿐입니다.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-rose-dim);color:var(--c-rose);">&#x26A0;</div>
+        <h3>컨텍스트 유실</h3>
+        <p>AI 에이전트이 끝나면 설계 결정, 진행 상황, 근거 &mdash; 모든 것이 사라집니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-rose-dim);color:var(--c-rose);">&#x1F504;</div>
+        <h3>수동 오버헤드</h3>
+        <p>브랜치 관리, 커밋 컨벤션, 리뷰 체크리스트, 상태 추적 &mdash; 전부 수작업.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-rose-dim);color:var(--c-rose);">&#x1F6AB;</div>
+        <h3>품질 게이트 부재</h3>
+        <p>리뷰 없이 머지, 테스트 없이 배포. AI 코드도 예외가 아닙니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-rose-dim);color:var(--c-rose);">&#x1F441;</div>
+        <h3>단일 시점 검토</h3>
+        <p>한 번의 AI 패스로는 표면적 버그만 잡힙니다. 깊은 아키텍처 결함, 보안 취약점, 엣지 케이스는 놓칩니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SOLUTION ===== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-accent">솔루션</span>
+      <h2>AI를 "가상 팀"으로 운영</h2>
+      <p>단일 채팅이 아닌 &mdash; 역할 기반 페르소나와 멀티패스 품질 검증을 갖춘 구조화된 가상 팀.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-primary-dim);color:var(--c-primary);">&#x1F3AF;</div>
+        <h3>에이전트 = 역할</h3>
+        <p>아키텍트, 개발자, 리뷰어, QA, DevOps &mdash; 각 에이전트이 전문가 역할을 수행합니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-accent-dim);color:var(--c-accent);">&#x1F50D;</div>
+        <h3>3-Pass 검증</h3>
+        <p>설계, 리뷰, 테스트 에이전트은 서로 다른 전문가 페르소나로 3회 검증. 단일 패스가 놓치는 것을 찾아냅니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-accent-dim);color:var(--c-accent);">&#x1F4CB;</div>
+        <h3>자동 인수인계</h3>
+        <p>handoff.md + .agent-status.json으로 에이전트 간 컨텍스트 100% 보존.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-amber-dim);color:var(--c-amber);">&#x2705;</div>
+        <h3>품질 게이트 + 루프</h3>
+        <p>리뷰 반려 &rarr; 개발. 테스트 실패 &rarr; 개발. 성능 위험 &rarr; 개발. 지름길 없음.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-sky-dim);color:var(--c-sky);">&#x1F504;</div>
+        <h3>다중 기획서 워크플로</h3>
+        <p>여러 기획서를 순차 처리. 완료 후 자동 아카이브 + 초기화.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:var(--c-primary-dim);color:var(--c-primary);">&#x1F30D;</div>
+        <h3>크로스 플랫폼</h3>
+        <p>Android, iOS, Python &mdash; 같은 프레임워크, .env 변수 치환으로 플랫폼별 대응.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== PIPELINE ===== -->
+<section id="pipeline">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-primary">파이프라인</span>
+      <h2>7-에이전트 SDLC 파이프라인</h2>
+      <p>기획서 투입 &rarr; 프로덕션 배포 &mdash; 피드백 루프 내장.</p>
+    </div>
+    <div class="pipeline-wrap">
+      <div class="pipeline">
+        <div class="pipe">
+          <div class="pipe-n">0</div>
+          <div class="pipe-label">설계</div>
+          <div class="pipe-sub">아키텍처 설계<br>Epic/TASK 분해</div>
+          <div class="pipe-pass">3-PASS</div>
+        </div>
+        <div class="pipe">
+          <div class="pipe-n">1</div>
+          <div class="pipe-label">개발</div>
+          <div class="pipe-sub">TASK 구현<br>MR 생성</div>
+        </div>
+        <div class="pipe">
+          <div class="pipe-n">2</div>
+          <div class="pipe-label">리뷰</div>
+          <div class="pipe-sub">스펙 &rarr; 보안 &rarr; 품질<br>승인 / 반려</div>
+          <div class="pipe-pass">3-PASS</div>
+        </div>
+        <div class="pipe">
+          <div class="pipe-n">3</div>
+          <div class="pipe-label">테스트</div>
+          <div class="pipe-sub">단위 &rarr; 통합 &rarr; 회귀<br>ALL PASS / FAIL</div>
+          <div class="pipe-pass">3-PASS</div>
+        </div>
+        <div class="pipe">
+          <div class="pipe-n">4</div>
+          <div class="pipe-label">성능</div>
+          <div class="pipe-sub">프로파일링 &amp; 예산<br>GOOD / CRITICAL</div>
+        </div>
+        <div class="pipe">
+          <div class="pipe-n">5</div>
+          <div class="pipe-label">문서</div>
+          <div class="pipe-sub">API &amp; 아키텍처 문서<br>아카이브 정리</div>
+        </div>
+        <div class="pipe">
+          <div class="pipe-n">6</div>
+          <div class="pipe-label">배포</div>
+          <div class="pipe-sub">CI/CD 파이프라인<br>릴리즈 태깅</div>
+        </div>
+      </div>
+      <div class="pipe-loop-note">
+        <span>&#x1F504; 리뷰 반려 &rarr; 에이전트 1 (개발)</span>
+        <span>&#x274C; 테스트 실패 &rarr; 에이전트 1 (개발)</span>
+        <span>&#x26A0; 성능 위험 &rarr; 에이전트 1 (개발)</span>
+      </div>
+    </div>
+
+    <!-- Flow Diagram -->
+    <div class="flow-wrap">
+      <p style="font-size:.82rem;font-weight:600;color:var(--c-text2);margin-bottom:1.2rem;text-align:center;">피드백 루프를 포함한 상세 흐름도</p>
+      <div class="flow-diagram">
+        <div class="flow-node s0">S0<br><small>설계</small><br><small style="font-size:.6rem;color:var(--c-text3);">3-Pass</small></div>
+        <div class="flow-arrow"><span class="flow-arrow-label">통과</span><br>&#x2192;</div>
+        <div class="flow-node s1">S1<br><small>개발</small></div>
+        <div class="flow-arrow"><span class="flow-arrow-label">MR</span><br>&#x2192;</div>
+        <div class="flow-node s2">S2<br><small>리뷰</small><br><small style="font-size:.6rem;color:var(--c-text3);">3-Pass</small></div>
+        <div class="flow-arrow">
+          <span style="display:flex;flex-direction:column;align-items:center;">
+            <span class="flow-arrow-label">승인</span>
+            &#x2192;
+            <span class="flow-reject-label">반려 &#x21A9; S1</span>
+          </span>
+        </div>
+        <div class="flow-node s3">S3<br><small>테스트</small><br><small style="font-size:.6rem;color:var(--c-text3);">3-Pass</small></div>
+        <div class="flow-arrow">
+          <span style="display:flex;flex-direction:column;align-items:center;">
+            <span class="flow-arrow-label">전체 통과</span>
+            &#x2192;
+            <span class="flow-reject-label">실패 &#x21A9; S1</span>
+          </span>
+        </div>
+        <div class="flow-node s4">S4<br><small>성능</small></div>
+        <div class="flow-arrow">
+          <span style="display:flex;flex-direction:column;align-items:center;">
+            <span class="flow-arrow-label">양호</span>
+            &#x2192;
+            <span class="flow-reject-label">위험 &#x21A9; S1</span>
+          </span>
+        </div>
+        <div class="flow-node s5">S5<br><small>문서</small></div>
+        <div class="flow-arrow"><span class="flow-arrow-label">아카이브</span><br>&#x2192;</div>
+        <div class="flow-node s6">S6<br><small>배포</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== MULTI-PASS VALIDATION ===== -->
+<section id="multipass">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-primary">핵심 기능</span>
+      <h2>3-Pass 멀티 페르소나 검증</h2>
+      <p>에이전트 0, 2, 3은 서로 다른 전문가 페르소나로 3단계 검증을 수행합니다. 각 Pass는 이전 Pass가 놓친 것을 잡아냅니다. 어느 Pass에서든 실패하면 Pass 1부터 재시작합니다.</p>
+    </div>
+
+    <div class="multipass-grid">
+      <!-- Session 0: Design 3-Pass -->
+      <div class="multipass-card design">
+        <div class="multipass-header">
+          <span class="badge badge-primary">에이전트 0</span>
+          <h3>설계 검증</h3>
+        </div>
+        <div class="pass-flow">
+          <div class="pass-item">
+            <div class="pass-num">1</div>
+            <div class="pass-persona">아키텍트</div>
+            <div class="pass-desc">아키텍처 초안 작성, Epic 분해, 인수 기준(AC)이 포함된 TASK 분해</div>
+          </div>
+          <div class="pass-item">
+            <div class="pass-num">2</div>
+            <div class="pass-persona">악마의 변호인</div>
+            <div class="pass-desc">약점 공격 &mdash; 복잡도, 숨겨진 의존성, 누락된 엣지 케이스, 테스트 가능성 결함</div>
+            <div class="pass-fail">&#x26A0; CRITICAL 이슈 발견 &rarr; Pass 1부터 재시작</div>
+          </div>
+          <div class="pass-item">
+            <div class="pass-num">3</div>
+            <div class="pass-persona">시니어 아키텍트</div>
+            <div class="pass-desc">Pass 1 + Pass 2를 종합하여 최종 ADR(아키텍처 결정 기록) 작성</div>
+          </div>
+        </div>
+        <div class="pass-result">
+          <strong>산출물:</strong> 아키텍처 문서 + TASK 분해표 + ADR
+        </div>
+      </div>
+
+      <!-- Session 2: Review 3-Pass -->
+      <div class="multipass-card review">
+        <div class="multipass-header">
+          <span class="badge badge-amber">에이전트 2</span>
+          <h3>코드 리뷰</h3>
+        </div>
+        <div class="pass-flow">
+          <div class="pass-item">
+            <div class="pass-num">1</div>
+            <div class="pass-persona">스펙 리뷰어</div>
+            <div class="pass-desc">MR이 아키텍처 &amp; 요구사항과 일치하는지 검증. 인수 기준(AC) 충족 여부 확인</div>
+            <div class="pass-fail">&#x274C; 불일치 &rarr; 즉시 반려 (Pass 2, 3 생략)</div>
+          </div>
+          <div class="pass-item">
+            <div class="pass-num">2</div>
+            <div class="pass-persona">보안 감사관</div>
+            <div class="pass-desc">OWASP Mobile Top 10 + STRIDE 위협 모델링. 취약점 스캔</div>
+            <div class="pass-fail">&#x274C; CRITICAL 발견 &rarr; 즉시 반려 (Pass 3 생략)</div>
+          </div>
+          <div class="pass-item">
+            <div class="pass-num">3</div>
+            <div class="pass-persona">품질 엔지니어</div>
+            <div class="pass-desc">코드 품질, 성능 병목, 테스트 가능성, 유지보수성 분석</div>
+          </div>
+        </div>
+        <div class="pass-result">
+          <strong>판정:</strong> 승인 &#x2705; / 코멘트 &#x1F4AC; / 반려 &#x1F504;
+        </div>
+      </div>
+
+      <!-- Session 3: Test 3-Pass -->
+      <div class="multipass-card test">
+        <div class="multipass-header">
+          <span class="badge badge-accent">에이전트 3</span>
+          <h3>테스트</h3>
+        </div>
+        <div class="pass-flow">
+          <div class="pass-item">
+            <div class="pass-num">1</div>
+            <div class="pass-persona">QA &mdash; 단위 테스트</div>
+            <div class="pass-desc">AC-to-test 1:1 매핑. 의존성 Mock 처리. 각 인수 기준 검증</div>
+            <div class="pass-fail">&#x274C; 실패 &rarr; 즉시 중단 (Pass 2, 3 생략)</div>
+          </div>
+          <div class="pass-item">
+            <div class="pass-num">2</div>
+            <div class="pass-persona">QA &mdash; 통합 테스트</div>
+            <div class="pass-desc">화면 전환, API 통합, 컴포넌트 간 상호작용 검증</div>
+            <div class="pass-fail">&#x274C; 실패 &rarr; 즉시 중단 (Pass 3 생략)</div>
+          </div>
+          <div class="pass-item">
+            <div class="pass-num">3</div>
+            <div class="pass-persona">QA &mdash; 회귀 테스트</div>
+            <div class="pass-desc">경계값, 네트워크 오류, 동시성, 전체 회귀 테스트 수행</div>
+          </div>
+        </div>
+        <div class="pass-result">
+          <strong>결과:</strong> 전체 통과 &#x2705; &rarr; 에이전트 4 &nbsp;|&nbsp; 실패 &#x274C; &rarr; 에이전트 1 (개발)
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-Pass Rule Note -->
+    <div class="tip-box" style="margin-top:1.5rem;">
+      <div class="tip-title">&#x1F6E1; 멀티패스 실패 복구 규칙</div>
+      <p>멀티패스 에이전트 (0, 2, 3)은 실패 시 항상 <strong>Pass 1부터 재시작</strong>합니다 &mdash; 부분 재실행 불가. 이를 통해 매 라운드가 완전하고 새로운 검증임을 보장합니다. 3회 이상 수동 수정 시도가 실패하면 <strong>git reset + 범위 축소</strong>가 트리거됩니다.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== REAL OUTPUT ===== -->
+<section id="output" class="gallery-section">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-accent">실제 산출물</span>
+      <h2>실제 생성 결과물</h2>
+      <p>AutoSDLC로 생성된 프로젝트의 실제 스크린샷.</p>
+    </div>
+
+    <h3>&#x1F3A8; 설계 산출물 <span class="badge badge-primary" style="font-size:.65rem;">에이전트 0</span></h3>
+    <p style="color:var(--muted);font-size:.85rem;margin:-.2rem 0 .8rem;">※ 아래는 에이전트 0이 생성하는 다수의 산출물 중 일부 예시입니다.</p>
+    <div class="gallery">
+      <div class="shot">
+        <img src="images/01-user-journey-flow.png" alt="사용자 여정 흐름도" loading="lazy">
+        <div class="shot-body">
+          <span class="badge badge-primary" style="font-size:.6rem;">설계</span>
+          <h4>사용자 여정 흐름도</h4>
+          <p>기획서 분석으로 자동 생성된 Mermaid 플로우차트. 앱 흐름, 전환, 분기 조건을 시각화.</p>
+        </div>
+      </div>
+      <div class="shot">
+        <img src="images/02-architecture-diagram.png" alt="아키텍처 다이어그램" loading="lazy">
+        <div class="shot-body">
+          <span class="badge badge-primary" style="font-size:.6rem;">설계</span>
+          <h4>아키텍처 다이어그램</h4>
+          <p>다양한 다이어그램 중 예시. UI &rarr; State &rarr; Data 3계층 구조와 의존성 시각화.</p>
+        </div>
+      </div>
+      <div class="shot">
+        <img src="images/03-mermaid-flowchart-code.png" alt="Mermaid 소스 코드" loading="lazy">
+        <div class="shot-body">
+          <span class="badge badge-primary" style="font-size:.6rem;">설계</span>
+          <h4>Mermaid 소스 코드</h4>
+          <p>다양한 다이어그램 소스 중 예시. Mermaid 원본 소스. VS Code / GitHub / GitLab에서 자동 렌더링.</p>
+        </div>
+      </div>
+      <div class="shot">
+        <img src="images/04-interface-spec.png" alt="인터페이스 명세" loading="lazy">
+        <div class="shot-body">
+          <span class="badge badge-primary" style="font-size:.6rem;">설계</span>
+          <h4>인터페이스 명세</h4>
+          <p>다수 명세 문서 중 예시. Provider/Widget 인터페이스 정의와 속성, 타입, 파라미터 테이블.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>&#x1F6E0; 개발 &amp; 태스크 관리 <span class="badge badge-sky" style="font-size:.65rem;">에이전트 1</span></h3>
+    <div class="gallery">
+      <div class="shot">
+        <img src="images/05-task-breakdown.png" alt="TASK 분해표" loading="lazy">
+        <div class="shot-body">
+          <span class="badge badge-sky" style="font-size:.6rem;">개발</span>
+          <h4>TASK 분해 (Epic &rarr; TASK)</h4>
+          <p>Epic/서브기능/TASK로 자동 분해. 설명, 우선순위, 의존성, 인수 기준 포함.</p>
+        </div>
+      </div>
+      <div class="shot">
+        <img src="images/06-git-commit-history.png" alt="Git 커밋 히스토리" loading="lazy">
+        <div class="shot-body">
+          <span class="badge badge-sky" style="font-size:.6rem;">개발</span>
+          <h4>Git 커밋 히스토리</h4>
+          <p>TASK ID가 포함된 구조화된 커밋 로그. feat(TASK-XXX) 형식으로 완전한 추적 가능.</p>
+        </div>
+      </div>
+      <div class="shot">
+        <img src="images/07-project-structure.png" alt="프로젝트 구조" loading="lazy">
+        <div class="shot-body">
+          <span class="badge badge-amber" style="font-size:.6rem;">구조</span>
+          <h4>생성된 프로젝트 구조</h4>
+          <p>start-*.sh로 자동 생성된 폴더 구조. 가이드, 소스, 리포트, 설정이 체계적으로 정리.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>&#x1F4CA; 리포트 <span class="badge badge-accent" style="font-size:.65rem;">에이전트 2~5</span></h3>
+    <div class="gallery">
+      <div class="shot">
+        <img src="images/08-perf-report.png" alt="성능 리포트" loading="lazy">
+        <div class="shot-body">
+          <span class="badge badge-accent" style="font-size:.6rem;">리포트</span>
+          <h4>성능 리포트 (에이전트 4)</h4>
+          <p>번들 사이즈, gzip 비율, OTA 매니페스트 분석. 자동 PASS/FAIL 판정.</p>
+        </div>
+      </div>
+      <div class="shot">
+        <img src="images/09-docs-report.png" alt="문서 리포트" loading="lazy">
+        <div class="shot-body">
+          <span class="badge badge-accent" style="font-size:.6rem;">리포트</span>
+          <h4>문서화 리포트 (에이전트 5)</h4>
+          <p>컴포넌트 문서 + 에이전트별 상태/판정이 포함된 진행 요약 테이블.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== REPORTS TABLE ===== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-accent">리포트</span>
+      <h2>에이전트별 자동 생성 리포트</h2>
+      <p>모든 에이전트은 구조화된 리포트를 생성하며, reports/ 디렉토리에 축적됩니다.</p>
+    </div>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>에이전트</th><th>리포트 유형</th><th>파일명 패턴</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>에이전트 0</td><td>설계 명세 + TASK 분해표</td><td>{spec}_spec_requirements_YYYYMMDD.md</td></tr>
+        <tr><td>에이전트 1</td><td>개발 로그</td><td>{spec}_dev_TASK-XXX_YYYYMMDD.md</td></tr>
+        <tr><td>에이전트 2</td><td>코드 리뷰 (3-Pass)</td><td>{spec}_review_TASK-XXX_YYYYMMDD.md</td></tr>
+        <tr><td>에이전트 3</td><td>테스트 결과 (3-Pass)</td><td>{spec}_test_TASK-XXX_YYYYMMDD.md</td></tr>
+        <tr><td>에이전트 4</td><td>성능 분석</td><td>{spec}_perf_TASK-XXX_YYYYMMDD.md</td></tr>
+        <tr><td>에이전트 5</td><td>문서화</td><td>{spec}_docs_TASK-XXX_YYYYMMDD.md</td></tr>
+        <tr><td>에이전트 6</td><td>배포 체크리스트</td><td>vX.X.X_deploy_release_YYYYMMDD.md</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== ARCHITECTURE ===== -->
+<section id="arch">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-primary">아키텍처</span>
+      <h2>핵심 구성 요소</h2>
+      <p>가이드가 동작을 정의하고, 스킬이 실행하고, 상태 파일이 추적하고, 게이트가 품질을 강제하고, 페르소나가 검증합니다.</p>
+    </div>
+    <div class="arch-grid">
+      <div class="arch-card">
+        <h3>에이전트 가이드</h3>
+        <ul class="arch-list">
+          <li>guide-common.md: 공통 규칙 (브랜치, 커밋, 선행조건)</li>
+          <li>guide-agent-0~6.md: 에이전트별 상세 절차</li>
+          <li>플랫폼 변수 (.env): Android/iOS/Python 자동 치환</li>
+          <li>3-Pass 규칙이 에이전트 0, 2, 3 가이드에 내장</li>
+        </ul>
+      </div>
+      <div class="arch-card">
+        <h3>슬래시 커맨드</h3>
+        <ul class="arch-list">
+          <li>/agent-X: 에이전트 시작 (가이드 자동 로드)</li>
+          <li>/handoff-verify: 에이전트 전환 + 상태 업데이트</li>
+          <li>/new-spec: 기획서 아카이브 + 다음 기획서 초기화</li>
+        </ul>
+      </div>
+      <div class="arch-card">
+        <h3>상태 추적</h3>
+        <ul class="arch-list">
+          <li>.agent-status.json: 에이전트 상태 (idle/active/done)</li>
+          <li>handoff.md: 에이전트 간 인수인계 문서 (자동 생성)</li>
+          <li>archives/: 완료된 기획서 아카이브</li>
+        </ul>
+      </div>
+      <div class="arch-card">
+        <h3>품질 게이트</h3>
+        <ul class="arch-list">
+          <li>에이전트 0: ADR 포함 3-Pass 설계 검증</li>
+          <li>에이전트 2: 3-Pass 리뷰 (스펙 &rarr; 보안 &rarr; 품질)</li>
+          <li>에이전트 3: 3-Pass 테스트 (단위 &rarr; 통합 &rarr; 회귀)</li>
+          <li>에이전트 4: 성능 예산 강제</li>
+          <li>선행조건 미충족 시 에이전트 진입 차단</li>
+        </ul>
+      </div>
+      <div class="arch-card">
+        <h3>피드백 루프</h3>
+        <ul class="arch-list">
+          <li>리뷰 반려 &rarr; 에이전트 1로 복귀</li>
+          <li>테스트 실패 &rarr; 에이전트 1로 복귀</li>
+          <li>성능 위험 &rarr; 에이전트 1로 복귀</li>
+          <li>멀티패스 실패 &rarr; Pass 1부터 재시작</li>
+          <li>3회+ 수정 실패 &rarr; git reset + 범위 축소</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REPO STRUCTURE ===== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-amber">레포지토리</span>
+      <h2>프로젝트 구조</h2>
+      <p>AutoSDLC 템플릿 레포지토리 디렉토리 레이아웃.</p>
+    </div>
+    <div class="tree-wrap">
+<pre><span class="dir">AutoSDLC/</span>
+&#x251C;&#x2500;&#x2500; <span class="dir">guides/</span>                          <span class="cmt"># 에이전트 가이드 + 플랫폼 변수 (Source of Truth)</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">guide-common.md</span>              <span class="cmt"># 공통 규칙</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">guide-agent-0-design.md</span>    <span class="cmt"># 에이전트 0: 아키텍처 설계 (3-Pass)</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">guide-agent-1-dev.md</span>       <span class="cmt"># 에이전트 1: 개발</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">guide-agent-2-review.md</span>    <span class="cmt"># 에이전트 2: 코드 리뷰 (3-Pass)</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">guide-agent-3-test.md</span>      <span class="cmt"># 에이전트 3: 테스트 (3-Pass)</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">guide-agent-4-perf.md</span>      <span class="cmt"># 에이전트 4: 성능</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">guide-agent-5-docs.md</span>      <span class="cmt"># 에이전트 5: 문서화</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">guide-agent-6-deploy.md</span>    <span class="cmt"># 에이전트 6: 배포</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">error-code-guide.md</span>          <span class="cmt"># 에러 코드 체계</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">security-checklist.md</span>        <span class="cmt"># 보안 검증 체크리스트</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">platform-vars-aos.env</span>        <span class="cmt"># Android 변수</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">platform-vars-ios.env</span>        <span class="cmt"># iOS 변수</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">platform-vars-python.env</span>     <span class="cmt"># Python 변수</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">platform-vars-flutter.env</span>    <span class="cmt"># Flutter 변수</span>
+&#x2502;   &#x2514;&#x2500;&#x2500; <span class="file">platform-vars-react.env</span>      <span class="cmt"># React 변수</span>
+&#x251C;&#x2500;&#x2500; <span class="dir">templates/</span>                       <span class="cmt"># 프로젝트 초기화 템플릿</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="dir">aos/</span>                         <span class="cmt"># Android 초기화 + CI</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="dir">ios/</span>                         <span class="cmt"># iOS 초기화 + CI</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="dir">python/</span>                      <span class="cmt"># Python 초기화 + CI</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="dir">skills/</span>                      <span class="cmt"># Claude 슬래시 커맨드</span>
+&#x2502;   &#x2514;&#x2500;&#x2500; <span class="dir">settings/</span>                    <span class="cmt"># Claude Code settings.json</span>
+&#x251C;&#x2500;&#x2500; <span class="dir">cross-platform/</span>                  <span class="cmt"># 크로스 플랫폼 조율</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">api-contract.md</span>              <span class="cmt"># API 명세 (단일 진실 공급원)</span>
+&#x2502;   &#x251C;&#x2500;&#x2500; <span class="file">feature-parity.md</span>            <span class="cmt"># 기능 동등성 추적</span>
+&#x2502;   &#x2514;&#x2500;&#x2500; <span class="file">release-coordination.md</span>      <span class="cmt"># 릴리즈 조율</span>
+&#x251C;&#x2500;&#x2500; <span class="dir">samples/</span>                         <span class="cmt"># 기획서 샘플</span>
+&#x251C;&#x2500;&#x2500; <span class="dir">images/</span>                          <span class="cmt"># 스크린샷 (산출물 미리보기)</span>
+&#x251C;&#x2500;&#x2500; <span class="file">start-aos.sh</span>                     <span class="cmt"># Android 프로젝트 생성기</span>
+&#x251C;&#x2500;&#x2500; <span class="file">start-ios.sh</span>                     <span class="cmt"># iOS 프로젝트 생성기</span>
+&#x251C;&#x2500;&#x2500; <span class="file">start-python.sh</span>                  <span class="cmt"># Python 프로젝트 생성기</span>
+&#x2514;&#x2500;&#x2500; <span class="file">quickstart.md</span>                    <span class="cmt"># 상세 사용 가이드</span></pre>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== COMPARISON ===== -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-rose">비교</span>
+      <h2>기존 AI 코딩 vs AutoSDLC</h2>
+    </div>
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>항목</th>
+          <th><span class="tag-old">기존 AI 코딩</span></th>
+          <th><span class="tag-new">AutoSDLC v5</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>범위</td><td>코드 생성만</td><td>설계부터 배포까지 (7개 에이전트)</td></tr>
+        <tr><td>검증</td><td>단일 패스, 구조 없음</td><td>3-Pass 멀티 페르소나 검증 (설계/리뷰/테스트)</td></tr>
+        <tr><td>품질 게이트</td><td>사용자 재량</td><td>리뷰 &rarr; 테스트 &rarr; 성능 게이트 + 자동 반려 루프</td></tr>
+        <tr><td>컨텍스트</td><td>에이전트 종료 시 유실</td><td>인수인계 파일로 100% 보존</td></tr>
+        <tr><td>보안</td><td>미검증</td><td>OWASP Mobile Top 10 + STRIDE (리뷰 Pass 2)</td></tr>
+        <tr><td>실패 복구</td><td>수동</td><td>자동 루프: 반려/실패 &rarr; 개발 &rarr; 재검증</td></tr>
+        <tr><td>추적</td><td>없음</td><td>.agent-status.json + git log + reports/</td></tr>
+        <tr><td>산출물</td><td>코드만</td><td>코드 + 문서 + 리포트 + ADR + 블루프린트</td></tr>
+        <tr><td>플랫폼</td><td>언어별 한정</td><td>.env 치환 (Android/iOS/Python)</td></tr>
+        <tr><td>팀 구조</td><td>단일 채팅</td><td>역할 기반 에이전트 + 페르소나 전환</td></tr>
+        <tr><td>다중 기획서</td><td>미지원</td><td>자동 아카이브 + 초기화 + 순차 처리</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== CUSTOMIZATION & AI SWAP ===== -->
+<section id="customize">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-amber">유연성</span>
+      <h2>프로젝트별 커스터마이징 &<br>AI 엔진 교체 가능</h2>
+      <p>템플릿은 프로젝트별로 복사됩니다 &mdash; 생성 후 각 프로젝트는 독립적으로 커스터마이징 가능. AI는 교체 가능한 부품입니다.</p>
+    </div>
+
+    <div class="card-grid" style="margin-bottom:2.5rem;">
+      <div class="card" style="border-top:3px solid var(--c-amber);">
+        <div class="card-icon" style="background:var(--c-amber-dim);color:var(--c-amber);">&#x2699;</div>
+        <h3>플랫폼 변수 (.env)</h3>
+        <p>빌드 명령어, 테스트 도구, 소스 루트, 패키지 매니저. <span class="ic" style="color:var(--c-amber);">{{BUILD_COMMAND}}</span>, <span class="ic" style="color:var(--c-amber);">{{TEST_COMMAND}}</span> 플레이스홀더가 프로젝트별로 치환됩니다.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--c-amber);">
+        <div class="card-icon" style="background:var(--c-amber-dim);color:var(--c-amber);">&#x1F4DD;</div>
+        <h3>에이전트 가이드</h3>
+        <p>프로젝트별 동작 규칙, 판정 기준, 산출물 형식 수정 가능. 예: 더 엄격한 리뷰, 더 높은 커버리지 목표.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--c-amber);">
+        <div class="card-icon" style="background:var(--c-amber-dim);color:var(--c-amber);">&#x26A1;</div>
+        <h3>슬래시 커맨드 / 스킬</h3>
+        <p>프로젝트별 커맨드 추가 또는 기존 커맨드 수정. <span class="ic" style="color:var(--c-amber);">.claude/commands/</span>에 마크다운 파일만 추가하면 됩니다.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--c-amber);">
+        <div class="card-icon" style="background:var(--c-amber-dim);color:var(--c-amber);">&#x1F3D7;</div>
+        <h3>CI/CD 파이프라인</h3>
+        <p>GitLab CI, GitHub Actions 등 프로젝트 배포 환경에 맞게 파이프라인 템플릿을 커스터마이징.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--c-amber);">
+        <div class="card-icon" style="background:var(--c-amber-dim);color:var(--c-amber);">&#x1F6E1;</div>
+        <h3>품질 게이트 임계값</h3>
+        <p>프로젝트 요구사항에 따라 테스트 커버리지 목표, 성능 예산(번들 사이즈, 메모리), 리뷰 기준 조정.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--c-amber);">
+        <div class="card-icon" style="background:var(--c-amber-dim);color:var(--c-amber);">&#x1F500;</div>
+        <h3>브랜치 전략</h3>
+        <p>Epic 규모, 팀 크기, 배포 주기에 따라 feat/epic/release 브랜치 전략 조정.</p>
+      </div>
+    </div>
+
+    <!-- AI Swap Panel -->
+    <div class="flex-panel">
+      <div class="flex-panel-inner">
+        <div class="flex-panel-icon">&#x1F504;</div>
+        <div class="flex-panel-body">
+          <h3>AI 엔진 교체 가능</h3>
+          <p>AI는 끊임없이 진화합니다. AutoSDLC 에이전트 가이드는 <strong>특정 AI에 종속되지 않는 마크다운 기반 프롬프트</strong>입니다 &mdash; AI 코딩 어시스턴트가 바뀌어도 프레임워크 구조는 그대로 유지됩니다.</p>
+          <div class="ai-badges">
+            <span class="badge badge-primary">Claude</span>
+            <span class="badge badge-accent">Gemini</span>
+            <span class="badge badge-sky">GPT</span>
+            <span class="badge badge-amber">Cursor</span>
+            <span class="badge badge-rose">차세대 AI...</span>
+          </div>
+          <div class="ai-dep-table">
+            <table class="cmp-table" style="margin:0;">
+              <thead>
+                <tr><th>계층</th><th>AI 의존도</th><th>교체 시 변경</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>에이전트 가이드 (guides/)</td><td style="color:var(--c-accent);">없음 &mdash; 순수 마크다운</td><td>변경 불필요</td></tr>
+                <tr><td>슬래시 커맨드 (skills/)</td><td style="color:var(--c-amber);">낮음 &mdash; 마크다운 프롬프트</td><td>경미한 문법 조정</td></tr>
+                <tr><td>진입 스크립트 (start-*.sh)</td><td style="color:var(--c-accent);">없음 &mdash; 쉘 스크립트</td><td>변경 불필요</td></tr>
+                <tr><td>상태 추적 (.agent-status.json)</td><td style="color:var(--c-accent);">없음 &mdash; JSON 파일</td><td>변경 불필요</td></tr>
+                <tr><td>settings.json</td><td style="color:var(--c-rose);">있음 &mdash; AI 도구 설정</td><td>AI별 설정으로 교체</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== STATS ===== -->
+<section>
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat"><div class="stat-n">7</div><div class="stat-l">전문 에이전트</div></div>
+      <div class="stat"><div class="stat-n">3-Pass</div><div class="stat-l">멀티 페르소나 검증</div></div>
+      <div class="stat"><div class="stat-n">100%</div><div class="stat-l">컨텍스트 보존</div></div>
+      <div class="stat"><div class="stat-n">1 명령</div><div class="stat-l">프로젝트 초기화</div></div>
+      <div class="stat"><div class="stat-n">3+</div><div class="stat-l">플랫폼 지원</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== HOW TO START ===== -->
+<section id="start">
+  <div class="container">
+    <div class="section-head">
+      <span class="badge badge-accent">시작하기</span>
+      <h2>3단계로 시작</h2>
+      <p>기획서를 준비하세요. 나머지는 AutoSDLC가 처리합니다.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-dot">1</div>
+        <h3>프로젝트 생성</h3>
+        <p>스크립트가 폴더 구조, 가이드, CI/CD, git init을 자동 완성합니다. 모바일과 Python 백엔드/자동화를 지원합니다.</p>
+        <div class="platform-cards">
+          <div class="platform-card">
+            <div class="label" style="color:var(--c-accent);">&#x1F4F1; Android (Kotlin)</div>
+            <code>bash ./start-aos.sh</code>
+          </div>
+          <div class="platform-card">
+            <div class="label" style="color:var(--c-sky);">&#x1F34E; iOS (Swift)</div>
+            <code>bash ./start-ios.sh</code>
+          </div>
+          <div class="platform-card">
+            <div class="label" style="color:var(--c-amber);">&#x1F40D; Python (백엔드/자동화)</div>
+            <code>bash ./start-python.sh</code>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-dot">2</div>
+        <h3>기획서 배치</h3>
+        <p>기획서를 <code>tasks/requirements.md</code>에 넣으세요. 에이전트 0이 3-Pass 설계 검증을 통해 Epic/TASK로 분석 및 분해합니다.</p>
+        <div class="tip-box">
+          <div class="tip-title">&#x1F4A1; 팁 &mdash; 참고 자료를 함께 넣으면 정확도가 올라갑니다</div>
+          <p>기획서(MD) 외에 <strong>화면 디자인 이미지, PPT, 와이어프레임, API 명세</strong>를 <code style="font-size:.78rem;">tasks/</code> 폴더에 추가하세요. AI가 텍스트 + 시각 자료를 종합하여 더 정확한 요구사항 추출과 TASK 분해를 수행합니다.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-dot">3</div>
+        <h3>에이전트 실행</h3>
+        <p>Claude를 열고 <code>/agent-0</code>으로 시작하세요. 각 에이전트은 가이드에 따라 자동 실행됩니다. 3-Pass 에이전트 (0, 2, 3)은 멀티 페르소나 검증을 자동으로 수행합니다.</p>
+        <code>claude &rarr; /agent-0 &rarr; /agent-1 &rarr; ... &rarr; /agent-6</code>
+        <div class="tip-box" style="margin-top:.7rem;">
+          <div class="tip-title">&#x1F504; 자동 피드백 루프</div>
+          <p>리뷰가 반려되거나 테스트가 실패하면, 파이프라인이 <strong>자동으로 에이전트 1 (개발)로 되돌아가</strong> 수정 후 재검증을 실행합니다. 품질 게이트를 통과할 때까지 수동 개입이 필요 없습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <p><strong>AutoSDLC v5</strong> &mdash; AI 기반 SDLC 자동화 프레임워크</p>
+  <p style="margin-top:.4rem;">3-Pass 멀티 페르소나 검증 &middot; 언어 &amp; 플랫폼 무관 &middot; AI 엔진 교체 가능</p>
+</footer>
+
+</body>
+</html>
