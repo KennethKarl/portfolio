@@ -50,16 +50,16 @@ function RegionSelect({ defaultSido = "서울시", defaultGugun = "강남구" })
 }
 
 const HOSPITALS = [
-  { id: 1, name: "임플라인치과 강남삼성점", field: "치과", region: "서울시-강남구", fee: 1, feeInterpreter: 2, feeBasis: "결제액(VAT포함)", treatments: 3, langs: ["영어", "중국어"], visible: true },
-  { id: 2, name: "광동병원", field: "건강검진", region: "서울시-강남구", fee: 1, feeInterpreter: 1, feeBasis: "공급가액(VAT제외)", treatments: 5, langs: ["영어", "일본어", "중국어", "러시아어"], visible: true },
-  { id: 3, name: "크크서울", field: "피부과", region: "서울시-강남구", fee: 1, feeInterpreter: 3, feeBasis: "결제액(VAT포함)", treatments: 4, langs: ["영어", "일본어"], visible: true },
-  { id: 4, name: "명지성모병원", field: "건강검진", region: "서울시-영등포구", fee: 1, feeInterpreter: 1, feeBasis: "공급가액(VAT제외)", treatments: 5, langs: ["영어", "중국어"], visible: true },
-  { id: 5, name: "레브치과", field: "치과", region: "서울시-강남구", fee: 1, feeInterpreter: 2, feeBasis: "결제액(VAT포함)", treatments: 2, langs: ["영어"], visible: false },
+  { id: 1, name: "데모A 치과", field: "치과", region: "서울시-강남구", fee: 1, feeInterpreter: 2, feeBasis: "결제액(VAT포함)", treatments: 3, langs: ["영어", "중국어"], visible: true },
+  { id: 2, name: "데모B 검진센터", field: "건강검진", region: "서울시-강남구", fee: 1, feeInterpreter: 1, feeBasis: "공급가액(VAT제외)", treatments: 5, langs: ["영어", "일본어", "중국어", "러시아어"], visible: true },
+  { id: 3, name: "데모C 피부과", field: "피부과", region: "서울시-강남구", fee: 1, feeInterpreter: 3, feeBasis: "결제액(VAT포함)", treatments: 4, langs: ["영어", "일본어"], visible: true },
+  { id: 4, name: "데모D 검진센터", field: "건강검진", region: "서울시-영등포구", fee: 1, feeInterpreter: 1, feeBasis: "공급가액(VAT제외)", treatments: 5, langs: ["영어", "중국어"], visible: true },
+  { id: 5, name: "데모E 치과", field: "치과", region: "서울시-강남구", fee: 1, feeInterpreter: 2, feeBasis: "결제액(VAT포함)", treatments: 2, langs: ["영어"], visible: false },
 ];
 
 // 병원별 항목 마스터 (항목 코드 + 다국어 항목명) — 시술 포함/옵션 항목 선택지의 원천
 const ITEM_MASTER = {
-  "임플라인치과 강남삼성점": [
+  "데모A 치과": [
     { code: "IMP-001", name: { ko: "임플란트 픽스처", en: "Implant fixture", ar: "" } },
     { code: "IMP-002", name: { ko: "지대주(어버트먼트)", en: "Abutment", ar: "" } },
     { code: "IMP-003", name: { ko: "크라운(보철)", en: "Crown", ar: "" } },
@@ -68,7 +68,7 @@ const ITEM_MASTER = {
     { code: "DEN-003", name: { ko: "치료 계획 상담(통역)", en: "Treatment consult (interpreter)", ar: "" } },
     { code: "CON-002", name: { ko: "사후 관리 1년", en: "1-year aftercare", ar: "" } },
   ],
-  "광동병원": [
+  "데모B 검진센터": [
     { code: "CHK-001", name: { ko: "기본 혈액검사 패널", en: "Basic blood panel", ar: "" } },
     { code: "CHK-002", name: { ko: "복부 초음파", en: "Abdominal ultrasound", ar: "" } },
     { code: "CHK-003", name: { ko: "위내시경(수면)", en: "Gastroscopy (sedated)", ar: "" } },
@@ -81,7 +81,7 @@ const ITEM_MASTER = {
     { code: "MRK-002", name: { ko: "호르몬 패널", en: "Hormone panel", ar: "" } },
     { code: "MRK-003", name: { ko: "골밀도", en: "Bone density", ar: "" } },
   ],
-  "크크서울": [
+  "데모C 피부과": [
     { code: "SKN-001", name: { ko: "피부 진단 스캔", en: "Skin diagnostic scan", ar: "" } },
     { code: "SKN-002", name: { ko: "레이저 토닝 2회", en: "Laser toning x2", ar: "" } },
     { code: "SKN-003", name: { ko: "진정 관리", en: "Soothing care", ar: "" } },
@@ -103,7 +103,7 @@ function itemLabel(hospitalName, ref, lang = "ko") {
 
 const TREATMENTS = [
   {
-    id: 1, hospital: "광동병원", dept: "건강검진", name: "Premium 건강검진 패키지",
+    id: 1, hospital: "데모B 검진센터", dept: "건강검진", name: "Premium 건강검진 패키지",
     list: 1960000, price: 1820000, payType: "예약금", depositAmount: 100000, visible: true, bookings: 14,
     fee: 1, feeBasis: "공급가액(VAT제외)", feeInherit: true,
     desc: { ko: "주요 장기와 암 위험을 하루에 확인하는 프리미엄 종합검진", en: "Premium one-day comprehensive checkup covering major organs and cancer risk", ar: "" },
@@ -120,7 +120,7 @@ const TREATMENTS = [
     prep: { ko: "검진 전날 저녁부터 금식\n복용 중인 약이 있으면 목록 지참\n편한 복장으로 내원", en: "Fast from the evening before\nBring a list of current medications\nWear comfortable clothing", ar: "" },
   },
   {
-    id: 2, hospital: "임플라인치과 강남삼성점", dept: "치과", name: "임플란트·보철 종합",
+    id: 2, hospital: "데모A 치과", dept: "치과", name: "임플란트·보철 종합",
     list: 6300000, price: 6000000, payType: "선결제", depositAmount: 0, visible: true, bookings: 6,
     fee: 1, feeBasis: "결제액(VAT포함)", feeInherit: true,
     desc: { ko: "정밀 진단부터 보철까지 통역과 함께 진행하는 임플란트 패키지", en: "Full implant package from diagnosis to prosthetics, with interpreter support", ar: "" },
@@ -134,7 +134,7 @@ const TREATMENTS = [
     prep: { ko: "기존 치과 파노라마·CT 있으면 지참\n스케일링 등 사전 진료 이력 공유\n시술 당일 식사 후 내원", en: "Bring prior dental X-ray/CT if any\nShare previous dental history\nEat before visiting on the day", ar: "" },
   },
   {
-    id: 3, hospital: "크크서울", dept: "피부과", name: "피부 노화·색소 레이저",
+    id: 3, hospital: "데모C 피부과", dept: "피부과", name: "피부 노화·색소 레이저",
     list: 1050000, price: 900000, payType: "불필요", depositAmount: 0, visible: true, bookings: 9,
     fee: 2, feeBasis: "결제액(VAT포함)", feeInherit: false,
     desc: { ko: "색소와 모공, 탄력을 한 번에 관리하는 복합 레이저 프로그램", en: "Combined laser program for pigmentation, pores and elasticity", ar: "" },
@@ -644,7 +644,7 @@ function HospitalDetail({ h, back, onEdit }) {
         </div>
         <div className="mt-4"><Label>원장 정보</Label>
           <div className="grid gap-2 sm:grid-cols-2">
-            {[["김태호","대표원장","임플란트·보철","서울대 치의학 박사 · 20년 경력"],["이수진","진료원장","심미보철·교정","연세대 치의학 · 국제학회 정회원"]].map(([n,t,sp,c])=>(
+            {[["김태호","대표원장","임플란트·보철","국내 치의학 박사 · 20년 경력"],["이수진","진료원장","심미보철·교정","국내 치의학 · 국제학회 정회원"]].map(([n,t,sp,c])=>(
               <div key={n} className="flex gap-3 rounded-lg border border-slate-200 p-3">
                 <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[10px] text-slate-400">사진</div>
                 <div>
