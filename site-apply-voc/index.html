@@ -1,0 +1,1691 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="케어브릿지 복지몰 메인 개선 인터랙티브 데모 — 7월 리뉴얼 프로토타입">
+<meta name="robots" content="noindex">
+<title>케어브릿지 복지몰 메인 개선 데모</title>
+<style>
+  :root{
+    --blue:#1F63FF; --blue-700:#1550E0; --blue-50:#EEF3FF; --blue-100:#DCE6FF;
+    --ink:#0E1726; --muted:#5A6A82; --faint:#8A97AB; --line:#E4E9F2;
+    --bg:#EAEEF6; --card:#FFFFFF; --coral:#FF5A5F; --coral-50:#FFEDED;
+    --good:#12B76A; --warn:#F79009; --warn-50:#FFF6E8;
+    --shadow:0 18px 50px -18px rgba(16,30,56,.35);
+    --font:"Pretendard","Pretendard Variable",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:
+      radial-gradient(1200px 600px at 50% -10%, #F4F7FD 0%, var(--bg) 60%);
+    color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;
+    line-height:1.5;padding:28px 16px 64px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+
+  /* ---- header ---- */
+  .pagehead{text-align:center;margin-bottom:22px;}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--blue);font-weight:700;}
+  .pagehead h1{font-size:26px;line-height:1.25;margin:8px 0 6px;font-weight:800;
+    text-wrap:balance;letter-spacing:-.02em;}
+  .pagehead p{margin:0;color:var(--muted);font-size:14px;}
+
+  /* ---- segmented control ---- */
+  .seg{display:flex;gap:4px;background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:4px;width:max-content;margin:22px auto 26px;
+    box-shadow:0 4px 14px -8px rgba(16,30,56,.25);}
+  .seg button{border:0;background:transparent;font-family:inherit;cursor:pointer;
+    font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 18px;border-radius:999px;
+    transition:.2s;white-space:nowrap;}
+  .seg button[aria-selected="true"]{background:var(--blue);color:#fff;
+    box-shadow:0 6px 16px -6px rgba(31,99,255,.6);}
+  .seg button:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+
+  .view{display:none;animation:fade .35s ease both;}
+  .view.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .stage{display:grid;grid-template-columns:390px 1fr;gap:36px;align-items:start;
+    justify-content:center;}
+  @media(max-width:900px){.stage{grid-template-columns:1fr;justify-items:center;}}
+
+  /* ---- phone ---- */
+  .phone{width:390px;max-width:92vw;background:#fff;border-radius:44px;
+    box-shadow:var(--shadow);border:1px solid #dfe5f0;padding:12px;position:relative;}
+  .screen{background:#F7F9FD;border-radius:32px;overflow:hidden;position:relative;
+    height:748px;display:flex;flex-direction:column;}
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);
+    width:118px;height:26px;background:#0E1726;border-radius:999px;z-index:20;}
+  .scroll{overflow-y:auto;flex:1;scrollbar-width:thin;}
+  .scroll::-webkit-scrollbar{width:0}
+  .pad{padding:0 16px;}
+
+  /* app top bar */
+  .appbar{padding:40px 16px 12px;display:flex;align-items:center;justify-content:space-between;
+    background:#fff;position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);}
+  .loc{display:flex;align-items:center;gap:4px;font-weight:700;font-size:15px;}
+  .loc svg{width:16px;height:16px;color:var(--blue);}
+  .loc .chev{width:14px;height:14px;color:var(--faint);}
+  .brand{font-weight:800;color:var(--blue);letter-spacing:-.02em;font-size:16px;}
+  .bell{width:22px;height:22px;color:var(--ink);}
+
+  /* search */
+  .search{margin:14px 0 6px;display:flex;align-items:center;gap:9px;background:#fff;
+    border:1.6px solid var(--blue);border-radius:14px;padding:13px 15px;
+    box-shadow:0 8px 20px -12px rgba(31,99,255,.45);}
+  .search svg{width:19px;height:19px;color:var(--blue);flex:none;}
+  .search span{color:var(--faint);font-size:14.5px;font-weight:500;}
+
+  /* section */
+  .sec{margin:20px 0 6px;}
+  .sec-h{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 12px;}
+  .sec-h h3{font-size:16.5px;margin:0;font-weight:800;letter-spacing:-.02em;}
+  .sec-h h3 b{color:var(--blue);}
+  .sec-h .more{font-size:12.5px;color:var(--faint);font-weight:600;}
+  .tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;
+    padding:3px 7px;border-radius:6px;background:var(--blue-50);color:var(--blue-700);
+    letter-spacing:.01em;vertical-align:middle;margin-left:7px;}
+  .tag.hot{background:var(--coral-50);color:#E23B40;}
+  .tag.low{background:#F1F3F7;color:var(--faint);}
+
+  /* departments grid */
+  .depts{display:grid;grid-template-columns:repeat(5,1fr);gap:10px 6px;}
+  .dept{border:0;background:transparent;font-family:inherit;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:7px;padding:4px 0;}
+  .dept i{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;
+    background:var(--blue-50);transition:.18s;}
+  .dept i svg{width:26px;height:26px;color:var(--blue-700);}
+  .dept:hover i{background:var(--blue-100);transform:translateY(-2px);}
+  .dept span{font-size:11.5px;font-weight:600;color:#2b3a52;}
+  .dept .rk{font-size:9.5px;color:var(--coral);font-weight:800;}
+
+  /* personalization */
+  .perso{background:linear-gradient(180deg,#F3F7FF, #fff);border:1px solid var(--blue-100);
+    border-radius:18px;padding:14px 14px 16px;}
+  .perso .who{display:flex;align-items:center;gap:7px;margin-bottom:12px;}
+  .perso .who .av{width:26px;height:26px;border-radius:8px;background:var(--blue);color:#fff;
+    font-size:12px;font-weight:800;display:grid;place-items:center;}
+  .perso .who b{font-size:14px;}
+  .perso .who small{color:var(--muted);font-size:11.5px;}
+  .rail{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;margin:0 -2px;scrollbar-width:none;}
+  .rail::-webkit-scrollbar{height:0}
+  .pcard{flex:0 0 132px;background:#fff;border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;}
+  .pcard .ph{height:76px;background:linear-gradient(135deg,#DCE6FF,#EEF3FF);position:relative;}
+  .pcard .ph .disc{position:absolute;left:8px;top:8px;background:var(--coral);color:#fff;
+    font-size:10px;font-weight:800;padding:2px 6px;border-radius:6px;}
+  .pcard .b{padding:9px 10px 11px;}
+  .pcard .b .nm{font-size:12.5px;font-weight:700;line-height:1.3;}
+  .pcard .b .price{margin-top:6px;font-size:13.5px;font-weight:800;color:var(--ink);
+    font-variant-numeric:tabular-nums;}
+  .pcard .b .price s{color:var(--faint);font-weight:500;font-size:11px;margin-left:4px;}
+  .pcard .b .rv{margin-top:4px;font-size:10.5px;color:var(--muted);}
+
+  /* recently viewed */
+  .rrail{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;margin:0 -2px;scrollbar-width:none;}
+  .rrail::-webkit-scrollbar{height:0}
+  .rcard{flex:0 0 112px;}
+  .rcard .th{height:112px;border-radius:14px;display:grid;align-content:center;justify-items:center;
+    gap:6px;padding:10px;color:#fff;text-align:center;overflow:hidden;position:relative;}
+  .rcard .th .badge{font-size:9px;font-weight:800;letter-spacing:.02em;background:rgba(255,255,255,.22);
+    border:1px solid rgba(255,255,255,.35);border-radius:6px;padding:2px 6px;}
+  .rcard .th .cap{font-size:11.5px;font-weight:800;line-height:1.25;text-shadow:0 1px 5px rgba(0,0,0,.35);}
+  .rcard .nm{margin-top:7px;font-size:12px;font-weight:700;line-height:1.3;}
+  .rcard .hos{font-size:10.5px;color:var(--muted);margin-top:2px;}
+
+  /* deal banner */
+  .deal{flex:0 0 88%;border-radius:16px;padding:16px 16px;color:#fff;
+    background:linear-gradient(120deg,#1F63FF,#5B8CFF);position:relative;overflow:hidden;}
+  .deal:nth-child(2){background:linear-gradient(120deg,#12143A,#2A3AA0);}
+  .deal small{font-size:11px;opacity:.9;font-weight:700;letter-spacing:.02em;}
+  .deal h4{margin:6px 0 2px;font-size:18px;font-weight:800;letter-spacing:-.02em;}
+  .deal p{margin:0;font-size:12px;opacity:.92;}
+  .deal .pill{position:absolute;right:14px;bottom:14px;background:rgba(255,255,255,.2);
+    border:1px solid rgba(255,255,255,.35);border-radius:999px;font-size:11px;font-weight:700;
+    padding:5px 11px;}
+
+  /* shortcut chips */
+  .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;margin:0 -2px;scrollbar-width:none;}
+  .chips::-webkit-scrollbar{height:0}
+  .chip{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;
+    padding:8px 13px;font-size:12.5px;font-weight:600;color:#33425c;white-space:nowrap;}
+  .chip b{color:var(--blue);}
+
+  /* review list */
+  .rev{display:flex;gap:11px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);}
+  .rev:last-child{border-bottom:0;}
+  .rev .th{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#E7EDFA,#F5F8FE);flex:none;}
+  .rev .m{flex:1;min-width:0;}
+  .rev .m .nm{font-size:13.5px;font-weight:700;}
+  .rev .m .st{font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .rev .m .st .star{color:#FFB020;font-weight:800;}
+  .rev .go{font-size:13px;font-weight:800;color:var(--blue);white-space:nowrap;}
+
+  /* bottom tab */
+  .tabbar{display:flex;background:#fff;border-top:1px solid var(--line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-size:10.5px;font-weight:600;color:var(--faint);}
+  .tab svg{width:22px;height:22px;}
+  .tab.on{color:var(--blue);}
+
+  .caption{max-width:390px;margin:12px auto 0;text-align:center;font-size:12.5px;color:var(--muted);}
+  .caption b{color:var(--ink);}
+
+  /* onboarding */
+  .steps{display:flex;gap:6px;padding:40px 16px 4px;background:#fff;}
+  .steps .s{flex:1;height:4px;border-radius:2px;background:var(--line);}
+  .steps .s.on{background:var(--blue);}
+  .ob-h{padding:22px 20px 6px;}
+  .ob-h .k{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.04em;}
+  .ob-h h2{font-size:21px;margin:8px 0 6px;font-weight:800;letter-spacing:-.02em;line-height:1.3;text-wrap:balance;}
+  .ob-h p{margin:0;color:var(--muted);font-size:13px;}
+  .selgrid{display:flex;flex-wrap:wrap;gap:9px;padding:18px 20px 8px;}
+  .pick{border:1.5px solid var(--line);background:#fff;font-family:inherit;cursor:pointer;
+    border-radius:12px;padding:11px 15px;font-size:14px;font-weight:600;color:#33425c;transition:.16s;
+    display:flex;align-items:center;gap:7px;}
+  .pick .ic{width:20px;height:20px;color:var(--faint);}
+  .pick[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-50);color:var(--blue-700);}
+  .pick[aria-pressed="true"] .ic{color:var(--blue);}
+  .pick:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+  .ob-foot{margin-top:auto;padding:14px 18px calc(18px + env(safe-area-inset-bottom));
+    background:linear-gradient(#F7F9FD00,#F7F9FD 30%);}
+  .cta{width:100%;border:0;background:var(--blue);color:#fff;font-family:inherit;font-weight:800;
+    font-size:15.5px;border-radius:14px;padding:15px;cursor:pointer;transition:.16s;
+    box-shadow:0 12px 24px -10px rgba(31,99,255,.6);}
+  .cta:disabled{background:#C7D2E4;box-shadow:none;cursor:not-allowed;}
+  .cta.ghost{background:#fff;color:var(--muted);border:1px solid var(--line);box-shadow:none;
+    font-weight:700;margin-top:9px;}
+  .done{padding:34px 24px;text-align:center;}
+  .done .mk{width:74px;height:74px;border-radius:50%;background:var(--blue-50);display:grid;place-items:center;margin:8px auto 18px;}
+  .done .mk svg{width:38px;height:38px;color:var(--blue);}
+  .done h2{font-size:22px;margin:0 0 8px;font-weight:800;letter-spacing:-.02em;}
+  .done p{color:var(--muted);font-size:13.5px;margin:0 auto;max-width:260px;}
+  .summ{margin:20px 0 0;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .summ .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:13px;}
+  .summ .row+.row{border-top:1px solid var(--line);}
+  .summ .row .lb{color:var(--muted);}
+  .summ .row .vl{font-weight:700;text-align:right;color:var(--ink);}
+
+  /* rationale */
+  .rat{max-width:960px;margin:0 auto;}
+  .rat .lead{text-align:center;color:var(--muted);font-size:14px;max-width:600px;margin:0 auto 24px;}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  @media(max-width:720px){.cards{grid-template-columns:1fr;}}
+  .rc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 18px 16px;
+    box-shadow:0 10px 30px -22px rgba(16,30,56,.4);position:relative;overflow:hidden;}
+  .rc .n{font-size:11px;font-weight:800;color:var(--blue);letter-spacing:.06em;}
+  .rc h4{margin:8px 0 4px;font-size:16px;font-weight:800;letter-spacing:-.01em;}
+  .rc .chg{font-size:13px;color:#38465e;margin:0 0 14px;}
+  .rc-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px;}
+  .rc-tab{font-size:10.5px;font-weight:800;letter-spacing:.02em;color:var(--blue-700);
+    background:var(--blue-50);border-radius:999px;padding:3px 10px;white-space:nowrap;}
+  .rc .pts{margin:8px 0 13px;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;}
+  .rc .pts li{position:relative;padding-left:16px;font-size:13px;color:#38465e;line-height:1.5;}
+  .rc .pts li::before{content:"";position:absolute;left:2px;top:7px;width:5px;height:5px;
+    border-radius:2px;background:var(--blue);}
+  .rc .pts li b{color:var(--ink);font-weight:800;}
+  .rc .pts li s{color:var(--faint);font-weight:500;}
+  .rc .ev{display:flex;flex-wrap:wrap;gap:8px;}
+  .metric{display:flex;flex-direction:column;background:var(--blue-50);border-radius:10px;
+    padding:8px 11px;min-width:92px;}
+  .metric .v{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--blue-700);letter-spacing:-.02em;}
+  .metric .l{font-size:10.5px;color:var(--muted);font-weight:600;margin-top:1px;}
+  .metric.warn{background:var(--warn-50);}
+  .metric.warn .v{color:#B54708;}
+  .src{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--faint);}
+  .src b{color:var(--muted);font-weight:700;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;margin:26px auto 0;
+    font-size:11.5px;color:var(--muted);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:9px;height:9px;border-radius:3px;}
+  .foot{max-width:960px;margin:30px auto 0;text-align:center;font-size:11.5px;color:var(--faint);line-height:1.6;}
+
+  /* ---- overlays / modals (in-phone) ---- */
+  .ovl{position:absolute;inset:0;z-index:40;}
+  .ovl[hidden]{display:none;}
+  .backdrop{position:absolute;inset:0;background:rgba(14,23,38,.45);animation:fade .18s ease;}
+  @keyframes slideup{from{transform:translateY(16px);opacity:.3}to{transform:none;opacity:1}}
+  .search[role]{cursor:pointer;}
+  /* search overlay (full) */
+  .searchscreen{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;animation:slideup .22s ease;}
+  .ss-head{display:flex;align-items:center;gap:10px;padding:40px 14px 12px;border-bottom:1px solid var(--line);}
+  .ss-head .bk{width:26px;height:26px;color:var(--ink);flex:none;background:none;border:0;cursor:pointer;padding:0;}
+  .ss-head .box{flex:1;display:flex;align-items:center;gap:8px;background:#F1F4F9;border-radius:12px;padding:11px 13px;}
+  .ss-head .box svg{width:18px;height:18px;color:var(--blue);flex:none;}
+  .ss-head .box input{border:0;background:none;font-family:inherit;font-size:14.5px;width:100%;outline:none;color:var(--ink);}
+  .ss-body{padding:16px;overflow-y:auto;flex:1;}
+  .ss-body .lbl{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:800;color:#3a475d;margin:8px 0 11px;}
+  .ss-body .lbl button{border:0;background:none;color:var(--faint);font-size:11.5px;font-family:inherit;cursor:pointer;}
+  .recentchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+  .ss-body .lbl .lbl-sub{font-weight:600;color:var(--faint);font-size:11px;}
+  .ptabs{display:flex;gap:7px;overflow-x:auto;margin:0 0 11px;scrollbar-width:none;}
+  .ptabs::-webkit-scrollbar{height:0}
+  .ptabs .pt{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 15px;font-family:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:.14s;white-space:nowrap;}
+  .ptabs .pt.on{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .pbody{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;background:linear-gradient(180deg,#F3F7FF,#fff);border:1px solid var(--blue-100);border-radius:14px;padding:14px;}
+  .pchip{border:1px solid var(--blue-100);background:#fff;border-radius:999px;padding:8px 13px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--blue-700);cursor:pointer;transition:.14s;}
+  .pchip:hover{border-color:var(--blue);background:var(--blue-50);}
+  .hotchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px;}
+  .hotchip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;font-family:inherit;font-size:13px;font-weight:600;color:#33425c;cursor:pointer;transition:.14s;white-space:nowrap;}
+  .hotchip:hover{border-color:var(--blue);color:var(--blue);}
+  .trend{display:grid;grid-template-columns:1fr 1fr;column-gap:20px;}
+  .trend-col{display:flex;flex-direction:column;}
+  .trend .tr{display:flex;align-items:center;gap:12px;padding:9px 2px;border:0;background:none;font-family:inherit;cursor:pointer;text-align:left;width:100%;}
+  .trend .tr .rk{width:15px;font-weight:800;font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink);flex:none;}
+  .trend .tr .kw{font-size:13.5px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .trend .tr:hover .kw{color:var(--blue);}
+  .rc-chip{display:inline-flex;align-items:center;gap:7px;background:#F1F4F9;border-radius:999px;padding:8px 11px 8px 14px;font-size:12.5px;font-weight:600;color:#33425c;}
+  .rc-chip button{border:0;background:none;color:var(--faint);cursor:pointer;font-size:15px;line-height:1;padding:0;}
+  .rc-chip .rc-t{font-family:inherit;font-size:12.5px;font-weight:600;color:#33425c;}
+  .rc-chip .rc-t:hover{color:var(--blue);}
+  .rc-chip .rc-x{font-size:15px;color:var(--faint);}
+  .poprank{display:flex;flex-direction:column;}
+  .poprank .pr{display:flex;align-items:center;gap:13px;padding:11px 2px;border:0;background:none;font-family:inherit;cursor:pointer;text-align:left;width:100%;}
+  .poprank .pr .rk{width:16px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums;font-size:15px;}
+  .poprank .pr .kw{font-size:14.5px;font-weight:600;color:var(--ink);}
+  .poprank .pr .up{margin-left:auto;font-size:10px;color:var(--coral);font-weight:800;}
+  /* bottom sheet */
+  .sheet{position:absolute;left:0;right:0;bottom:0;max-height:84%;background:#fff;
+    border-radius:22px 22px 0 0;display:flex;flex-direction:column;animation:slideup .24s ease;}
+  .sheet-h{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 13px;border-bottom:1px solid var(--line);}
+  .sheet-h h3{margin:0;font-size:16.5px;font-weight:800;letter-spacing:-.02em;}
+  .sheet-h .x{width:30px;height:30px;border-radius:9px;border:0;background:#F1F4F9;cursor:pointer;display:grid;place-items:center;color:var(--ink);}
+  .sheet-h .x svg{width:18px;height:18px;}
+  .sheet-b{padding:16px 18px 26px;overflow-y:auto;}
+  .sheet-note{background:var(--coral-50);color:#E23B40;font-size:12px;font-weight:700;border-radius:10px;padding:10px 13px;margin-bottom:14px;}
+  .allgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .allcat{border:1px solid var(--line);border-radius:12px;padding:12px 13px;}
+  .allcat .ct{font-size:13px;font-weight:800;margin-bottom:9px;color:var(--ink);}
+  .allcat .it{display:flex;flex-wrap:wrap;gap:6px;}
+  .allcat .it span{font-size:11.5px;background:var(--blue-50);color:var(--blue-700);border-radius:6px;padding:3px 8px;font-weight:600;}
+  .deal-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);}
+  .deal-row:last-child{border-bottom:0;}
+  .deal-row .dth{width:56px;height:56px;border-radius:12px;flex:none;background:linear-gradient(135deg,#DCE6FF,#EEF3FF);}
+  .deal-row .dm{flex:1;min-width:0;}
+  .deal-row .dm .dn{font-size:13.5px;font-weight:700;}
+  .deal-row .dm .dh{font-size:11px;color:var(--muted);margin-top:2px;}
+  .deal-row .dm .dp{font-size:14px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums;}
+  .deal-row .dm .dp s{color:var(--faint);font-weight:500;font-size:11px;margin-left:5px;}
+  .deal-row .dbtn{font-size:12px;font-weight:800;color:#fff;background:var(--blue);border-radius:9px;padding:9px 14px;border:0;cursor:pointer;flex:none;}
+  /* full-screen sub pages (진료과 상세 / 특가전) */
+  .subscreen{position:absolute;inset:0;background:#F7F9FD;display:flex;flex-direction:column;animation:slideup .22s ease;}
+  .sub-head{display:flex;align-items:center;gap:10px;padding:40px 14px 12px;background:#fff;border-bottom:1px solid var(--line);}
+  .sub-head .bk{width:26px;height:26px;color:var(--ink);flex:none;background:none;border:0;cursor:pointer;padding:0;}
+  .sub-head .sbox{flex:1;display:flex;align-items:center;gap:8px;background:#fff;border:1.6px solid var(--blue);border-radius:12px;padding:10px 13px;cursor:pointer;}
+  .sub-head .sbox svg{width:17px;height:17px;color:var(--blue);flex:none;}
+  .sub-head .sbox span{color:var(--faint);font-size:13px;}
+  .sub-head .ttl{flex:1;text-align:center;font-size:16.5px;font-weight:800;margin-right:26px;}
+  .sub-body{overflow-y:auto;flex:1;}
+  .fairbtn{margin:14px 16px;display:flex;align-items:center;gap:12px;width:calc(100% - 32px);text-align:left;cursor:pointer;
+    background:linear-gradient(100deg,#EDF2FF,#F3ECFF);border:1px solid var(--blue-100);border-radius:14px;padding:14px 16px;}
+  .fairbtn .em{width:38px;height:38px;border-radius:11px;background:var(--blue);color:#fff;display:grid;place-items:center;flex:none;}
+  .fairbtn .em svg{width:20px;height:20px;}
+  .fairbtn .tx{flex:1;} .fairbtn .tx b{font-size:14.5px;font-weight:800;display:block;} .fairbtn .tx small{font-size:11px;color:var(--muted);}
+  .fairbtn .ar{color:var(--blue);font-weight:800;font-size:18px;}
+  .dd-tabs{display:flex;gap:18px;padding:4px 18px 0;background:#fff;border-bottom:1px solid var(--line);}
+  .dd-tabs button{border:0;background:none;font-family:inherit;font-size:14px;font-weight:700;color:var(--faint);padding:12px 2px;cursor:pointer;border-bottom:2.5px solid transparent;}
+  .dd-tabs button.on{color:var(--ink);border-bottom-color:var(--ink);}
+  .dd-filters{display:flex;gap:7px;overflow-x:auto;padding:12px 16px;background:#fff;scrollbar-width:none;}
+  .dd-filters::-webkit-scrollbar{height:0}
+  .ddf{flex:none;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:600;color:#33425c;background:#fff;white-space:nowrap;}
+  .ddf.act{border-color:var(--blue);color:var(--blue);background:var(--blue-50);}
+  .slist{padding:2px 16px 24px;background:#fff;}
+  .scard{padding:16px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;}
+  .scard .sth{width:78px;height:78px;border-radius:12px;flex:none;background:linear-gradient(135deg,#E7EDFA,#F5F8FE);}
+  .scard .sm{flex:1;min-width:0;}
+  .scard .hos{font-size:11px;color:var(--muted);}
+  .scard .snm{font-size:14.5px;font-weight:700;margin:3px 0;}
+  .scard .rt{font-size:11.5px;color:var(--muted);} .scard .rt b{color:#FFB020;}
+  .scard .pr{margin-top:5px;} .scard .pr s{color:var(--faint);font-size:11.5px;}
+  .scard .now{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;} .scard .now .pct{color:var(--blue);margin-right:5px;}
+  .scard .cpn{margin-top:8px;border:1px solid var(--blue-100);background:var(--blue-50);border-radius:9px;padding:8px;text-align:center;font-size:12px;font-weight:700;color:var(--blue-700);}
+  /* 특가전 page */
+  .fair-tabs{display:flex;gap:16px;overflow-x:auto;padding:4px 18px 0;background:#fff;border-bottom:1px solid var(--line);scrollbar-width:none;}
+  .fair-tabs::-webkit-scrollbar{height:0}
+  .fair-tabs button{border:0;background:none;font-family:inherit;font-size:14px;font-weight:700;color:var(--faint);padding:12px 2px;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;}
+  .fair-tabs button.on{color:var(--blue);border-bottom-color:var(--blue);}
+  .fair-sec{padding:16px 16px 0;}
+  .fair-sec h4{font-size:16px;font-weight:800;margin:0 0 12px;}
+  .fdeal{margin-bottom:18px;}
+  .fdeal .cd{font-size:12px;color:var(--blue);font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+  .fdeal .cd svg{width:14px;height:14px;}
+  .fdeal .cd .cd-time{font-variant-numeric:tabular-nums;}
+  .fdeal .bn{border-radius:14px;height:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#fff;
+    background:linear-gradient(100deg,#7DE3CE,#9DBAF6,#CBAAF2);text-shadow:0 1px 6px rgba(60,40,90,.28);}
+  .fdeal .bn .t{font-size:19px;font-weight:800;letter-spacing:-.02em;}
+  .fdeal .bn .go{font-size:12.5px;font-weight:700;opacity:.95;}
+
+  /* ---- signup flow (screenshot walkthrough) ---- */
+  .sg{max-width:540px;margin:0 auto;}
+  .sg-frame{display:block;width:100%;border:1px solid #dfe5f0;padding:0;background:#fff;cursor:pointer;
+    position:relative;border-radius:22px;overflow:hidden;box-shadow:var(--shadow);}
+  .sg-frame img{display:block;width:100%;height:auto;animation:fade .3s ease both;}
+  .sg-frame:focus-visible{outline:2px solid var(--blue);outline-offset:3px;}
+  .sg-tap{position:absolute;right:16px;bottom:16px;background:var(--blue);color:#fff;font-size:13px;font-weight:800;
+    border-radius:999px;padding:10px 17px;box-shadow:0 12px 26px -8px rgba(31,99,255,.75);
+    display:inline-flex;align-items:center;gap:6px;pointer-events:none;animation:sgpulse 1.7s ease-in-out infinite;}
+  @keyframes sgpulse{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(-5px);opacity:.92}}
+  .sg-act{text-align:center;margin:18px auto 0;font-size:14.5px;font-weight:700;color:var(--muted);}
+  .sg-act b{color:var(--ink);font-weight:800;}
+  .sg-act b em{color:var(--blue);font-style:normal;}
+  .sg-ctl{display:flex;align-items:center;justify-content:center;gap:16px;margin:14px 0 0;}
+  .sg-dots{display:flex;gap:6px;}
+  .sg-dots i{width:7px;height:7px;border-radius:50%;background:var(--line);transition:.22s;}
+  .sg-dots i.on{background:var(--blue);width:22px;border-radius:4px;}
+  .sg-nav{border:1px solid var(--line);background:#fff;font-family:inherit;font-weight:700;font-size:12.5px;
+    color:var(--muted);border-radius:999px;padding:8px 15px;cursor:pointer;transition:.16s;}
+  .sg-nav:hover:not(:disabled){border-color:var(--blue);color:var(--blue);}
+  .sg-nav:disabled{opacity:.35;cursor:not-allowed;}
+  .sg-count{font-size:12px;color:var(--faint);font-weight:700;font-variant-numeric:tabular-nums;}
+
+  /* ---- onboarding: sort toggle · detail groups · spec card ---- */
+  .obsort{display:inline-flex;gap:3px;background:#EEF1F7;border-radius:999px;padding:3px;margin-top:14px;}
+  .obsort button{border:0;background:transparent;font-family:inherit;cursor:pointer;font-size:12px;font-weight:700;
+    color:var(--muted);padding:7px 13px;border-radius:999px;transition:.16s;display:inline-flex;align-items:center;gap:5px;}
+  .obsort button.on{background:#fff;color:var(--blue);box-shadow:0 2px 6px -2px rgba(16,30,56,.25);}
+  .obsort .soon{font-size:9px;font-weight:800;color:#fff;background:var(--warn);border-radius:5px;padding:1px 4px;letter-spacing:.02em;}
+  .selgrid.tight{gap:7px;padding:10px 0 0;}
+  .selgroups{padding:14px 20px 8px;}
+  .selgrp{margin-bottom:16px;}
+  .selgrp .grp-t{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+  .selgrp .grp-t .gic{width:18px;height:18px;color:var(--blue);display:inline-flex;}
+  .selgrp .grp-t .gic svg{width:18px;height:18px;}
+  .pick.sm{padding:9px 12px;font-size:12.5px;}
+  .nodetail{font-size:12.5px;color:var(--muted);background:var(--blue-50);border-radius:12px;padding:13px 15px;margin:4px 0 0;}
+
+  .obspec{max-width:420px;}
+  .obspec .spec-h{font-size:13px;font-weight:800;color:var(--ink);letter-spacing:-.01em;margin:0 0 12px;
+    padding-bottom:10px;border-bottom:1px solid var(--line);}
+  .spec .sc{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);}
+  .spec .sc:last-child{border-bottom:0;}
+  .spec .sc-n{flex:none;width:26px;height:26px;border-radius:8px;background:var(--blue-50);color:var(--blue-700);
+    font-size:11px;font-weight:800;display:grid;place-items:center;font-variant-numeric:tabular-nums;}
+  .spec .sc-b{flex:1;min-width:0;}
+  .spec .sc-b b{font-size:13.5px;font-weight:800;color:var(--ink);}
+  .spec .sc-b p{margin:3px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55;}
+  .spec .sc-b p b{font-weight:800;color:#38465e;font-size:12.5px;}
+  .spec .sc-b em{font-style:normal;font-weight:700;color:var(--blue);}
+  .spec .sc-b a{color:var(--blue);font-weight:700;text-decoration:none;border-bottom:1px solid var(--blue-100);}
+  .now-badge,.soon-badge{display:inline-block;font-size:10px;font-weight:800;border-radius:5px;padding:1px 6px;margin-left:2px;white-space:nowrap;}
+  .now-badge{background:var(--blue-50);color:var(--blue-700);}
+  .soon-badge{background:var(--warn-50);color:#B54708;}
+  .spec-src{margin:14px 0 0;font-size:11px;color:var(--faint);}
+  @media(max-width:900px){.obspec{max-width:420px;margin:8px auto 0;}}
+
+  /* ---- STEP 3 관심 지역 (A 하이브리드 / B 검색우선) ---- */
+  .locbody{padding:16px 20px 8px;}
+  .locbody .selgrid{padding:0;gap:9px;}
+  .geo{width:100%;display:flex;align-items:center;gap:12px;border:1.5px solid var(--blue-100);background:var(--blue-50);
+    border-radius:14px;padding:12px 14px;font-family:inherit;cursor:pointer;text-align:left;margin-bottom:14px;transition:.16s;}
+  .geo:hover{border-color:var(--blue);}
+  .geo .geoic{width:36px;height:36px;border-radius:11px;background:#fff;display:grid;place-items:center;color:var(--blue);flex:none;}
+  .geo .geoic svg{width:20px;height:20px;} .geo .geoic.on{background:var(--blue);color:#fff;}
+  .geo .geotx{flex:1;min-width:0;} .geo .geotx b{display:block;font-size:14px;font-weight:800;color:var(--ink);} .geo .geotx small{font-size:11.5px;color:var(--muted);}
+  .geo .geoar{color:var(--blue);font-weight:800;font-size:18px;} .geo .geochk{color:var(--blue);} .geo .geochk svg{width:22px;height:22px;}
+  .selstrip{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px;}
+  .selstrip.empty{font-size:12px;color:var(--faint);background:#F4F6FA;border-radius:10px;padding:11px 13px;}
+  .selstrip .s{display:inline-flex;align-items:center;gap:5px;background:var(--blue);color:#fff;border-radius:999px;padding:7px 8px 7px 11px;font-size:12.5px;font-weight:700;}
+  .selstrip .s svg{width:13px;height:13px;}
+  .selstrip .s button{border:0;background:rgba(255,255,255,.28);color:#fff;width:17px;height:17px;border-radius:50%;cursor:pointer;font-size:12px;line-height:1;display:grid;place-items:center;padding:0;margin-left:2px;}
+  .loclbl{display:flex;align-items:baseline;gap:8px;font-size:12.5px;font-weight:800;color:#3a475d;margin:4px 0 11px;}
+  .loclbl span{font-size:11px;font-weight:600;color:var(--faint);}
+  .pick.wide{width:100%;justify-content:center;margin-top:11px;}
+  .locsearchbtn{width:100%;display:flex;align-items:center;gap:9px;border:1px dashed #C7D2E4;background:#fff;border-radius:12px;
+    padding:13px 14px;font-family:inherit;cursor:pointer;margin-top:12px;color:#5A6A82;font-size:13px;font-weight:600;transition:.16s;}
+  .locsearchbtn:hover{border-color:var(--blue);color:var(--blue);}
+  .locsearchbtn svg{width:17px;height:17px;color:var(--blue);flex:none;} .locsearchbtn .ar{margin-left:auto;color:var(--blue);font-weight:800;}
+  .locsearchbox{display:flex;align-items:center;gap:9px;border:1.6px solid var(--blue);border-radius:12px;padding:12px 14px;margin-bottom:13px;
+    box-shadow:0 8px 20px -12px rgba(31,99,255,.45);}
+  .locsearchbox svg{width:18px;height:18px;color:var(--blue);flex:none;}
+  .locsearchbox input{border:0;background:none;font-family:inherit;font-size:14.5px;width:100%;outline:none;color:var(--ink);}
+  .locback{border:0;background:none;font-family:inherit;color:var(--muted);font-weight:700;font-size:12.5px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:4px;padding:0 0 12px;}
+  .locback svg{width:16px;height:16px;}
+  .locres{display:flex;flex-direction:column;}
+  .locres .r{display:flex;align-items:center;gap:11px;padding:11px 4px;border:0;background:none;font-family:inherit;cursor:pointer;
+    text-align:left;width:100%;border-bottom:1px solid var(--line);}
+  .locres .r:last-child{border-bottom:0;}
+  .locres .ric{width:30px;height:30px;border-radius:9px;background:var(--blue-50);display:grid;place-items:center;color:var(--blue-700);flex:none;transition:.14s;}
+  .locres .ric svg{width:17px;height:17px;}
+  .locres .rl{font-size:14px;font-weight:700;color:var(--ink);}
+  .locres .rk{font-size:11px;color:var(--faint);}
+  .locres .rchk{margin-left:auto;color:var(--blue);} .locres .rchk svg{width:18px;height:18px;}
+  .locres .r[aria-pressed="true"] .ric{background:var(--blue);color:#fff;}
+  .locres .r[aria-pressed="true"] .rl{color:var(--blue-700);}
+  .locempty{font-size:12.5px;color:var(--muted);padding:20px 4px;text-align:center;line-height:1.6;}
+
+  /* ---- 시술 리스트 탭 ---- */
+  .pl-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:40px 16px 11px;
+    background:#fff;position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);}
+  .pl-region{display:inline-flex;align-items:center;gap:3px;border:0;background:none;font-family:inherit;cursor:pointer;
+    font-size:15px;font-weight:800;color:var(--ink);padding:0;}
+  .pl-region svg{width:16px;height:16px;color:var(--blue);}
+  .pl-region .plchev svg{width:14px;height:14px;color:var(--faint);}
+  .pl-sort{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-family:inherit;
+    font-size:12.5px;font-weight:700;color:#33425c;cursor:pointer;} .pl-sort span{color:var(--faint);}
+  .pl-cats{display:flex;gap:7px;overflow-x:auto;padding:12px 16px 4px;background:#fff;scrollbar-width:none;}
+  .pl-cats::-webkit-scrollbar{height:0}
+  .plc{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-family:inherit;
+    font-size:12.5px;font-weight:600;color:#33425c;cursor:pointer;white-space:nowrap;transition:.14s;}
+  .plc.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .pl-filters{display:flex;gap:7px;overflow-x:auto;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line);scrollbar-width:none;}
+  .pl-filters::-webkit-scrollbar{height:0}
+  .plf{flex:none;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:600;color:#33425c;background:#fff;white-space:nowrap;}
+  .pl-cnt{padding:13px 16px 2px;font-size:12px;color:var(--muted);} .pl-cnt b{color:var(--ink);}
+  .pl-cnt .pl-adnote{color:var(--blue);font-weight:700;}
+  .pl-list{padding:0 16px 8px;}
+  .scard .sth{position:relative;}
+  .scard.ad .sth{outline:2px solid var(--blue);outline-offset:-2px;}
+  .adbadge{position:absolute;left:5px;top:5px;background:rgba(14,23,38,.74);color:#fff;font-size:9px;font-weight:800;
+    padding:2px 6px;border-radius:6px;letter-spacing:.04em;}
+  /* 시술리스트 상단 검색 헤더 */
+  .pl-sbar{padding:38px 16px 8px;background:#fff;position:sticky;top:0;z-index:12;}
+  .pl-sbar .box{display:flex;align-items:center;gap:9px;border:1.6px solid var(--blue);border-radius:12px;padding:12px 13px;box-shadow:0 8px 20px -12px rgba(31,99,255,.4);width:100%;background:#fff;font-family:inherit;cursor:pointer;text-align:left;}
+  .pl-sbar .box svg{width:18px;height:18px;color:var(--blue);flex:none;}
+  .pl-sbar .pl-sbtxt{font-size:14px;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .pl-sbar .pl-sbtxt.has{color:var(--ink);font-weight:600;}
+  .pl-eg{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:6px 16px 10px;background:#fff;scrollbar-width:none;border-bottom:1px solid var(--line);}
+  .pl-eg::-webkit-scrollbar{height:0}
+  .pl-eg>span{font-size:11px;font-weight:700;color:var(--faint);flex:none;}
+  .pl-eg button{flex:none;border:1px solid var(--blue-100);background:var(--blue-50);color:var(--blue-700);border-radius:999px;padding:6px 11px;font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .pl-eg button.clr{border-color:var(--line);background:#fff;color:var(--muted);}
+  .pl-rel{padding:11px 16px 0;font-size:13px;color:var(--muted);} .pl-rel b{color:var(--ink);font-weight:700;}
+  .pl-ad{margin:12px 16px;border-radius:12px;padding:14px 16px;background:linear-gradient(100deg,#1B3A9E,#2E5BD0);color:#fff;position:relative;overflow:hidden;}
+  .pl-ad-t{font-size:14.5px;font-weight:800;letter-spacing:-.01em;} .pl-ad-s{font-size:11px;opacity:.85;margin-top:3px;}
+  .pl-ad-tag{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);font-size:9px;font-weight:800;border-radius:5px;padding:1px 5px;}
+  .pl-tabs2{display:flex;gap:20px;padding:6px 16px 0;background:#fff;border-bottom:1px solid var(--line);}
+  .plt2{border:0;background:none;font-family:inherit;font-size:15px;font-weight:800;color:var(--faint);padding:12px 2px;cursor:pointer;border-bottom:2.5px solid transparent;}
+  .plt2.on{color:var(--ink);border-bottom-color:var(--ink);} .plt2 b{color:inherit;font-variant-numeric:tabular-nums;}
+  .pl-top2{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 16px 11px;background:#fff;border-bottom:1px solid var(--line);}
+  .pl-region{cursor:pointer;transition:.14s;} .pl-region:hover b{color:var(--blue);}
+  .rp-list{display:flex;flex-direction:column;gap:6px;}
+  .rp{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 14px;font-family:inherit;cursor:pointer;transition:.14s;width:100%;text-align:left;}
+  .rp:hover{border-color:var(--blue);}
+  .rp.on{border-color:var(--blue);background:var(--blue-50);}
+  .rp .rp-ic{width:20px;height:20px;color:var(--blue);flex:none;} .rp .rp-ic svg{width:20px;height:20px;}
+  .rp .rp-nm{font-size:14.5px;font-weight:800;color:var(--ink);}
+  .rp .rp-cnt{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:600;}
+  .rp.on .rp-cnt{margin-left:auto;} .rp .rp-chk{color:var(--blue);margin-left:8px;} .rp .rp-chk svg{width:18px;height:18px;}
+  /* ── 실제 carebridge.io 시술 카드(90%+ 재현) — 토큰: Pretendard, #1B59FA, 병원명 #808B96, 정가 #A7B0B9, 경계 #EBEBEB, 뱃지 #06A42D/#E7F7EC ── */
+  .sd-card{display:flex;gap:12px;padding:16px 0 18px;border-bottom:1px solid #EBEBEB;letter-spacing:-.02em;}
+  .sd-thumb{width:100px;height:100px;border-radius:8px;flex:none;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#DDE6F5,#EEF2FA);}
+  .sd-ad{position:absolute;left:5px;top:5px;background:rgba(14,23,38,.72);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:6px;letter-spacing:.04em;}
+  .sd-body{flex:1;min-width:0;}
+  .sd-badge{display:inline-block;background:#E7F7EC;color:#06A42D;font-size:11px;font-weight:600;border-radius:5px;padding:2px 7px;margin-bottom:5px;letter-spacing:-.02em;}
+  .sd-hos{font-size:12px;font-weight:400;color:#808B96;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sd-st{color:#808B96;} .sd-st svg{width:11px;height:11px;vertical-align:-1.5px;margin-right:1px;}
+  .sd-title{font-size:15.5px;font-weight:600;color:#000;margin:2px 0 4px;line-height:1.32;}
+  .sd-rate{display:flex;align-items:center;gap:3px;font-size:13.5px;font-weight:600;color:#000;}
+  .sd-rate svg{width:13px;height:13px;color:#1B1B1F;}
+  .sd-rate .sd-cnt{color:#5A5F65;font-weight:500;font-size:12.5px;margin-left:1px;}
+  .sd-was{font-size:12px;color:#A7B0B9;margin-top:7px;} .sd-was s{color:#A7B0B9;}
+  .sd-price{margin-top:2px;font-size:18px;font-weight:700;color:#000;font-variant-numeric:tabular-nums;}
+  .sd-pct{color:#1B59FA;font-weight:700;font-size:16px;margin-right:6px;}
+  .sd-cpn{margin-top:9px;border:1px solid #DCE6FF;background:#F4F7FF;border-radius:8px;padding:8px;text-align:center;font-size:12px;font-weight:700;color:#1550E0;}
+  .sd-nav .tab{color:#3d4148;font-size:11px;font-weight:500;letter-spacing:-.02em;}
+  .sd-nav .tab svg{width:23px;height:23px;stroke-width:1.7;}
+  .sd-nav .sd-call{display:inline-flex;} .sd-nav .sd-call svg{color:#3d4148;}
+  /* 개선 메인 관심 지역(최대 3곳) */
+  .appbar .loc{border:0;background:none;font-family:inherit;cursor:pointer;padding:0;}
+  .appbar .loc b{font-weight:700;font-size:15px;color:var(--ink);}
+  .appbar .loc:hover b{color:var(--blue);}
+  .rg-max{font-size:11px;font-weight:700;color:#fff;background:var(--blue);border-radius:6px;padding:2px 7px;margin-left:6px;vertical-align:middle;}
+  .rg-help{font-size:12.5px;color:var(--muted);margin:0 0 12px;} .rg-help b{color:var(--blue);}
+  .rp.dis{opacity:.4;cursor:not-allowed;}
+  .locbody .pick:disabled{opacity:.4;cursor:not-allowed;}
+  .locres .r:disabled{opacity:.45;cursor:not-allowed;}
+  .subscreen .ttl .rg-max{margin-left:6px;}
+  /* ── 예약 플로우 ── */
+  #rvScroll{background:#F4F6FA;letter-spacing:-.02em;}
+  .rv-head{display:flex;align-items:center;gap:8px;padding:38px 16px 12px;background:#fff;position:sticky;top:0;z-index:10;font-size:16px;font-weight:800;color:#111;}
+  .rv-head .rv-back{border:0;background:none;padding:0;cursor:pointer;color:#111;} .rv-head .rv-back svg{width:22px;height:22px;}
+  .rv-prog{display:flex;gap:12px;align-items:center;padding:14px 16px;background:#fff;border-bottom:8px solid #EDF0F5;}
+  .rv-prog-th{width:56px;height:56px;border-radius:10px;flex:none;background:linear-gradient(135deg,#12275F,#2E5BD0);}
+  .rv-prog-nm{font-size:14px;font-weight:700;color:#111;} .rv-prog-pr{font-size:18px;font-weight:800;color:#111;margin-top:3px;}
+  .rv-benefit{margin:14px 16px 0;border:1.5px solid var(--blue);border-radius:12px;overflow:hidden;background:#fff;}
+  .rv-benefit-h{background:var(--blue);color:#fff;font-size:12.5px;font-weight:700;padding:10px 13px;}
+  .rv-benefit ul{margin:0;padding:11px 13px 12px 27px;} .rv-benefit li{font-size:12.5px;color:#38465e;line-height:1.75;}
+  .rv-point{margin:12px 16px 0;background:#EEF3FF;border-radius:12px;padding:12px 14px;} .rv-point b{font-size:13px;color:#1550E0;} .rv-point small{display:block;color:var(--muted);font-size:11.5px;margin-top:3px;}
+  .rv-sec{margin:8px 0 0;padding:18px 16px;background:#fff;border-top:8px solid #EDF0F5;}
+  .rv-sec-t{font-size:15px;font-weight:800;color:#111;margin-bottom:12px;} .rv-sec-t small{font-size:11.5px;font-weight:500;color:var(--blue);margin-left:6px;}
+  .rv-warn{background:#FFEDED;border-radius:10px;padding:11px 13px;margin-bottom:14px;} .rv-warn b{font-size:12.5px;color:#E23B40;} .rv-warn p{margin:4px 0 0;font-size:11.5px;color:#9A6a6a;line-height:1.55;}
+  .rv-cal-h{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:800;margin-bottom:10px;} .rv-cal-nav{color:var(--faint);font-weight:700;}
+  .rv-wd{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--faint);margin-bottom:4px;}
+  .rv-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px 0;}
+  .rv-day{border:0;background:none;font-family:inherit;font-size:13.5px;font-weight:600;color:#111;cursor:pointer;height:38px;border-radius:50%;} .rv-e{height:38px;}
+  .rv-day.past{color:#C7CDD6;cursor:default;} .rv-day.sel{background:var(--blue);color:#fff;}
+  .rv-ampm{font-size:12.5px;font-weight:700;color:#3a475d;margin:16px 0 9px;}
+  .rv-times{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .rv-time{border:1px solid var(--line);background:#fff;border-radius:9px;padding:11px 0;font-family:inherit;font-size:12.5px;font-weight:600;color:#33425c;cursor:pointer;}
+  .rv-time:disabled{background:#EDF0F5;color:#B7BEC9;cursor:default;} .rv-time.sel{border-color:var(--blue);background:var(--blue);color:#fff;}
+  .rv-agree{display:flex;align-items:center;gap:9px;padding:16px;background:#fff;border-top:8px solid #EDF0F5;font-size:12.5px;color:#38465e;}
+  .rv-agree .rv-chk{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);background:#fff;color:#C7CDD6;flex:none;cursor:pointer;display:grid;place-items:center;padding:0;} .rv-agree .rv-chk svg{width:13px;height:13px;} .rv-agree .rv-chk.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+  .rv-agree b{color:#E23B40;}
+  .rv-moved{margin:12px 16px 0;font-size:11.5px;color:var(--blue-700);background:var(--blue-50);border-radius:10px;padding:10px 13px;text-align:center;} .rv-moved b{font-weight:700;}
+  .rv-foot{padding:14px 16px calc(18px + env(safe-area-inset-bottom));background:#fff;position:sticky;bottom:0;border-top:1px solid var(--line);margin-top:8px;}
+  .rv-cta{width:100%;border:0;background:var(--blue);color:#fff;font-family:inherit;font-weight:800;font-size:15.5px;border-radius:12px;padding:15px;cursor:pointer;}
+  .rv-cta:disabled{background:#C7D2E4;cursor:not-allowed;} .rv-cta.ok{background:#E7F7EC;color:#06A42D;}
+  .rv-cta.ghost{background:#fff;color:var(--muted);border:1px solid var(--line);font-weight:700;margin-top:9px;}
+  .rv-done{display:flex;align-items:center;gap:12px;margin:14px 16px 0;background:#fff;border:1px solid var(--blue-100);border-radius:14px;padding:16px;}
+  .rv-done-ic{width:44px;height:44px;border-radius:50%;background:var(--blue-50);color:var(--blue);display:grid;place-items:center;flex:none;} .rv-done-ic svg{width:24px;height:24px;}
+  .rv-done-tx b{font-size:15px;font-weight:800;color:#111;} .rv-done-tx p{margin:3px 0 0;font-size:12px;color:var(--muted);line-height:1.5;}
+  .rv-summary{margin:10px 16px 0;font-size:12.5px;color:var(--muted);background:#fff;border-radius:12px;padding:13px 15px;} .rv-summary b{color:#111;font-size:13.5px;}
+  .rv-extra-h{padding:20px 16px 2px;font-size:15.5px;font-weight:800;color:#111;} .rv-extra-h span{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:4px;}
+  .rv-target{border:1.5px solid var(--blue);border-radius:12px;padding:13px 15px;margin-bottom:10px;}
+  .rv-target-h{font-size:14px;font-weight:800;color:#111;} .rv-badge{font-size:11px;font-weight:700;color:var(--blue-700);background:var(--blue-50);border-radius:6px;padding:1px 7px;margin-left:4px;}
+  .rv-target-d{font-size:12.5px;color:#48566e;margin-top:5px;}
+  .rv-addfam{width:100%;border:0;background:var(--ink);color:#fff;font-family:inherit;font-weight:800;font-size:13.5px;border-radius:10px;padding:13px;cursor:pointer;margin:4px 0 12px;} .rv-addfam:disabled{opacity:.4;cursor:not-allowed;}
+  .rv-notes{margin:0;padding-left:18px;} .rv-notes li{font-size:11.5px;color:var(--muted);line-height:1.7;}
+  .rv-ta{width:100%;min-height:88px;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:inherit;font-size:13px;resize:none;outline:none;color:var(--ink);}
+  .rv-sel{width:100%;border:1px solid var(--line);border-radius:10px;padding:13px 12px;font-family:inherit;font-size:13.5px;color:var(--ink);background:#fff;outline:none;}
+  #rvSpec .sc-b s{color:var(--faint);}
+  /* ── 광고·특가 인벤토리 ── */
+  .ad-fair{display:flex;align-items:center;gap:10px;border-radius:16px;padding:16px 18px;margin:14px 0 6px;color:#fff;cursor:pointer;
+    background:linear-gradient(120deg,#12143A,#2A3AA0);position:relative;overflow:hidden;}
+  .ad-fair-tag{font-size:11px;font-weight:700;opacity:.9;}
+  .ad-fair-t{font-size:18px;font-weight:800;margin:5px 0 3px;letter-spacing:-.02em;}
+  .ad-fair-s{font-size:11.5px;opacity:.9;}
+  .ad-fair-l{flex:1;min-width:0;}
+  .ad-fair-go{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:999px;font-size:11px;font-weight:700;padding:6px 11px;white-space:nowrap;}
+  .ad-rank{display:grid;grid-template-columns:1fr 1fr;column-gap:16px;}
+  .ad-rank-col{display:flex;flex-direction:column;}
+  .ad-rk{display:flex;align-items:center;gap:9px;padding:9px 2px;border:0;background:none;font-family:inherit;cursor:pointer;text-align:left;width:100%;}
+  .ad-rk-n{width:15px;font-weight:800;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums;flex:none;}
+  .ad-rk-n.hot{color:var(--blue);}
+  .ad-rk-nm{font-size:13px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+  .ad-bd{font-size:8.5px;font-weight:800;border-radius:4px;padding:1px 4px;flex:none;} .ad-bd.best{background:#FFE9D6;color:#E8590C;} .ad-bd.new{background:var(--blue-50);color:var(--blue-700);}
+  .ad-tr{font-size:9px;font-weight:800;flex:none;} .ad-tr.up{color:#E23B40;} .ad-tr.down{color:var(--blue);} .ad-tr.same{color:var(--faint);}
+  .ad-spon-note{font-size:11.5px;color:var(--muted);background:var(--blue-50);border-radius:10px;padding:10px 13px;margin:2px 0 8px;} .ad-spon-note b{color:var(--blue-700);}
+  /* 광고·특가 = 데스크톱 웹 좌측 사이드바 영역 */
+  .ad-swap{display:flex;justify-content:center;gap:3px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px;width:max-content;margin:0 auto 20px;}
+  .ad-swap button{border:0;background:transparent;font-family:inherit;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--muted);padding:7px 16px;border-radius:999px;}
+  .ad-swap button.on{background:var(--blue);color:#fff;}
+  .webframe{display:flex;gap:22px;width:100%;max-width:660px;align-items:flex-start;}
+  .web-side{width:244px;flex:none;padding:18px 16px;background:#EEF1F6;border-radius:20px;border:1px solid #E4E9F2;overflow-y:auto;max-height:800px;scrollbar-width:none;} .web-side::-webkit-scrollbar{width:0;}
+  .web-app{flex:1;background:#fff;min-width:0;overflow:hidden;border-radius:22px;border:1px solid #E9EDF4;box-shadow:var(--shadow);}
+  .ws-label{font-size:10.5px;font-weight:800;border-radius:6px;padding:4px 8px;margin-bottom:12px;text-align:center;}
+  .ws-label.asis{background:#F1F3F7;color:var(--faint);} .ws-label.tobe{background:var(--blue);color:#fff;}
+  .ws-card{border-radius:14px;padding:14px;margin-bottom:11px;} .ws-card.blue{background:#E7F0FF;} .ws-card.green{background:#E7F6EC;}
+  .ws-tag{display:inline-block;font-size:10px;font-weight:700;color:#fff;background:var(--blue);border-radius:6px;padding:2px 7px;margin-bottom:8px;} .ws-tag.g{background:#12B76A;}
+  .ws-t{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.3;} .ws-s{font-size:11px;color:var(--muted);margin-top:4px;}
+  .ws-qr{margin:14px 0 4px;} .ws-qr b{font-size:15px;color:var(--ink);letter-spacing:-.02em;} .ws-qr-codes{display:flex;gap:8px;margin-top:10px;} .ws-qr-codes span{width:54px;height:54px;border-radius:6px;background:repeating-conic-gradient(#111 0% 25%,#fff 0% 50%) 0/8px 8px;}
+  .ws-foot{font-size:10px;color:var(--faint);margin-top:14px;line-height:1.6;}
+  .ws-sec{font-size:13px;font-weight:800;color:var(--ink);margin:16px 0 8px;letter-spacing:-.02em;} .ws-sec b{color:var(--blue);} .ws-sec .tag{margin-left:4px;}
+  .ad-fair.small{padding:13px 14px;margin:0 0 4px;border-radius:14px;} .ad-fair.small .ad-fair-t{font-size:15px;margin:4px 0 2px;} .ad-fair.small .ad-fair-s{font-size:10.5px;} .ad-fair.small .ad-fair-go{font-size:14px;padding:0;background:none;border:0;}
+  .ad-rank.single{display:block;} .ad-rank.single .ad-rk{padding:8px 0;}
+  .ad-spon-note.small{font-size:10.5px;padding:8px 10px;line-height:1.5;}
+  .ad-mini{display:flex;gap:9px;align-items:center;padding:9px 0;border-top:1px solid var(--line);position:relative;}
+  .ad-mini-th{width:44px;height:44px;border-radius:8px;flex:none;background:linear-gradient(135deg,#DDE6F5,#EEF2FA);}
+  .ad-mini-ad{position:absolute;left:4px;top:12px;background:rgba(14,23,38,.72);color:#fff;font-size:8px;font-weight:800;padding:1px 5px;border-radius:5px;z-index:1;}
+  .ad-mini-b{flex:1;min-width:0;} .ad-mini-hos{font-size:10.5px;color:#808B96;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} .ad-mini-nm{font-size:12.5px;font-weight:700;color:var(--ink);margin:1px 0 2px;}
+  .ad-mini-pr{font-size:13px;font-weight:800;color:var(--ink);} .ad-mini-pr .pct{color:var(--blue);margin-right:4px;}
+  /* 웹 우측 앱 (compact) */
+  .wa-head{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 10px;border-bottom:1px solid #F0F2F6;} .wa-logo{font-weight:900;color:var(--blue);font-size:15px;letter-spacing:.02em;} .wa-hic svg{width:18px;height:18px;color:var(--ink);}
+  .wa-promo{display:flex;gap:4px;padding:11px 10px;overflow:hidden;} .wa-p{flex:1;text-align:center;font-size:9.5px;font-weight:600;color:#33425c;} .wa-pic{display:block;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#DCE6FF,#EEF3FF);margin:0 auto 5px;}
+  .wa-banner{margin:2px 12px 0;border-radius:12px;padding:14px;color:#fff;background:linear-gradient(120deg,#1B2A6B,#3A4FC0);} .wa-banner small{font-size:9.5px;opacity:.85;} .wa-banner b{display:block;font-size:16px;font-weight:800;margin:5px 0 3px;letter-spacing:-.02em;} .wa-banner span{font-size:10px;opacity:.9;}
+  .wa-depts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 4px;padding:14px 8px 6px;} .wa-d{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:#2b3a52;} .wa-d i{width:40px;height:40px;border-radius:12px;background:var(--blue-50);display:grid;place-items:center;} .wa-d i svg{width:21px;height:21px;color:var(--blue-700);}
+  .wa-sec{font-size:13px;font-weight:800;color:var(--ink);padding:12px 14px 8px;}
+  .wa-cards{display:flex;gap:9px;padding:0 14px 16px;overflow:hidden;} .wa-c{flex:0 0 96px;} .wa-c-th{height:96px;border-radius:10px;} .wa-c-nm{font-size:11.5px;font-weight:700;margin:6px 0 2px;line-height:1.3;} .wa-c-hos{font-size:10px;color:var(--muted);} .wa-c-pr{font-size:13px;font-weight:800;margin-top:2px;}
+  .ad-stage{grid-template-columns:660px 380px;align-items:start;}
+  @media(max-width:1040px){.ad-stage{grid-template-columns:1fr;justify-items:center;}}
+  @media(max-width:900px){.webframe{max-width:100%;} .web-side{width:200px;}}
+  @media(max-width:640px){.webframe{flex-direction:column;} .web-side{width:100%;max-height:none;}}
+  .rg-apply{width:100%;border:0;background:var(--blue);color:#fff;font-family:inherit;font-weight:800;font-size:14.5px;border-radius:12px;padding:14px;cursor:pointer;margin-top:14px;box-shadow:0 12px 24px -10px rgba(31,99,255,.6);}
+  /* diff 설명 태그 */
+  .df-tag{font-size:10px;font-weight:800;border-radius:5px;padding:1px 6px;margin-left:4px;vertical-align:middle;white-space:nowrap;}
+  .df-tag.add{background:#E7F7EC;color:#06A42D;} .df-tag.mod{background:var(--blue-50);color:var(--blue-700);} .df-tag.del{background:#FDECEC;color:#D64545;}
+  #diffSpec .sc-n{font-size:15px;font-weight:800;}
+  .pl-filters.hos{border-bottom:1px solid var(--line);}
+  .pl-hlist{padding:2px 16px 8px;}
+  .hcard{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);}
+  .hcard:last-child{border-bottom:0;}
+  .hcard .hth{width:48px;height:48px;border-radius:12px;flex:none;background:linear-gradient(135deg,#E7EDFA,#F5F8FE);display:grid;place-items:center;font-size:13px;font-weight:800;color:var(--blue-700);}
+  .hcard .hm{flex:1;min-width:0;} .hcard .hnm{font-size:14.5px;font-weight:800;color:var(--ink);}
+  .hcard .hsub{font-size:11.5px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .hcard .hrt{font-size:11.5px;color:var(--muted);margin-top:4px;} .hcard .hrt b{color:#FFB020;}
+  .hcard .htag{color:var(--blue-700);font-weight:700;background:var(--blue-50);border-radius:5px;padding:1px 6px;}
+  .hcard .hbtn{border:1px solid var(--blue);background:#fff;color:var(--blue);font-family:inherit;font-weight:800;font-size:12.5px;border-radius:9px;padding:9px 15px;cursor:pointer;flex:none;}
+  .pl-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:46px 24px;}
+  .pl-empty-ic{width:70px;height:70px;border-radius:50%;background:#F1F4F9;display:grid;place-items:center;color:var(--faint);margin-bottom:16px;}
+  .pl-empty-ic svg{width:34px;height:34px;}
+  .pl-empty p{font-size:14px;color:var(--muted);font-weight:600;margin:0 0 16px;}
+  .pl-req{border:0;background:var(--blue);color:#fff;font-family:inherit;font-weight:800;font-size:13.5px;border-radius:10px;padding:12px 20px;cursor:pointer;}
+  .pl-empty-hint{margin-top:18px;font-size:12px;color:var(--faint);line-height:1.6;max-width:255px;} .pl-empty-hint b{color:var(--blue);}
+  /* 우측 설명 — 직접 해보기 */
+  .spec-try{margin-top:16px;background:var(--blue-50);border:1px solid var(--blue-100);border-radius:12px;padding:13px 15px;}
+  .spec-try .try-h{font-size:12.5px;font-weight:800;color:var(--blue-700);margin-bottom:8px;}
+  .spec-try ol{margin:0;padding-left:18px;} .spec-try li{font-size:12.5px;color:#38465e;line-height:1.7;} .spec-try li b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="pagehead">
+    <div class="eyebrow">Product Demo · 7월 리뉴얼</div>
+    <h1>케어브릿지 복지몰 메인 개선 데모</h1>
+    <p>Amplitude 활동 데이터 · 2026-07-06 우선순위 회의를 반영한 예약 전환 중심 재편안</p>
+  </header>
+  <div style="max-width:1080px;margin:0 auto 16px;padding:11px 16px;border:1px solid #DCE6FF;background:#EEF3FF;border-radius:12px;font-size:12.5px;color:#1550E0;text-align:center;line-height:1.55;font-weight:600">⚠️ <b>포트폴리오 데모</b> · 가상 브랜드 「케어브릿지」 · 목업 데이터 — 실제 서비스·수치와 무관한 기획 프로토타입입니다.</div>
+
+  <div class="seg" role="tablist" aria-label="데모 화면 전환">
+    <button role="tab" aria-selected="false" data-view="rat">개선 포인트</button>
+    <button role="tab" aria-selected="false" data-view="onboard">가입 온보딩</button>
+    <button role="tab" aria-selected="true" data-view="main">개선 메인</button>
+    <button role="tab" aria-selected="false" data-view="proclist">시술리스트</button>
+    <button role="tab" aria-selected="false" data-view="reserve">예약플로우</button>
+    <button role="tab" aria-selected="false" data-view="ad">광고·특가</button>
+  </div>
+
+  <!-- ============ MAIN ============ -->
+  <section class="view active" id="v-main">
+    <div class="stage">
+      <div class="phone">
+        <div class="screen">
+          <div class="notch"></div>
+          <div class="scroll" id="mainScroll"><!-- injected --></div>
+          <div class="ovl" id="mainOvl" hidden></div>
+          <nav class="tabbar">
+            <div class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>홈</div>
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>검색</div>
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>예약</div>
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>마이</div>
+          </nav>
+        </div>
+      </div>
+      <div>
+        <p class="caption" id="mainCap"></p>
+        <div class="obspec" id="diffSpec">
+          <div class="spec-h">실제 메인(welfaremall.stage) 대비 변경점</div>
+          <div class="spec">
+            <div class="sc"><div class="sc-n">＋</div><div class="sc-b"><b>관심 지역 선택 신설 <span class="df-tag add">추가</span></b><p>실제 메인엔 없는 <b>지역 지정(최대 3곳)</b>을 상단에 신설. 선택 지역 기준으로 추천·특가를 우선 노출합니다.</p></div></div>
+            <div class="sc"><div class="sc-n">＋</div><div class="sc-b"><b>검색바 최상단 고정 <span class="df-tag add">추가</span></b><p>실제는 배너·프로모 아이콘에 밀려 검색이 하단에 묻힘 → <b>검색을 최상단으로</b> 끌어올려 탐색형 유저 즉시 진입.</p></div></div>
+            <div class="sc"><div class="sc-n">＋</div><div class="sc-b"><b>개인화 추천 영역 신설 <span class="df-tag add">추가</span></b><p>실제엔 없는 <b>‘하늘님 맞춤 추천’</b>(관심 진료과·최근 본 시술 기반) + <b>‘많이 찾는’ 추천 칩</b>을 상단에 배치.</p></div></div>
+            <div class="sc"><div class="sc-n">↻</div><div class="sc-b"><b>진료과 인기순 간소화 <span class="df-tag mod">변경</span></b><p>실제는 다수 진료과가 비정렬로 나열 → <b>활동 인기순 정렬 + 개수 축소</b>(▲순위 표기)로 첫 화면에서 바로 탐색.</p></div></div>
+            <div class="sc"><div class="sc-n">－</div><div class="sc-b"><b>저활동 위젯 축소·제거 <span class="df-tag del">제거</span></b><p>큰 프로모션 배너·프로모 퀵아이콘 행·인기/주변/신규 병원 위젯·메인 리뷰 등 <b>클릭 저조 영역</b>을 하단 이동 또는 제거.</p></div></div>
+          </div>
+          <p class="spec-src">기준: welfaremall.stage.carebridge.io 현행 메인 · 2026-07-06 회의 개선안 반영 · 프로토타입</p>
+        </div>
+        <div class="obspec" id="searchSpec" hidden>
+          <div class="spec-h">검색 화면 — 지역·관심 진료과 맞춤 추천</div>
+          <div class="spec">
+            <div class="sc"><div class="sc-n">01</div><div class="sc-b"><b>신규 영역 위치</b><p>기존 <b>‘최근 검색어’</b>와 <b>‘지금 많이 찾는 검색어’</b> 사이에 맞춤 추천 영역을 새로 넣었습니다.</p></div></div>
+            <div class="sc"><div class="sc-n">02</div><div class="sc-b"><b>지역·관심 진료과 개인화</b><p>고객의 <b>관심 지역(강남·강남역)</b>과 가입 온보딩에서 고른 <b>관심 진료과</b>를 기반으로 추천을 구성합니다.</p></div></div>
+            <div class="sc"><div class="sc-n">03</div><div class="sc-b"><b>진료과 탭 구성</b><p>피부과·안과·치과 등 <b>진료과 탭</b>으로 전환하면, 탭마다 해당 지역에서 인기 있는 <b>세부 시술</b>이 칩으로 노출됩니다.</p></div></div>
+            <div class="sc"><div class="sc-n">04</div><div class="sc-b"><b>기대 효과</b><p>검색어를 입력하기 전에도 <em>맞춤 시술을 즉시 제안</em>해 탐색 시간을 줄이고 예약 전환을 유도합니다.</p></div></div>
+          </div>
+          <p class="spec-src">검색어 입력 전(zero-query) 개인화 · 관심 지역/진료과 연동</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 시술 리스트 ============ -->
+  <section class="view" id="v-proclist">
+    <div class="stage">
+      <div class="phone">
+        <div class="screen">
+          <div class="notch"></div>
+          <div class="scroll" id="plScroll"></div>
+          <div class="ovl" id="plOvl" hidden></div>
+          <nav class="tabbar sd-nav">
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>홈</div>
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>주변병원</div>
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.6 3.5 9 3l1.6 4-1.9 1.4a12 12 0 0 0 5 5L15 11.4 19 13l-.5 2.4a2 2 0 0 1-2.2 1.6A14 14 0 0 1 5 5.7a2 2 0 0 1 1.6-2.2Z"/></svg>전화상담</div>
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="8.5" width="17" height="5" rx="1"/><path d="M5 13.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6.5M12 8.5V21"/><path d="M12 8.5S10.5 4 8 4a2.2 2.2 0 0 0 0 4.5h4Zm0 0S13.5 4 16 4a2.2 2.2 0 0 1 0 4.5h-4Z"/></svg>혜택</div>
+            <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>MY</div>
+          </nav>
+        </div>
+      </div>
+      <div class="obspec">
+        <div class="spec-h">시술 리스트 — 검색·지역 기반 개편</div>
+        <div class="spec">
+          <div class="sc"><div class="sc-n">01</div><div class="sc-b"><b>상단 검색 영역 추가</b><p>기존 리스트는 그대로 두고, 상단에 <b>검색창 · 연관 검색어 · AD 배너 · [시술 / 병원] 탭</b>을 붙였습니다. (검색 결과 화면과 동일한 구조)</p></div></div>
+          <div class="sc"><div class="sc-n">02</div><div class="sc-b"><b>지역 선택 → 재조회</b><p>상단 <b>지역 버튼(강남)</b>을 누르면 지역을 바꿀 수 있고, 변경 즉시 해당 지역의 시술·병원으로 <b>재조회</b>됩니다. (강남·압구정·잠실·부산 서면·대구 동성로) 재조회 결과는 <b>상단 AD 2건 방어</b> 후 <b>차 순위부터 인기순</b>으로 정렬됩니다.</p></div></div>
+          <div class="sc"><div class="sc-n">03</div><div class="sc-b"><b>시술 0건 → 병원 탭 자동 전환</b><p>선택한 지역에 <b>노출할 시술이 없으면</b> 자동으로 <em>병원 탭</em>을 기본으로 보여줍니다. (‘검색 결과가 없어요 → 희망 시술 요청’ + 해당 지역 병원 노출)</p></div></div>
+          <div class="sc"><div class="sc-n">04</div><div class="sc-b"><b>지역별 시술·병원 수 자동 표시</b><p>지역 선택 시트에서 각 지역마다 <b>‘시술 N · 병원 M’</b> 개수를 자동 노출합니다. 선택 전에 지역별 <b>매물 규모(커버리지)</b>를 한눈에 비교할 수 있어, 시술이 0건인 지역(예: 부산 서면)도 미리 파악됩니다.</p></div></div>
+          <div class="sc"><div class="sc-n">05</div><div class="sc-b"><b>카드 정보 = 병원명 · 지역 · 지하철역</b><p>각 시술 카드 상단에 <b>병원명 · 지역 · 지하철역</b>을 표기합니다. (예: ‘강남 SW피부과 · 강남 · 🚇강남역’) <b>지하철역 정보가 없는 병원은 지하철역을 표시하지 않습니다.</b> (예: ‘청담 온의원 · 압구정’)</p></div></div>
+        </div>
+        <div class="spec-try">
+          <div class="try-h">▶ 직접 해보기</div>
+          <ol>
+            <li><b>‘이갈이/코골이’</b> · <b>‘임플란트’</b> 검색 → 시술 탭에 결과 노출</li>
+            <li>지역 버튼 → 시트에서 <b>지역별 시술·병원 수</b> 확인 (강남 시술10·병원6, 부산 서면 시술0·병원3 …)</li>
+            <li>지역 <b>‘부산 서면’</b> 선택 → 시술 0건 → <b>병원 탭 자동 전환</b></li>
+            <li>검색창 직접 입력 또는 상단 <b>예시 칩</b>으로 실행</li>
+          </ol>
+        </div>
+        <p class="spec-src">2026-07-06 회의 반영 · 지역 선택 재조회 · 결과 없음 시 병원 폴백</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 예약 플로우 ============ -->
+  <section class="view" id="v-reserve">
+    <div class="stage">
+      <div class="phone"><div class="screen">
+        <div class="notch"></div>
+        <div class="scroll" id="rvScroll"></div>
+      </div></div>
+      <div><div class="obspec" id="rvSpec">
+        <div class="spec-h">예약 플로우 개선 — 선(先)신청 · 후(後)상세입력</div>
+        <div class="spec">
+          <div class="sc"><div class="sc-n">01</div><div class="sc-b"><b>예약 신청 마찰 최소화</b><p>기존 예약 화면에서 <b>진료 대상 · 병원 전달사항 · 추가 상담 희망 시술</b>을 <b>제거</b>하고, <b>내원 희망 일시 + 약관 동의</b>만으로 <b>‘예약 신청하기’ 즉시 신청</b>되도록 간소화했습니다.</p></div></div>
+          <div class="sc"><div class="sc-n">02</div><div class="sc-b"><b>팝업 → 접수 페이지 전환</b><p>신청 후 <s>완료 팝업</s> 대신 <b>새 페이지</b>가 열립니다. 상단에 <b>‘예약 신청이 접수되었어요’</b> 안내(기존 팝업 내용)를 노출합니다.</p></div></div>
+          <div class="sc"><div class="sc-n">03</div><div class="sc-b"><b>상세정보 후속 수집 → DB 업데이트</b><p>접수 페이지 하단에서 <b>진료 대상(가족·지인 추가) · 병원 전달사항 · 추가 상담 희망 시술</b>을 추가로 입력받아 <b>예약 건에 이어붙여 DB 업데이트</b>합니다. ‘나중에 입력’도 가능.</p></div></div>
+          <div class="sc"><div class="sc-n">04</div><div class="sc-b"><b>기대 효과</b><p>예약 신청 단계의 입력 부담을 낮춰 <em>신청 전환율 ↑</em>, 필수 상세는 접수 직후 자연스럽게 수집해 <em>완결성</em>도 유지합니다.</p></div></div>
+        </div>
+        <div class="spec-try">
+          <div class="try-h">▶ 직접 해보기</div>
+          <ol>
+            <li>날짜(예: <b>16일</b>) · 시간(<b>오후 05:00</b>) 선택 → 약관 동의 → <b>‘예약 신청하기’</b></li>
+            <li>접수 페이지 상단 <b>접수 안내</b> 확인</li>
+            <li>하단에서 <b>가족·지인 추가</b> · 전달사항 · 추가 상담 입력 → <b>‘입력 완료·저장하기’</b> (DB 업데이트)</li>
+          </ol>
+        </div>
+        <p class="spec-src">기준: welfaremall.stage.carebridge.io/reservation · 프로토타입</p>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ============ 광고·특가 영역 ============ -->
+  <section class="view" id="v-ad">
+    <div class="ad-swap"><button id="adAsis" onclick="setAdMode('asis')">AS-IS 현재</button><button id="adTobe" class="on" onclick="setAdMode('tobe')">TO-BE 개선</button></div>
+    <div class="stage ad-stage">
+      <div class="webframe"><div class="web-side" id="adSide"></div><div class="web-app" id="adApp"></div></div>
+      <div><div class="obspec" id="adSpec">
+        <div class="spec-h">스샷2 좌측 사이드바 영역 → 개인화 광고·특가 인벤토리</div>
+        <p class="caption" style="text-align:left;margin:0 0 16px">데스크톱 웹 <b>좌측 사이드바 영역</b>(스샷2)이 현재 <b>케어브릿지 꿀팁·공지사항·QR</b> 등 저활동 콘텐츠로 비어 있습니다. <b>타 플랫폼</b>이 같은 자리를 ‘실시간 인기 시술 + 특가전’ 인벤토리로 쓰는 것처럼, <b>이 사이드바를 개인화 광고·특가 인벤토리로 전환</b>합니다. (상단 <b>AS-IS/TO-BE</b> 토글로 비교)</p>
+        <div class="spec">
+          <div class="sc"><div class="sc-n">01</div><div class="sc-b"><b>특가전 노출</b><p>‘이달의 제휴 특가 · 인기 시술 특가전’을 <b>전면 배치</b>해 최저가 혜택으로 유입·탐색을 유도합니다.</p></div></div>
+          <div class="sc"><div class="sc-n">02</div><div class="sc-b"><b>실시간 인기 시술 랭킹</b><p>검색·예약 로그 기반 <b>실시간 Top 10</b>(순위 추이·BEST/NEW)으로 트렌드 탐색을 촉진합니다. (타 플랫폼 형)</p></div></div>
+          <div class="sc"><div class="sc-n">03</div><div class="sc-b"><b>개인화 + 스폰서(광고비 지불) 노출</b><p>고객의 <b>관심 진료과·지역에 매칭되는</b> 병원/시술 중 <b>광고비를 지불한 제휴 병원</b>을 <span class="df-tag mod">AD</span>로 <b>상단 우선 노출</b>합니다. 개인화 매칭이므로 광고여도 관련성이 높습니다.</p></div></div>
+          <div class="sc"><div class="sc-n">04</div><div class="sc-b"><b>기대 효과</b><p>미활용 영역을 <em>광고 매출 인벤토리</em>로 전환하는 동시에, 개인화 매칭으로 <em>예약 전환</em>도 함께 끌어올립니다.</p></div></div>
+        </div>
+        <p class="spec-src">참고: 타 플랫폼(스샷1) 실시간 인기 시술·특가전 영역 · 프로토타입</p>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ============ ONBOARDING ============ -->
+  <section class="view" id="v-onboard">
+    <div class="stage">
+      <div class="phone">
+        <div class="screen">
+          <div class="notch"></div>
+          <div class="steps"><span class="s on"></span><span class="s"></span><span class="s"></span></div>
+          <div class="scroll" id="obScroll"></div>
+        </div>
+      </div>
+      <div class="obspec">
+        <p class="caption" style="text-align:left;margin:0 0 18px"><b>가입 온보딩에서 관심 정보를 수집</b>합니다. 진료과 → 세부 시술 → 관심 지역 순으로 받아 첫 홈부터 개인화된 추천을 노출합니다.</p>
+        <div class="spec-h">카테고리 노출 &amp; 정렬 로직</div>
+        <div class="spec">
+          <div class="sc"><div class="sc-n">01</div><div class="sc-b"><b>전체 카테고리 노출</b><p><a href="https://carebridge.io/menu" target="_blank" rel="noopener">carebridge.io/menu</a>의 진료과 <b>17종 전부</b>를 STEP 1에 노출합니다. (기존 데모 7종 → 전체) 세부 시술이 없는 과(건강검진 등)도 포함.</p></div></div>
+          <div class="sc"><div class="sc-n">02</div><div class="sc-b"><b>1차 정렬 · 가나다순</b><p>신규 유저는 탐색 기준이 없으므로, 카테고리를 <b>이름 가나다순</b>으로 예측 가능하게 정렬해 노출합니다. <span class="now-badge">현재 기본</span></p></div></div>
+          <div class="sc"><div class="sc-n">03</div><div class="sc-b"><b>추후 · 많이 찾는 순 재정렬</b><p>검색·선택 로그가 쌓이면 <b>사용자 검색량 기반 '많이 찾는 순'</b>으로 카테고리를 자동 재정렬합니다. STEP 1의 <em>[많이 찾는 순]</em> 토글로 적용 모습을 미리 볼 수 있어요. <span class="soon-badge">추후 적용</span></p></div></div>
+          <div class="sc"><div class="sc-n">04</div><div class="sc-b"><b>세부 시술 = /menu 동일</b><p>카테고리를 선택하면 해당 진료과의 <b>세부 시술</b>이 STEP 2에 나오며, 그 목록은 <a href="https://carebridge.io/menu" target="_blank" rel="noopener">carebridge.io/menu</a>와 동일하게 구성됩니다.</p></div></div>
+        </div>
+        <p class="spec-src">출처 · api.carebridge.io/department/list (carebridge.io/menu) · 2026-07-16 기준</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RATIONALE ============ -->
+  <section class="view" id="v-rat">
+    <div class="rat">
+      <p class="lead"><b>가입 온보딩 · 개선 메인 · 시술리스트 · 예약플로우 · 광고·특가</b> — 각 탭에 적용된 개선을 한눈에 요약했습니다. 모든 변경은 <b>실제 사용 데이터</b>(Amplitude 활동 순위)·<b>취소 사유 분석</b>·2026-07-06 회의에 근거합니다.</p>
+      <div class="cards" id="ratCards"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--blue)"></i>Amplitude 활동 데이터 (상대 순위)</span>
+        <span><i class="dot" style="background:var(--warn)"></i>예약 취소 사유 분석</span>
+      </div>
+      <p class="foot">출처 · 2026-07-06 기능 개선 우선순위 회의 · 아이디어 「앱 메인 개선(간소화)」 「가입 온보딩 시 사용자 정보 획득」<br>본 화면은 프로토타입 데모이며 실제 서비스 데이터·가격과 다를 수 있습니다.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ---------- icons ---------- */
+const I = {
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>',
+  skin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg>',
+  face:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3a7 7 0 0 0-7 7v3a7 7 0 0 0 14 0v-3a7 7 0 0 0-7-7Z"/><path d="M9 13c.6.8 1.7 1.3 3 1.3s2.4-.5 3-1.3"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>',
+  tooth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3c2 0 3-1 5 0s2 4 1.5 8c-.4 3-1 7-2.5 7s-1.5-4-4-4-2.5 4-4 4-2.1-4-2.5-7C5 7 5 4 7 3s3 0 5 0Z"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20s-7-4.4-7-9.5A3.7 3.7 0 0 1 12 7a3.7 3.7 0 0 1 7 3.5C19 15.6 12 20 12 20Z"/><path d="M8 11h2l1-2 1.5 3 1-1.5h2.5"/></svg>',
+  hair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M5 14c0-6 3.5-9 7-9s7 3 7 9"/><path d="M8 14V9M12 14V7M16 14v-5"/><path d="M4 18h16"/></svg>',
+  body:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="5" r="2.4"/><path d="M12 8v7m0 0-3 6m3-6 3 6M7 11l5 1 5-1"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m5 13 4 4L19 7"/></svg>',
+  grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 5l-7 7 7 7"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  ticket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8Z"/><path d="M13 6.5v11"/></svg>',
+  steth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M6 3v5a4 4 0 0 0 8 0V3"/><path d="M5.5 3H7M13 3h1.5M10 16.5V18a4 4 0 0 0 8 0v-2.5"/><circle cx="18" cy="13" r="2"/></svg>',
+  woman:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="8" r="5"/><path d="M12 13v8M9 18h6"/></svg>',
+  man:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10" cy="14" r="5"/><path d="M14.5 9.5 20 4M20 4h-5M20 4v5"/></svg>',
+  mind:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M13 21H9a2 2 0 0 1-2-2v-3c0-1.5-1-2.5-1-4.5A6 6 0 0 1 18 9"/><path d="M13.5 12.2c.7-1.1 2.7-.8 2.7.5 0 1.2-1.5 1.8-2.7 2.8-1.2-1-2.7-1.6-2.7-2.8 0-1.3 2-1.6 2.7-.5Z"/></svg>',
+  bone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M9 15 15 9"/><path d="M9 15a1.9 1.9 0 1 1-2.6-.8 1.9 1.9 0 1 1 .8-2.6l6.2 6.2a1.9 1.9 0 1 1 2.6.8 1.9 1.9 0 1 1-.8 2.6Z" transform="translate(-1 -1)"/><path d="M8.5 15.5a2 2 0 1 1-3-1 2 2 0 1 1 1-3l6 6a2 2 0 1 1-1 3 2 2 0 1 1-3-1Z"/></svg>',
+  herb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M11 21c-5 0-7-4.5-7-8.5C4 8 7 5 11 5c4 0 6 3 6 7"/><path d="M11 21c0-6 3-9.5 8-10.5"/></svg>',
+  beauty:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3Z"/><path d="M18.5 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"/></svg>',
+  shot:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m13 3 8 8M18.5 5.5l-11 11L4 20l1-4.5 8.5-8.5"/><path d="M8.5 10.5l2 2M11 8l2 2"/></svg>',
+  ent:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M7.5 9.5a4.5 4.5 0 1 1 9 0c0 2.3-2 3.2-2 5.3A2.8 2.8 0 0 1 9 15"/><path d="M9.8 9.6a2.2 2.2 0 0 1 4.2.4"/></svg>',
+  cross:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 7v10M7 12h10"/><rect x="4" y="4" width="16" height="16" rx="5"/></svg>',
+  subway:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="3" width="12" height="14" rx="4"/><path d="M6 11h12M8.5 21l1.7-3M15.5 21l-1.7-3"/><circle cx="9.3" cy="13.7" r="1"/><circle cx="14.7" cy="13.7" r="1"/></svg>',
+  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.6 3 14.4 0 18M12 3c-3 3.6-3 14.4 0 18"/></svg>',
+  noresult:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l4 4v6"/><path d="M13 3v5h5"/><path d="M18 17.5 21 20.5"/><circle cx="14" cy="15" r="3.5"/><path d="M6 12H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 18l-5.8 3 1.1-6.5L2.6 9.9l6.5-.9L12 2.6Z"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M6.6 3.5 9 3l1.6 4-1.9 1.4a12 12 0 0 0 5 5L15 11.4 19 13l-.5 2.4a2 2 0 0 1-2.2 1.6A14 14 0 0 1 5 5.7a2 2 0 0 1 1.6-2.2Z"/></svg>',
+  gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="8.5" width="17" height="5" rx="1"/><path d="M5 13.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6.5M12 8.5V21"/><path d="M12 8.5S10.5 4 8 4a2.2 2.2 0 0 0 0 4.5h4Zm0 0S13.5 4 16 4a2.2 2.2 0 0 1 0 4.5h-4Z"/></svg>'
+};
+
+/* ---------- data ---------- */
+const depts = [
+  {n:'피부과',ic:'skin',rk:'1위'},{n:'성형외과',ic:'face',rk:'2위'},{n:'안과',ic:'eye',rk:'3위'},
+  {n:'치과',ic:'tooth',rk:'4위'},{n:'건강검진',ic:'heart',rk:'5위'},
+  {n:'모발이식',ic:'hair'},{n:'비만/체형',ic:'body'},{n:'전체',ic:'grid'}
+];
+const perso = [
+  {nm:'보톡스 이마 100U',price:'9,900원',was:'39,000원',disc:'74%',rv:'★4.9 (1,284)'},
+  {nm:'물광주사 3cc',price:'59,000원',was:'120,000원',disc:'50%',rv:'★4.8 (860)'},
+  {nm:'리쥬란 힐러 2cc',price:'149,000원',was:'220,000원',disc:'32%',rv:'★4.9 (512)'},
+  {nm:'스마일라식',price:'1,490,000원',was:'',disc:'',rv:'★4.9 (2,010)'}
+];
+const reviews = [
+  {nm:'강남 라인성형외과 · 눈매교정',st:'<span class="star">★ 4.9</span> · 후기 2,310 · 재방문율 상위'},
+  {nm:'압구정 SW피부과 · 리프팅',st:'<span class="star">★ 4.9</span> · 후기 1,742 · 이달의 인기'},
+  {nm:'선릉 굿타임치과 · 임플란트',st:'<span class="star">★ 4.8</span> · 후기 980 · 정찰가 공개'}
+];
+const recent = [
+  {nm:'오스템 BA 임플란트',hos:'원데이치과',cap:'하루만에 끝나는<br>원데이 임플란트',badge:'원데이치과',g:'linear-gradient(150deg,#12275F,#2E5BD0)'},
+  {nm:'치아미백 3회 / 9cycle',hos:'서울메스티지치과',cap:'서울대 치과대학<br>동문 병원',badge:'서울메스티지치과',g:'linear-gradient(150deg,#0E6E6D,#12A3A0)'},
+  {nm:'동대문 레이저',hos:'동대문 피부과',cap:'',badge:'',g:'linear-gradient(150deg,#3E7C4E,#7CB889)'},
+  {nm:'테스트',hos:'테스트 병원',cap:'',badge:'',g:'linear-gradient(150deg,#7C879E,#AEB8CC)'}
+];
+function recentCards(){
+  return recent.map(r=>`<div class="rcard">
+    <div class="th" style="background:${r.g}">${r.badge?`<span class="badge">${r.badge}</span>`:''}${r.cap?`<span class="cap">${r.cap}</span>`:''}</div>
+    <div class="nm">${r.nm}</div><div class="hos">${r.hos}</div></div>`).join('');
+}
+
+/* ---------- search & popups ---------- */
+const recentSearches = ['강남 보톡스','스마일라식','종합검진','임플란트'];
+const hotProcedures = ['라식/라섹','임플란트','충치치료','보톡스','제모','치아교정','예방접종','눈성형','모발이식'];
+const trendKeywords = ['이갈이/코골이','안구건조증 IPL','보톡스/턱관절/양악','지방이식','다이어트','지방분해/바디라인','상담/검사','부분교정','보톡스','리프팅레이저'];
+function nowStamp(){const d=new Date();const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())} 기준`;}
+/* 검색 화면 — 고객 지역·관심 진료과 맞춤 추천(탭) */
+const persoSearch = [
+  {dept:'피부과', items:['보톡스 이마','물광주사','리쥬란 힐러','슈링크 리프팅','스킨부스터','제모']},
+  {dept:'안과', items:['스마일라식','라섹','투데이라섹','렌즈삽입술','드림렌즈']},
+  {dept:'치과', items:['임플란트','치아미백','투명교정','라미네이트','충치치료']}
+];
+let pTab=0;
+function persoBody(i){return persoSearch[i].items.map(x=>`<button class="pchip" onclick="runSearch('${x}')">${x}</button>`).join('');}
+function setPTab(i){pTab=i; const b=document.getElementById('pbody'); if(b) b.innerHTML=persoBody(i); document.querySelectorAll('.ptabs .pt').forEach((el,idx)=>el.classList.toggle('on',idx===i));}
+const allProc = [
+  ['피부과',['보톡스','필러','리프팅','물광·스킨부스터','여드름·흉터','제모']],
+  ['성형외과',['눈성형','코성형','안면윤곽','지방이식','실리프팅']],
+  ['안과',['라식','라섹','스마일라식','렌즈삽입술','노안교정']],
+  ['치과',['임플란트','교정','미백','충치치료','라미네이트']],
+  ['건강검진',['종합검진','프리미엄검진','여성검진','내시경','MRI']],
+  ['모발이식',['절개식','비절개식','두피문신']],
+  ['비만/체형',['지방분해주사','체형관리','냉각','인바디']],
+  ['한방',['다이어트 한약','추나요법','침·약침']]
+];
+const deptDeals = {
+  '피부과':[{nm:'보톡스 이마 100U',hos:'강남 SW피부과',price:'9,900원',was:'39,000원'},{nm:'물광주사 3cc',hos:'압구정 라비앙',price:'59,000원',was:'120,000원'},{nm:'리쥬란 힐러 2cc',hos:'청담 온의원',price:'149,000원',was:'220,000원'}],
+  '성형외과':[{nm:'자연유착 눈매교정',hos:'강남 라인성형외과',price:'990,000원',was:'1,400,000원'},{nm:'실리프팅 20line',hos:'신사 더페이스',price:'390,000원',was:'700,000원'}],
+  '안과':[{nm:'스마일라식',hos:'강남밝은눈안과',price:'1,490,000원',was:'1,900,000원'},{nm:'라섹',hos:'서초 리앤안과',price:'890,000원',was:'1,200,000원'}],
+  '치과':[{nm:'국산 임플란트 1개',hos:'선릉 굿타임치과',price:'590,000원',was:'900,000원'},{nm:'전악 치아미백',hos:'역삼 화이트치과',price:'149,000원',was:'250,000원'}],
+  '건강검진':[{nm:'직장인 종합검진',hos:'강남 세이프메디컬',price:'199,000원',was:'350,000원'},{nm:'프리미엄 검진(MRI 포함)',hos:'분당 그린검진센터',price:'490,000원',was:'800,000원'}],
+  '치아':[],
+  '모발이식':[{nm:'비절개 모발이식 2,000모',hos:'강남 모아름',price:'2,900,000원',was:'3,900,000원'}],
+  '비만/체형':[{nm:'지방분해주사 4cc',hos:'강남 라인클리닉',price:'99,000원',was:'180,000원'}]
+};
+function ovl(){return document.getElementById('mainOvl');}
+function closeOvl(){if(typeof clearFair==='function')clearFair(); const o=ovl(); o.hidden=true; o.innerHTML='';
+  const sp=document.getElementById('searchSpec'), mc=document.getElementById('mainCap'), df=document.getElementById('diffSpec');
+  if(sp) sp.hidden=true; if(mc) mc.style.display=''; if(df) df.hidden=false;}
+/* 검색 화면 마크업(개선 메인·시술리스트 공용). closeFn = 뒤로가기 시 호출할 함수명 문자열 */
+function searchScreenHTML(kw, closeFn){
+  pTab=0;
+  return `<div class="searchscreen">
+    <div class="ss-head"><button class="bk" onclick="${closeFn}()" aria-label="뒤로">${I.back}</button>
+      <div class="box">${I.search}<input placeholder="어떤 시술을 찾으세요?" value="${kw?kw.replace(/"/g,'&quot;'):''}" onkeydown="if(event.key==='Enter'&&this.value.trim()){runSearch(this.value.trim());}"></div></div>
+    <div class="ss-body">
+      <div class="lbl">최근 검색어 <button onclick="this.closest('.ss-body').querySelector('.recentchips').innerHTML='<span style=&quot;color:var(--faint);font-size:12.5px&quot;>최근 검색어가 없어요</span>'">전체삭제</button></div>
+      <div class="recentchips">${recentSearches.map(s=>`<span class="rc-chip"><button class="rc-t" onclick="runSearch('${s}')">${s}</button><button class="rc-x" aria-label="삭제" onclick="event.stopPropagation();this.closest('.rc-chip').remove()">×</button></span>`).join('')}</div>
+      <div class="lbl"><span>하늘님 <span style="color:var(--blue)">맞춤 추천</span></span><span class="lbl-sub">강남·강남역 · 관심 진료과 기반</span></div>
+      <div class="ptabs">${persoSearch.map((p,i)=>`<button class="pt${i===pTab?' on':''}" onclick="setPTab(${i})">${p.dept}</button>`).join('')}</div>
+      <div class="pbody" id="pbody">${persoBody(pTab)}</div>
+      <div class="lbl"><span>지금 <span style="color:var(--blue)">많이 찾는</span> 시술</span></div>
+      <div class="hotchips">${hotProcedures.map(s=>`<button class="hotchip" onclick="runSearch('${s}')">${s}</button>`).join('')}</div>
+      <div class="lbl"><span><span style="color:var(--blue)">인기</span> 검색어 트렌드</span><span class="lbl-sub">${nowStamp()}</span></div>
+      <div class="trend">
+        <div class="trend-col">${trendKeywords.slice(0,5).map((s,i)=>`<button class="tr" onclick="runSearch('${s}')"><span class="rk">${i+1}</span><span class="kw">${s}</span></button>`).join('')}</div>
+        <div class="trend-col">${trendKeywords.slice(5,10).map((s,i)=>`<button class="tr" onclick="runSearch('${s}')"><span class="rk">${i+6}</span><span class="kw">${s}</span></button>`).join('')}</div>
+      </div>
+    </div></div>`;
+}
+/* 검색 라벨/엔터 → 어느 오버레이든 닫고 시술리스트에서 결과 노출 */
+function runSearch(kw){
+  const mo=document.getElementById('mainOvl'); if(mo){mo.hidden=true; mo.innerHTML='';}
+  const po=document.getElementById('plOvl'); if(po){po.hidden=true; po.innerHTML='';}
+  const sp=document.getElementById('searchSpec'), mc=document.getElementById('mainCap'), df=document.getElementById('diffSpec');
+  if(sp) sp.hidden=true; if(mc) mc.style.display=''; if(df) df.hidden=false;
+  switchView('proclist'); plTry(kw);
+}
+/* 개선 메인 검색바 → mainOvl */
+function openSearch(kw){
+  const o=ovl();
+  o.innerHTML=searchScreenHTML(kw,'closeOvl');
+  o.hidden=false;
+  const sp=document.getElementById('searchSpec'), mc=document.getElementById('mainCap'), df=document.getElementById('diffSpec');
+  if(sp) sp.hidden=false; if(mc) mc.style.display='none'; if(df) df.hidden=true;
+  const inp=o.querySelector('input'); if(inp) inp.focus();
+}
+/* 시술리스트 검색바 → plOvl (같은 검색 화면) */
+function plOpenSearch(kw){
+  const o=document.getElementById('plOvl'); if(!o) return;
+  o.innerHTML=searchScreenHTML(kw,'plCloseSearch');
+  o.hidden=false;
+  const inp=o.querySelector('input'); if(inp) inp.focus();
+}
+function plCloseSearch(){ const o=document.getElementById('plOvl'); if(o){o.hidden=true; o.innerHTML='';} }
+function openAllProcedures(){
+  const o=ovl();
+  o.innerHTML=`<div class="backdrop" onclick="closeOvl()"></div>
+    <div class="sheet"><div class="sheet-h"><h3>전체 시술</h3>
+      <button class="x" onclick="closeOvl()" aria-label="닫기">${I.x}</button></div>
+      <div class="sheet-b"><div class="allgrid">
+        ${allProc.map(([c,items])=>`<div class="allcat"><div class="ct">${c}</div><div class="it">${items.map(x=>`<span>${x}</span>`).join('')}</div></div>`).join('')}
+      </div></div></div>`;
+  o.hidden=false;
+}
+function deptClick(name){
+  if(name==='전체'){openAllProcedures();return;}
+  openDeptDetail(name);
+}
+// ---- 진료과 상세 페이지 (스샷2 스타일: 검색 + 필터 + 시술 리스트 + 특가전 보기) ----
+function won(s){return (+String(s).replace(/[^0-9]/g,''))||0;}
+function comma(n){return n.toLocaleString('en-US');}
+function scard(d){
+  const p=won(d.price), w=won(d.was);
+  const pct = w>0 ? Math.round((1-p/w)*100)+'%' : '';
+  const cpn = w>0 ? comma(p - Math.min(20000, Math.round(p*0.1)))+'원' : '';
+  return `<div class="scard"><div class="sth"></div><div class="sm">
+    <div class="hos">(T) 케어브릿지 제휴 · ${d.hos}</div>
+    <div class="snm">${d.nm}</div>
+    <div class="rt"><b>★ 9.7</b> (46) · VAT 포함</div>
+    <div class="pr">${w>0?`<s>${d.was}</s><div class="now"><span class="pct">${pct}</span>${d.price}</div>`:`<div class="now">${d.price}</div>`}</div>
+    ${cpn?`<div class="cpn">쿠폰 적용 시 ${cpn}</div>`:''}
+  </div></div>`;
+}
+function openDeptDetail(name){
+  clearFair();
+  const deals = (deptDeals[name]&&deptDeals[name].length)?deptDeals[name]:[{nm:name+' 대표 시술',hos:'케어브릿지 제휴병원',price:'가격 문의',was:''}];
+  const o=ovl();
+  o.innerHTML=`<div class="subscreen">
+    <div class="sub-head"><button class="bk" onclick="closeOvl()" aria-label="뒤로">${I.back}</button>
+      <div class="sbox" onclick="openSearch()">${I.search}<span>시술명, 병원명, 지역을 검색해보세요</span></div></div>
+    <div class="sub-body">
+      <button class="fairbtn" onclick="openDealFair('${name}')">
+        <span class="em">${I.ticket}</span>
+        <span class="tx"><b>${name} 특가전 보기</b><small>${name} 진료과 7월 한정 특가만 모아봤어요</small></span>
+        <span class="ar">›</span></button>
+      <div class="dd-tabs"><button class="on">시술 1,395</button><button>병원</button></div>
+      <div class="dd-filters"><div class="ddf">인기순 ▾</div><div class="ddf">지역 ▾</div><div class="ddf act">${name} ▾</div>
+        <div class="ddf">쿠폰 추가할인</div><div class="ddf">당일할인</div><div class="ddf">특가전</div></div>
+      <div class="slist">${deals.map(scard).join('')}</div>
+    </div></div>`;
+  o.hidden=false;
+}
+// ---- 특가전 페이지 (스샷4 스타일: 탭 + 실시간 카운트다운 + 그라데이션 카드) ----
+const fairDeals = {
+  '안과':['7월 스마일라식','7월 스마트라식','7월 투데이라섹','7월 라섹','7월 라식'],
+  '치과':['7월 임플란트 페스타','7월 투명교정','7월 치아미백'],
+  '피부과':['7월 보톡스 페스타','7월 물광·스킨부스터','7월 리프팅 위크'],
+  '성형외과':['7월 눈성형 특가','7월 코성형 위크','7월 안면윤곽'],
+  '건강검진':['7월 종합검진 특가','7월 프리미엄검진','7월 여성검진'],
+  '모발이식':['7월 모발이식 특가','7월 두피케어 위크'],
+  '비만/체형':['7월 다이어트 특가','7월 지방분해주사']
+};
+let fairTarget=0, fairTimer=null;
+function pad(n){return String(n).padStart(2,'0');}
+function fmtLeft(ms){const s=Math.max(0,Math.floor(ms/1000));const d=Math.floor(s/86400);return `${d}일 ${pad(Math.floor(s%86400/3600))}:${pad(Math.floor(s%3600/60))}:${pad(s%60)}`;}
+function fdeal(t){return `<div class="fdeal"><div class="cd">${I.clock}<span>종료까지 <span class="cd-time">--</span></span></div>
+  <div class="bn"><span class="t">${t}</span><span class="go">${t} 입장하기 ›</span></div></div>`;}
+function renderFair(active, focus){
+  const cats=['전체', ...Object.keys(fairDeals)];
+  const show = active==='전체' ? Object.keys(fairDeals) : [active];
+  const o=ovl();
+  o.innerHTML=`<div class="subscreen">
+    <div class="sub-head"><button class="bk" onclick="openDeptDetail('${focus}')" aria-label="뒤로">${I.back}</button>
+      <div class="ttl">케어브릿지 특가전</div></div>
+    <div class="fair-tabs">${cats.map(c=>`<button class="${c===active?'on':''}" onclick="switchFair('${c}','${focus}')">${c}</button>`).join('')}</div>
+    <div class="sub-body">${show.map(c=>`<div class="fair-sec"><h4>${c}</h4>${(fairDeals[c]||[]).map(fdeal).join('')}</div>`).join('')}</div>
+  </div>`;
+  o.hidden=false;
+}
+function tickFair(){const left=fairTarget-Date.now();document.querySelectorAll('#mainOvl .cd-time').forEach(el=>el.textContent=fmtLeft(left));}
+function clearFair(){if(fairTimer){clearInterval(fairTimer);fairTimer=null;}}
+function openDealFair(name){
+  clearFair();
+  const active = fairDeals[name] ? name : '전체';
+  fairTarget = Date.now() + (24*86400+11*3600+42*60+23)*1000;
+  renderFair(active, name);
+  tickFair();
+  fairTimer=setInterval(tickFair,1000);
+}
+function switchFair(cat, focus){ renderFair(cat, focus); tickFair(); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){const o=document.getElementById('mainOvl'); if(o&&!o.hidden) closeOvl();} });
+
+/* ---------- MAIN render ---------- */
+const cap = '검색을 <b>최상단</b>으로 올리고, 진료과를 <b>인기순</b>으로 간소화했으며, <b>개인화 추천</b> 영역을 신설했습니다. 클릭이 저조한 위젯(인기·주변 병원, 메인 리뷰)은 하단으로 내리거나 제거했습니다.';
+function deptGrid(showRank){
+  return `<div class="depts">`+depts.map(d=>`
+    <button class="dept" onclick="deptClick('${d.n}')"><i>${I[d.ic]}</i><span>${d.n}</span>${showRank&&d.rk?`<span class="rk">▲${d.rk}</span>`:''}</button>`).join('')+`</div>`;
+}
+/* 개선 메인 — 관심 지역 최대 3곳 선택 */
+let mainRegions=['강남·압구정'];
+let mainGeoArea='', mainSearchOn=false, mainRegQuery='';
+function mainRegionLabel(){ return mainRegions.length<=1 ? (mainRegions[0]||'지역') : `${mainRegions[0]} 외 ${mainRegions.length-1}`; }
+function topbar(){
+  return `<div class="appbar">
+    <button class="loc" onclick="openMainRegion()">${I.pin}<b>${mainRegionLabel()}</b><span class="chev">${I.chev}</span></button>
+    <div class="brand">CareBridge</div>
+    <div class="bell">${I.bell}</div>
+  </div>`;
+}
+/* 개선 메인 지역 선택 = 가입 온보딩 STEP3 지역 화면(현재위치+인기 상권+검색) 재현, mainRegions(최대3) */
+function mainGeoHTML(){
+  if(mainGeoArea) return `<span class="geoic on">${I.pin}</span><span class="geotx"><b>현재 위치 · ${mainGeoArea}</b><small>탭하여 다시 감지</small></span><span class="geochk">${I.check}</span>`;
+  return `<span class="geoic">${I.pin}</span><span class="geotx"><b>현재 위치로 설정</b><small>내 주변 병원을 먼저 볼게요</small></span><span class="geoar">›</span>`;
+}
+function mainSelStrip(){
+  if(!mainRegions.length) return `<div class="selstrip empty" id="mainRegStrip">아직 선택한 지역이 없어요</div>`;
+  return `<div class="selstrip" id="mainRegStrip">${mainRegions.map(r=>`<span class="s">${I.pin}${r}<button aria-label="${r} 삭제" onclick="mainToggleRegion('${r}')">×</button></span>`).join('')}</div>`;
+}
+function mainRegResults(q){
+  q=(q||'').trim(); const nq=q.replace(/[·\s]/g,'');
+  let list=q?obSearchIndex.filter(e=>e.l.replace(/[·\s]/g,'').includes(nq)||e.t.replace(/[·\s]/g,'').includes(nq)):obSearchIndex.slice(0,7);
+  if(!list.length) return `<div class="locempty">'${q}' 검색 결과가 없어요.<br>다른 지역명이나 지하철역을 입력해 보세요.</div>`;
+  const full=mainRegions.length>=3;
+  return list.slice(0,40).map(e=>{const on=mainRegions.includes(e.l);const dis=!on&&full;
+    return `<button class="r" data-region="${e.l}" aria-pressed="${on}" ${dis?'disabled':''} onclick="mainToggleRegion('${e.l}')"><span class="ric">${e.k==='역'?I.subway:I.pin}</span><span class="rl">${e.l}</span><span class="rk">${e.t}</span><span class="rchk">${on?I.check:''}</span></button>`;
+  }).join('');
+}
+function renderMainRegion(){
+  const o=ovl(); const full=mainRegions.length>=3;
+  let body;
+  if(mainSearchOn){
+    body=`<button class="locback" onclick="mainCloseRegSearch()">${I.back}인기 상권으로</button>
+      <div class="locsearchbox">${I.search}<input id="mainRegInput" placeholder="동네·지하철역·지역 검색" value="${mainRegQuery.replace(/"/g,'&quot;')}" oninput="mainRegSearch(this.value)" autocomplete="off"></div>
+      ${mainSelStrip()}
+      <div class="locres" id="mainRegResults">${mainRegResults(mainRegQuery)}</div>`;
+  } else {
+    body=`<button class="geo" id="mainGeo" onclick="mainDetectLoc()">${mainGeoHTML()}</button>
+      ${mainSelStrip()}
+      <div class="loclbl">인기 상권 <span>병원 밀집순</span></div>
+      <div class="selgrid">${obPopularAreas.map(r=>{const on=mainRegions.includes(r);const dis=!on&&full;
+        return `<button class="pick" data-region="${r}" aria-pressed="${on}" ${dis?'disabled':''} onclick="mainToggleRegion('${r}')"><span class="ic">${I.pin}</span>${r}</button>`;}).join('')}</div>
+      <button class="locsearchbtn" onclick="mainOpenRegSearch()">${I.search}<span>찾는 지역이 없나요? 지역·지하철역 검색</span><span class="ar">›</span></button>`;
+  }
+  o.innerHTML=`<div class="subscreen">
+    <div class="sub-head"><button class="bk" onclick="mainRegionApply()" aria-label="닫기">${I.back}</button>
+      <div class="ttl">관심 지역 <span class="rg-max">최대 3곳</span></div></div>
+    <div class="sub-body"><div class="locbody">
+      <p class="rg-help">어느 지역에서 진료·시술받고 싶으세요? <b id="mainRegCnt">${mainRegions.length}/3</b> 선택됨</p>
+      ${body}
+    </div></div>
+    <div class="ob-foot"><button class="cta" id="mainRegFoot" onclick="mainRegionApply()">${mainRegions.length}곳 적용</button></div>
+  </div>`;
+  o.hidden=false;
+}
+function mainToggleRegion(r){
+  const i=mainRegions.indexOf(r);
+  if(i>=0){ if(mainRegions.length>1) mainRegions.splice(i,1); }
+  else if(mainRegions.length<3){ mainRegions.push(r); }
+  const o=ovl();
+  o.querySelectorAll('[data-region]').forEach(b=>{const on=mainRegions.includes(b.dataset.region); b.setAttribute('aria-pressed',on); if(!on&&mainRegions.length>=3) b.setAttribute('disabled',''); else b.removeAttribute('disabled');});
+  const res=document.getElementById('mainRegResults'); if(res) res.innerHTML=mainRegResults(mainRegQuery);
+  const strip=document.getElementById('mainRegStrip'); if(strip) strip.outerHTML=mainSelStrip();
+  const cnt=document.getElementById('mainRegCnt'); if(cnt) cnt.textContent=`${mainRegions.length}/3`;
+  const foot=document.getElementById('mainRegFoot'); if(foot) foot.textContent=`${mainRegions.length}곳 적용`;
+}
+function mainDetectLoc(){
+  const g=document.getElementById('mainGeo'); if(!g) return;
+  g.innerHTML=`<span class="geoic">${I.pin}</span><span class="geotx"><b>위치 확인 중…</b><small>네이버 지오코딩으로 상권 매칭</small></span>`;
+  setTimeout(()=>{ mainGeoArea='강남·압구정'; if(!mainRegions.includes(mainGeoArea)&&mainRegions.length<3) mainRegions.unshift(mainGeoArea); renderMainRegion(); },700);
+}
+function mainOpenRegSearch(){ mainSearchOn=true; renderMainRegion(); mainRegFocus(); }
+function mainCloseRegSearch(){ mainSearchOn=false; renderMainRegion(); }
+function mainRegSearch(q){ mainRegQuery=q; const r=document.getElementById('mainRegResults'); if(r) r.innerHTML=mainRegResults(q); }
+function mainRegFocus(){ const i=document.getElementById('mainRegInput'); if(i){i.focus(); const v=i.value; i.value=''; i.value=v;} }
+function openMainRegion(){ mainSearchOn=false; mainRegQuery=''; renderMainRegion(); }
+function mainRegionApply(){ mainSearchOn=false; mainRegQuery=''; const o=ovl(); o.hidden=true; o.innerHTML=''; renderMain(); }
+function persoRail(){
+  return perso.map(p=>`<div class="pcard">
+    <div class="ph">${p.disc?`<span class="disc">${p.disc}</span>`:''}</div>
+    <div class="b"><div class="nm">${p.nm}</div>
+      <div class="price">${p.price}${p.was?`<s>${p.was}</s>`:''}</div>
+      <div class="rv">${p.rv}</div></div></div>`).join('');
+}
+function renderTOBE(){
+  return topbar()+`<div class="pad">
+    <div class="search" role="button" tabindex="0" onclick="openSearch()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSearch();}">${I.search}<span>어떤 시술을 찾으세요?</span></div>
+    <div class="sec"><div class="sec-h"><h3>진료과 <b>바로가기</b><span class="tag hot">활동 1위</span></h3></div>
+      ${deptGrid(true)}</div>
+    <div class="sec"><div class="sec-h"><h3>하늘님 <b>맞춤 추천</b><span class="tag">온보딩 관심정보</span></h3><span class="more">더보기</span></div>
+      <div class="perso"><div class="who"><span class="av">재</span><div><b>30대 · 피부과 관심</b> <small>· 최근 본 보톡스 기반</small></div></div>
+        <div class="rail">${persoRail()}</div></div></div>
+    <div class="sec"><div class="sec-h"><h3>하늘님이 <b>최근 본 시술</b></h3></div>
+      <div class="rrail">${recentCards()}</div></div>
+    <div class="sec"><div class="sec-h"><h3>이번 주 <b>핵심 특가</b></h3></div>
+      <div class="rail">
+        <div class="deal"><small>7월 한정 특가</small><h4>보톡스 100U · 9,900원</h4><p>선착순 · 오늘 예약 가능</p><span class="pill">예약하기</span></div>
+        <div class="deal"><small>프리미엄 제휴</small><h4>종합 건강검진 199,000원</h4><p>복지 포인트 추가 적립</p><span class="pill">둘러보기</span></div>
+      </div></div>
+    <div class="sec"><div class="sec-h"><h3>나와 비슷한 사용자가 <b>많이 찾는</b></h3><span class="more">${mainRegionLabel()} · 30대 기준</span></div>
+      <div class="chips">
+        <div class="chip" onclick="runSearch('보톡스')"><b>#</b>보톡스</div><div class="chip" onclick="runSearch('스마일라식')"><b>#</b>스마일라식</div>
+        <div class="chip" onclick="runSearch('리프팅')"><b>#</b>리프팅</div><div class="chip" onclick="runSearch('종합검진')"><b>#</b>종합검진</div>
+        <div class="chip" onclick="runSearch('치아미백')"><b>#</b>치아미백</div><div class="chip" onclick="runSearch('모발이식')"><b>#</b>모발이식</div>
+      </div></div>
+    <div class="sec"><div class="sec-h"><h3>후기 좋은 <b>시술</b><span class="tag">후기 많은 순</span></h3></div>
+      ${reviews.map(r=>`<div class="rev"><div class="th"></div><div class="m"><div class="nm">${r.nm}</div><div class="st">${r.st}</div></div><div class="go">예약</div></div>`).join('')}</div>
+    <div style="height:20px"></div>
+  </div>`;
+}
+function renderMain(){
+  document.getElementById('mainScroll').innerHTML = renderTOBE();
+  document.getElementById('mainCap').innerHTML = cap;
+  document.getElementById('mainScroll').scrollTop=0;
+}
+
+/* ---------- 시술 리스트 ---------- */
+const procList=[
+  {ad:true, nm:'보톡스 이마 100U', hos:'강남 SW피부과', dept:'피부과', region:'강남', station:'강남역', price:'9,900원', was:'39,000원', rate:'9.8', rv:'1,284', coupon:true},
+  {ad:true, nm:'스마일라식', hos:'강남밝은눈안과', dept:'안과', region:'강남', station:'강남역', price:'1,490,000원', was:'1,900,000원', rate:'9.7', rv:'2,010', coupon:true},
+  {nm:'물광주사 3cc', hos:'압구정 라비앙', dept:'피부과', region:'압구정', station:'압구정로데오역', price:'59,000원', was:'120,000원', rate:'9.6', rv:'860', coupon:true},
+  {nm:'리쥬란 힐러 2cc', hos:'청담 온의원', dept:'피부과', region:'압구정', station:'', price:'149,000원', was:'220,000원', rate:'9.5', rv:'512', coupon:true},
+  {nm:'자연유착 눈매교정', hos:'강남 라인성형외과', dept:'성형외과', region:'강남', station:'강남역', price:'990,000원', was:'1,400,000원', rate:'9.6', rv:'742', coupon:false},
+  {nm:'국산 임플란트 1개', hos:'선릉 굿타임치과', dept:'치과', region:'선릉·삼성', station:'선릉역', price:'590,000원', was:'900,000원', rate:'9.4', rv:'331', coupon:true},
+  {nm:'리프팅 슈링크 300샷', hos:'신사 더페이스의원', dept:'피부과', region:'압구정', station:'신사역', price:'190,000원', was:'350,000원', rate:'9.5', rv:'604', coupon:true},
+  {nm:'치아미백 3회', hos:'역삼 화이트치과', dept:'치과', region:'강남', station:'역삼역', price:'149,000원', was:'250,000원', rate:'9.2', rv:'188', coupon:true},
+  {nm:'종합검진 (종합 건강검진)', hos:'강남 세이프메디컬', dept:'건강검진', region:'강남', station:'', price:'199,000원', was:'350,000원', rate:'9.3', rv:'97', coupon:false},
+  {nm:'비절개 모발이식 2,000모', hos:'강남 모아름의원', dept:'두피/탈모', region:'강남', station:'강남역', price:'2,900,000원', was:'3,900,000원', rate:'9.4', rv:'145', coupon:false}
+];
+// 이갈이/코골이 + 잠실·송파(지역 전환 데모용) 시술 추가
+procList.push(
+  {nm:'나이트가드 (이갈이 장치)', hos:'성누가병원', dept:'치과', region:'강남', station:'강남역', price:'200,000원', was:'250,000원', rate:'9.2', rv:'5', coupon:false},
+  {nm:'코골이 장치', hos:'스카이치과', dept:'치과', region:'강남', station:'역삼역', price:'350,000원', was:'450,000원', rate:'9.5', rv:'14', coupon:false},
+  {nm:'이갈이 장치 하드', hos:'스카이치과', dept:'치과', region:'강남', station:'역삼역', price:'500,000원', was:'700,000원', rate:'9.5', rv:'14', coupon:false},
+  {nm:'라식', hos:'잠실 밝은눈안과', dept:'안과', region:'잠실·송파', station:'잠실역', price:'990,000원', was:'1,300,000원', rate:'9.3', rv:'120', coupon:true},
+  {nm:'임플란트(단일)', hos:'송파 굿플란트치과', dept:'치과', region:'잠실·송파', station:'', price:'650,000원', was:'950,000원', rate:'9.2', rv:'88', coupon:true},
+  {nm:'물광주사 3cc', hos:'잠실 라비앙의원', dept:'피부과', region:'잠실·송파', station:'잠실역', price:'69,000원', was:'130,000원', rate:'9.1', rv:'54', coupon:true}
+);
+// 병원 리스트 (강남권 + 잠실·송파 + 부산 서면 + 대구 동성로) — 지역 기반 노출 & 시술 0건 시 병원 폴백 데모용
+const hosList=[
+  {nm:'성누가병원', dept:'치과·내과·한방과', region:'강남·강남역', line:'강남역', rate:'9.2', rv:'5', tag:'제휴'},
+  {nm:'스카이치과', dept:'치과', region:'강남·역삼역', line:'역삼역', rate:'9.5', rv:'14', tag:'제휴'},
+  {nm:'강남서울밝은안과', dept:'안과', region:'강남·강남역', line:'강남역', rate:'9.3', rv:'35', tag:'제휴'},
+  {nm:'선릉 굿타임치과', dept:'치과', region:'선릉·삼성', line:'선릉역', rate:'9.4', rv:'331'},
+  {nm:'압구정 라비앙의원', dept:'피부과', region:'압구정', line:'압구정로데오역', rate:'9.6', rv:'860', tag:'제휴'},
+  {nm:'역삼 화이트치과', dept:'치과', region:'강남·역삼역', line:'역삼역', rate:'9.2', rv:'188'},
+  {nm:'강남 세이프메디컬', dept:'건강검진', region:'강남·강남역', line:'강남역', rate:'9.3', rv:'97'},
+  {nm:'잠실 밝은눈안과', dept:'안과', region:'잠실·송파', line:'잠실역', rate:'9.3', rv:'120', tag:'제휴'},
+  {nm:'송파 굿플란트치과', dept:'치과', region:'잠실·송파', line:'송파역', rate:'9.2', rv:'88'},
+  {nm:'서면 SW피부과', dept:'피부과', region:'부산 서면', line:'서면역', rate:'9.1', rv:'42', tag:'제휴'},
+  {nm:'서면 굿모닝치과', dept:'치과', region:'부산 서면', line:'서면역', rate:'9.0', rv:'27'},
+  {nm:'서면 밝은미소안과', dept:'안과', region:'부산 서면', line:'서면역', rate:'9.2', rv:'53'},
+  {nm:'동성로 SW피부과', dept:'피부과', region:'대구 동성로', line:'중앙로역', rate:'9.1', rv:'33', tag:'제휴'},
+  {nm:'동성로 밝은치과', dept:'치과', region:'대구 동성로', line:'반월당역', rate:'9.0', rv:'21'}
+];
+const plCats=['전체','피부과','안과','치과','성형외과','건강검진','두피/탈모'];
+// 지역: 선택형 필터. 그룹 매칭으로 하위 상권 포함
+const plRegions=['강남','압구정·신사','잠실·송파','부산 서면','대구 동성로'];
+const plRegionMatch={'강남':['강남','역삼','선릉','삼성'],'압구정·신사':['압구정','신사','청담'],'잠실·송파':['잠실','송파'],'부산 서면':['서면'],'대구 동성로':['동성로','대구']};
+function itemInRegion(reg, key){ return (plRegionMatch[key]||[]).some(m=>reg.includes(m)); }
+let plCat='전체', plTab='시술', plQuery='', plRegion='강남';
+function procCard(d){
+  const p=won(d.price), w=won(d.was);
+  const pct = w>0?Math.round((1-p/w)*100)+'%':'';
+  const cp = d.coupon ? comma(p - Math.min(20000, Math.round(p*0.1)))+'원' : '';
+  return `<div class="sd-card">
+    <div class="sd-thumb">${d.ad?'<span class="sd-ad">AD</span>':''}</div>
+    <div class="sd-body">
+      ${d.coupon?`<span class="sd-badge">고유가 지원금 사용가능</span>`:''}
+      <div class="sd-hos">${d.hos} · ${d.region}${d.station?` · <span class="sd-st">${I.subway}${d.station}</span>`:''}</div>
+      <div class="sd-title">${d.nm}</div>
+      <div class="sd-rate">${I.star}<b>${d.rate}</b> <span class="sd-cnt">(${d.rv})</span></div>
+      ${w>0?`<div class="sd-was"><s>${d.was}</s> · VAT 포함</div>`:''}
+      <div class="sd-price">${pct?`<span class="sd-pct">${pct}</span>`:''}${d.price}</div>
+      ${cp?`<div class="sd-cpn">쿠폰 적용 시 ${cp}</div>`:''}
+    </div></div>`;
+}
+function hCard(h){
+  return `<div class="hcard"><div class="hth">${h.nm.replace(/\s.*/,'').slice(0,2)}</div>
+    <div class="hm"><div class="hnm">${h.nm}</div>
+      <div class="hsub">${h.dept} · ${h.region} · ${h.line}</div>
+      <div class="hrt"><b>★ ${h.rate}</b> (${h.rv})${h.tag?` · <span class="htag">${h.tag}</span>`:''}</div>
+    </div><button class="hbtn">예약</button></div>`;
+}
+const plNorm=s=>String(s).replace(/[·\s]/g,'');
+function plTokens(q){return q.trim().split(/[\s·\/,]+/).filter(Boolean).map(plNorm);}
+function plMatch(fields,q){const t=plTokens(q); if(!t.length) return true; return t.some(tk=>fields.some(f=>plNorm(f).includes(tk)));}
+// 지역(plRegion) + 검색어(plQuery) 교차 필터. 검색어는 시술명/진료과/병원명 매칭(지역은 선택형)
+function plProcAll(){ const q=plQuery.trim(); return procList.filter(d=> itemInRegion(d.region,plRegion) && (q?plMatch([d.nm,d.dept,d.hos],q):true) ); }
+function plProcShown(){ let l=plProcAll(); if(plCat!=='전체') l=l.filter(d=>d.dept===plCat); return l; }
+function plHosAll(){ const q=plQuery.trim(); return hosList.filter(h=> itemInRegion(h.region,plRegion) && (q?plMatch([h.nm,h.dept,h.line],q):true) ); }
+function plRegionLabel(){ return plRegion; }
+function renderProcList(){
+  document.getElementById('plScroll').innerHTML=`
+    <div class="pl-sbar"><button class="box" onclick="plOpenSearch(plQuery)">${I.search}<span class="pl-sbtxt${plQuery?' has':''}">${plQuery||'시술명, 병원명, 지역을 검색해보세요'}</span></button></div>
+    <div class="pl-eg"><span>예시</span>
+      <button onclick="plTry('이갈이/코골이')">이갈이/코골이</button>
+      <button onclick="plTry('임플란트')">임플란트</button>
+      <button onclick="plSetRegion('부산 서면')">지역→부산 서면</button>
+      ${(plQuery||plRegion!=='강남')?`<button class="clr" onclick="plReset()">초기화</button>`:''}
+    </div>
+    <div id="plDyn">${renderPlDyn()}</div>`;
+}
+function renderPlDyn(){
+  const nP=plProcAll().length, nH=plHosAll().length;
+  return `${plQuery.trim()?`<div class="pl-rel">연관 <b>${plQuery.trim()}</b></div>`:''}
+    <div class="pl-ad"><div class="pl-ad-t">덴티움 → 오스템 임플란트 업그레이드</div><div class="pl-ad-s">*뼈 이식 등 추가 시술은 별도 금액 발생</div><span class="pl-ad-tag">AD</span></div>
+    <div class="pl-top2"><button class="pl-region" onclick="openRegionPicker()">${I.pin}<b>${plRegion}</b><span class="plchev">${I.chev}</span></button><button class="pl-sort">인기순 <span>▾</span></button></div>
+    <div class="pl-tabs2">
+      <button class="plt2 ${plTab==='시술'?'on':''}" onclick="plSetTab('시술')">시술 <b>${nP}</b></button>
+      <button class="plt2 ${plTab==='병원'?'on':''}" onclick="plSetTab('병원')">병원 <b>${nH}</b></button>
+    </div>
+    ${plTab==='시술'?renderPlProcTab():renderPlHosTab()}`;
+}
+function renderPlProcTab(){
+  if(plProcAll().length===0){
+    return `<div class="pl-empty"><div class="pl-empty-ic">${I.noresult}</div>
+      <p>${plRegion}${plQuery.trim()?` · ‘${plQuery.trim()}’`:''} 시술 결과가 없어요</p>
+      <button class="pl-req">희망 시술 요청하기</button>
+      <div class="pl-empty-hint"><b>${plRegion}</b> 지역은 등록된 시술이 아직 없어요.<br>위 <b>병원 탭</b>에서 해당 지역 병원을 먼저 확인해 보세요.</div></div>`;
+  }
+  const items=plProcShown();
+  return `<div class="pl-cats">${plCats.map(c=>`<button class="plc${c===plCat?' on':''}" onclick="plSetCat('${c}')">${c}</button>`).join('')}</div>
+    <div class="pl-filters">${['쿠폰 추가할인','당일할인','특가전','오늘 예약가능'].map(f=>`<span class="plf">${f}</span>`).join('')}</div>
+    <div class="pl-cnt">시술 <b>${items.length}</b>건 · ${plRegion} · 인기순 <span class="pl-adnote">· 상단 AD 방어</span></div>
+    <div class="pl-list">${items.map(procCard).join('')}</div><div style="height:20px"></div>`;
+}
+function renderPlHosTab(){
+  const hos=plHosAll();
+  if(!hos.length) return `<div class="pl-filters hos"><span class="plf">진료과 ▾</span><span class="plf">쿠폰 추가할인</span></div>
+    <div class="pl-empty"><div class="pl-empty-ic">${I.noresult}</div><p>${plRegion} 병원 결과가 없어요</p><button class="pl-req">희망 병원 요청하기</button></div>`;
+  return `<div class="pl-filters hos"><span class="plf">진료과 ▾</span><span class="plf">쿠폰 추가할인</span></div>
+    <div class="pl-cnt">병원 <b>${hos.length}</b>곳 · ${plRegion}</div>
+    <div class="pl-hlist">${hos.map(hCard).join('')}</div><div style="height:20px"></div>`;
+}
+function plUpdate(){ document.getElementById('plDyn').innerHTML=renderPlDyn(); }
+function plAutoTab(){ plTab = (plProcAll().length===0 && plHosAll().length>0) ? '병원' : (plProcAll().length>0 ? '시술' : plTab); }
+function plSearch(q){ plQuery=q; plCat='전체'; plAutoTab(); plUpdate(); }
+function plTry(q){ plQuery=q; plCat='전체'; plAutoTab(); renderProcList(); const i=document.getElementById('plInput'); if(i){i.value=q;} }
+function plSetTab(t){ plTab=t; plUpdate(); }
+function plSetCat(c){ plCat=c; plUpdate(); }
+function plReset(){ plQuery=''; plRegion='강남'; plCat='전체'; plTab='시술'; renderProcList(); }
+/* 지역 선택 피커 (시술리스트 폰 오버레이) */
+function openRegionPicker(){
+  const o=document.getElementById('plOvl'); if(!o) return;
+  o.innerHTML=`<div class="backdrop" onclick="closeRegionPicker()"></div>
+    <div class="sheet"><div class="sheet-h"><h3>지역 선택</h3><button class="x" onclick="closeRegionPicker()" aria-label="닫기">${I.x}</button></div>
+      <div class="sheet-b"><div class="rp-list">${plRegions.map(r=>{
+        const np=procList.filter(d=>itemInRegion(d.region,r)).length, nh=hosList.filter(h=>itemInRegion(h.region,r)).length;
+        return `<button class="rp ${r===plRegion?'on':''}" onclick="plSetRegion('${r}')"><span class="rp-ic">${I.pin}</span><span class="rp-nm">${r}</span><span class="rp-cnt">시술 ${np} · 병원 ${nh}</span>${r===plRegion?`<span class="rp-chk">${I.check}</span>`:''}</button>`;
+      }).join('')}</div></div></div>`;
+  o.hidden=false;
+}
+function closeRegionPicker(){ const o=document.getElementById('plOvl'); if(o){o.hidden=true; o.innerHTML='';} }
+function plSetRegion(r){ plRegion=r; plQuery=''; plCat='전체'; closeRegionPicker(); plAutoTab(); renderProcList(); }
+
+/* ---------- ONBOARDING (carebridge.io/menu 전체 카테고리) ---------- */
+// 진료과 17종 + 세부 시술 — 출처: api.carebridge.io/department/list (carebridge.io/menu 동일)
+// 배열 순서 = 앱 노출 순서(=검색·이용 기반 '많이 찾는 순' 프록시)
+const obDeptData=[
+  {n:'치과',t:['충치치료','임플란트','틀니','전체교정','부분교정','심미치료','치아복구','소아치료','보톡스/턱관절/양악','이갈이/코골이','기타진료']},
+  {n:'안과',t:['시력교정술','노안 시력교정술','백내장','드림렌즈','안구건조증 IPL','기타진료']},
+  {n:'피부과',t:['리프팅레이저','스킨부스터','제모','보톡스','필러','미백/색소/점','여드름/모공/피부관리','실리프팅','줄기세포','수액/영양주사','기타진료','그 외 시술']},
+  {n:'성형외과',t:['눈성형','눈지방성형','코성형','입술/인중성형','안면윤곽/양악','가슴성형','지방흡입','지방이식','거상술','기타진료']},
+  {n:'건강검진',t:[]},
+  {n:'다이어트',t:['지방분해/바디라인','다이어트','그 외 시술']},
+  {n:'두피/탈모',t:['모발이식','두피치료','기타진료','반영구/문신']},
+  {n:'산부인과',t:['예방접종','여성 시술/수술','검진','기타진료']},
+  {n:'심리상담',t:['상담/검사','기타진료']},
+  {n:'비뇨기과',t:['남성 시술/수술','검진','기타진료']},
+  {n:'정형외과',t:['치료/비수술','수술','기타진료']},
+  {n:'내과',t:['내과진료','기타진료']},
+  {n:'한의원',t:['한약','약침','도수치료/충격파','기타진료','피부 질환']},
+  {n:'뷰티',t:['반영구/문신','기타진료']},
+  {n:'예방접종',t:['예방접종','기타진료']},
+  {n:'이비인후과',t:['호흡/청각/수면','기타진료']},
+  {n:'외과',t:['외과진료','기타진료']}
+];
+const deptTreat=Object.fromEntries(obDeptData.map(d=>[d.n,d.t]));
+const deptIconMap={'치과':'tooth','안과':'eye','피부과':'skin','성형외과':'face','건강검진':'steth','다이어트':'body','두피/탈모':'hair','산부인과':'woman','심리상담':'mind','비뇨기과':'man','정형외과':'bone','내과':'steth','한의원':'herb','뷰티':'beauty','예방접종':'shot','이비인후과':'ent','외과':'cross'};
+function deptIcon(n){return I[deptIconMap[n]]||I.cross;}
+const obRegion=['강남·강남역','서초·교대','잠실·송파','홍대·신촌','판교·분당','수원·영통','부산 서면','대구 동성로'];
+let obSort='ganada'; // 'ganada'(현재 기본) | 'popular'(추후 검색량 기반 재정렬)
+let ob={step:0, dept:new Set(), detail:new Set(), region:new Set()};
+/* STEP 3 관심 지역 — A(하이브리드) / B(검색우선) 두 방식 데모 */
+let obLoc='A';        // 'A' 하이브리드 | 'B' 검색우선
+let obSearchOn=false; // A에서 검색 서브뷰 열림 여부
+let obQuery='';
+let obGeoArea='';     // 현재위치 감지 결과(시뮬레이션)
+const obPopularAreas=['강남·압구정','서초·교대','잠실·송파','건대·성수','홍대·신촌','노원·수유','분당·판교','부산 서면','대구 동성로'];
+const obSearchIndex=[
+  {l:'강남·압구정',k:'상권',t:'서울 강남'},{l:'강남역',k:'역',t:'2호선·신분당'},{l:'신논현·논현',k:'역',t:'서울 강남'},{l:'압구정로데오',k:'역',t:'서울 강남'},{l:'선릉·삼성',k:'역',t:'서울 강남'},{l:'서초·교대',k:'상권',t:'서울 서초'},{l:'사당·이수',k:'역',t:'서울 동작'},
+  {l:'잠실·송파',k:'상권',t:'서울 송파'},{l:'강동·천호',k:'상권',t:'서울 강동'},{l:'홍대·신촌',k:'상권',t:'서울 마포'},{l:'건대·성수',k:'상권',t:'서울 광진'},{l:'용산·이태원',k:'상권',t:'서울 용산'},{l:'영등포·여의도',k:'상권',t:'서울 영등포'},{l:'목동·양천',k:'상권',t:'서울 양천'},{l:'노원·수유',k:'상권',t:'서울 노원'},{l:'종로·광화문',k:'상권',t:'서울 종로'},
+  {l:'강남구',k:'구',t:'서울'},{l:'서초구',k:'구',t:'서울'},{l:'송파구',k:'구',t:'서울'},{l:'마포구',k:'구',t:'서울'},{l:'강서구',k:'구',t:'서울'},{l:'관악구',k:'구',t:'서울'},{l:'은평구',k:'구',t:'서울'},{l:'성북구',k:'구',t:'서울'},{l:'동대문구',k:'구',t:'서울'},
+  {l:'분당·서현',k:'상권',t:'경기 성남'},{l:'판교',k:'역',t:'경기 성남'},{l:'수원·영통',k:'상권',t:'경기 수원'},{l:'일산·라페스타',k:'상권',t:'경기 고양'},{l:'부천 중동',k:'상권',t:'경기 부천'},{l:'안양·평촌',k:'상권',t:'경기 안양'},{l:'인천 부평',k:'상권',t:'인천'},{l:'인천 구월',k:'상권',t:'인천'},
+  {l:'부산 서면',k:'상권',t:'부산'},{l:'부산 해운대',k:'상권',t:'부산'},{l:'대구 동성로',k:'상권',t:'대구'},{l:'대전 둔산',k:'상권',t:'대전'},{l:'광주 상무',k:'상권',t:'광주'},{l:'울산 삼산',k:'상권',t:'울산'},{l:'창원 상남',k:'상권',t:'경남'},{l:'천안 신불당',k:'상권',t:'충남'},{l:'청주 성안길',k:'상권',t:'충북'},{l:'전주 객사',k:'상권',t:'전북'},{l:'제주시청',k:'상권',t:'제주'}
+];
+function obDeptList(){const a=obDeptData.slice(); if(obSort==='ganada') a.sort((x,y)=>x.n.localeCompare(y.n,'ko')); return a;}
+function obSetSort(s){obSort=s; obRender();}
+
+function obRender(){
+  const S=document.querySelectorAll('#v-onboard .steps .s');
+  S.forEach((s,i)=>s.className='s'+(i<=ob.step?' on':''));
+  const el=document.getElementById('obScroll');
+  if(ob.step===0){
+    const list=obDeptList();
+    el.innerHTML=`<div class="ob-h"><div class="k">STEP 1 / 3</div><h2>어떤 진료에<br>관심이 있으세요?</h2><p>관심 진료과 위주로 홈을 구성해 드려요. (복수 선택)</p>
+      <div class="obsort" role="group" aria-label="카테고리 정렬 기준">
+        <button class="${obSort==='ganada'?'on':''}" onclick="obSetSort('ganada')">가나다순</button>
+        <button class="${obSort==='popular'?'on':''}" onclick="obSetSort('popular')">많이 찾는 순<span class="soon">추후</span></button>
+      </div></div>
+      <div class="selgrid">${list.map(d=>`<button class="pick" aria-pressed="${ob.dept.has(d.n)}" onclick="obPick('dept','${d.n}')"><span class="ic">${deptIcon(d.n)}</span>${d.n}</button>`).join('')}</div>
+      <div class="ob-foot"><button class="cta" ${ob.dept.size?'':'disabled'} onclick="obNext()">다음 (${ob.dept.size})</button></div>`;
+  } else if(ob.step===1){
+    const picks=[...ob.dept];
+    const groups=picks.map(d=>({d,items:deptTreat[d]||[]})).filter(g=>g.items.length);
+    const hasAny=groups.length>0;
+    el.innerHTML=`<div class="ob-h"><div class="k">STEP 2 / 3</div><h2>세부 진료를<br>골라주세요</h2><p>선택하신 <b>${picks.join(', ')}</b>의 세부 시술이에요.</p></div>
+      <div class="selgroups">${groups.map(g=>`<div class="selgrp"><div class="grp-t"><span class="gic">${deptIcon(g.d)}</span>${g.d}</div>
+        <div class="selgrid tight">${g.items.map(x=>{const k=g.d+'::'+x; return `<button class="pick sm" aria-pressed="${ob.detail.has(k)}" onclick="obPickKey('${k}')">${x}</button>`;}).join('')}</div></div>`).join('')}
+        ${hasAny?'':'<p class="nodetail">선택하신 진료과는 세부 시술 없이 바로 예약할 수 있어요.</p>'}</div>
+      <div class="ob-foot"><button class="cta" ${(ob.detail.size||!hasAny)?'':'disabled'} onclick="obNext()">다음 (${ob.detail.size})</button>
+        <button class="cta ghost" onclick="obPrev()">이전</button></div>`;
+  } else if(ob.step===2){
+    let body;
+    if(obLoc==='B' || obSearchOn){
+      body=`${obLoc==='A'?`<button class="locback" onclick="obCloseSearch()">${I.back}인기 상권으로</button>`:''}
+        <div class="locsearchbox">${I.search}<input id="obSearchInput" placeholder="동네·지하철역·지역 검색" value="${obQuery.replace(/"/g,'&quot;')}" oninput="obSearchFilter(this.value)" autocomplete="off"></div>
+        ${selStripHTML()}
+        <div class="locres" id="obSearchResults">${searchResultsHTML(obQuery)}</div>`;
+    } else {
+      body=`<button class="geo" id="obGeo" onclick="obDetectLoc()">${obGeoHTML()}</button>
+        ${selStripHTML()}
+        <div class="loclbl">인기 상권 <span>병원 밀집순</span></div>
+        <div class="selgrid">${obPopularAreas.map(r=>`<button class="pick" data-region="${r}" aria-pressed="${ob.region.has(r)}" onclick="obToggleRegion('${r}')"><span class="ic">${I.pin}</span>${r}</button>`).join('')}</div>
+        <button class="locsearchbtn" onclick="obOpenSearch()">${I.search}<span>찾는 지역이 없나요? 지역·지하철역 검색</span><span class="ar">›</span></button>
+        <button class="pick wide" data-region="전국·어디든" aria-pressed="${ob.region.has('전국·어디든')}" onclick="obToggleRegion('전국·어디든')"><span class="ic">${I.globe}</span>전국·어디든 상관없어요</button>`;
+    }
+    el.innerHTML=`<div class="ob-h"><div class="k">STEP 3 / 3</div><h2>관심 지역을<br>선택해 주세요</h2><p>어느 지역에서 진료·시술받고 싶으세요? (복수 선택)</p>
+      <div class="obsort" role="group" aria-label="지역 선택 방식">
+        <button class="${obLoc==='A'?'on':''}" onclick="obSetLoc('A')">A · 하이브리드</button>
+        <button class="${obLoc==='B'?'on':''}" onclick="obSetLoc('B')">B · 검색 우선</button>
+      </div></div>
+      <div class="locbody">${body}</div>
+      <div class="ob-foot" id="obStep3Foot">${step3FootHTML()}</div>`;
+  } else {
+    const detNames=[...ob.detail].map(k=>k.split('::')[1]);
+    el.innerHTML=`<div class="done"><div class="mk">${I.check}</div>
+      <h2>맞춤 홈이 준비됐어요</h2><p>선택하신 관심 정보로 첫 화면부터 개인화 추천을 노출합니다.</p>
+      <div class="summ">
+        <div class="row"><span class="lb">관심 진료과</span><span class="vl">${[...ob.dept].join(', ')||'-'}</span></div>
+        <div class="row"><span class="lb">관심 시술</span><span class="vl">${detNames.join(', ')||'-'}</span></div>
+        <div class="row"><span class="lb">관심 지역</span><span class="vl">${[...ob.region].join(', ')||'-'}</span></div>
+      </div>
+      <div class="ob-foot" style="padding-top:22px"><button class="cta" onclick="goMain()">개인화된 홈 보기 →</button>
+        <button class="cta ghost" onclick="obReset()">처음부터 다시</button></div></div>`;
+  }
+  el.scrollTop=0;
+}
+function obPick(k,v){const s=ob[k]; s.has(v)?s.delete(v):s.add(v); obRender();}
+function obPickKey(k){ob.detail.has(k)?ob.detail.delete(k):ob.detail.add(k); obRender();}
+function obNext(){ob.step++; obRender();}
+function obPrev(){ob.step--; obRender();}
+function obReset(){obSort='ganada'; obLoc='A'; obSearchOn=false; obQuery=''; obGeoArea=''; ob={step:0,dept:new Set(),detail:new Set(),region:new Set()}; obRender();}
+function goMain(){switchView('main');}
+
+/* ---------- STEP 3 관심 지역: A 하이브리드 / B 검색우선 ---------- */
+function step3FootHTML(){
+  return `<button class="cta" ${ob.region.size?'':'disabled'} onclick="obNext()">맞춤 홈 만들기${ob.region.size?` (${ob.region.size})`:''}</button>
+    <button class="cta ghost" onclick="obPrev()">이전</button>`;
+}
+function obGeoHTML(){
+  if(obGeoArea) return `<span class="geoic on">${I.pin}</span><span class="geotx"><b>현재 위치 · ${obGeoArea}</b><small>탭하여 다시 감지</small></span><span class="geochk">${I.check}</span>`;
+  return `<span class="geoic">${I.pin}</span><span class="geotx"><b>현재 위치로 설정</b><small>내 주변 병원을 먼저 볼게요</small></span><span class="geoar">›</span>`;
+}
+function selStripHTML(){
+  const arr=[...ob.region];
+  if(!arr.length) return `<div class="selstrip empty" id="obSelStrip">아직 선택한 지역이 없어요 · 최소 1곳을 골라주세요</div>`;
+  return `<div class="selstrip" id="obSelStrip">${arr.map(r=>`<span class="s">${I.pin}${r}<button aria-label="${r} 삭제" onclick="obToggleRegion('${r}')">×</button></span>`).join('')}</div>`;
+}
+function searchResultsHTML(q){
+  q=(q||'').trim();
+  const nq=q.replace(/[·\s]/g,'');
+  let list = q ? obSearchIndex.filter(e=>e.l.replace(/[·\s]/g,'').includes(nq) || e.t.replace(/[·\s]/g,'').includes(nq)) : obSearchIndex.slice(0,7);
+  if(!list.length) return `<div class="locempty">'${q}' 검색 결과가 없어요.<br>다른 지역명이나 지하철역을 입력해 보세요.</div>`;
+  return list.slice(0,40).map(e=>`<button class="r" data-region="${e.l}" aria-pressed="${ob.region.has(e.l)}" onclick="obToggleRegion('${e.l}')">
+    <span class="ric">${e.k==='역'?I.subway:I.pin}</span><span class="rl">${e.l}</span><span class="rk">${e.t}</span>
+    <span class="rchk">${ob.region.has(e.l)?I.check:''}</span></button>`).join('');
+}
+function obToggleRegion(v){
+  ob.region.has(v)?ob.region.delete(v):ob.region.add(v);
+  document.querySelectorAll('#obScroll [data-region]').forEach(b=>b.setAttribute('aria-pressed', ob.region.has(b.dataset.region)));
+  const r=document.getElementById('obSearchResults'); if(r) r.innerHTML=searchResultsHTML(obQuery);
+  const strip=document.getElementById('obSelStrip'); if(strip) strip.outerHTML=selStripHTML();
+  const foot=document.getElementById('obStep3Foot'); if(foot) foot.innerHTML=step3FootHTML();
+}
+function obSearchFilter(q){obQuery=q; const r=document.getElementById('obSearchResults'); if(r) r.innerHTML=searchResultsHTML(q);}
+function obSetLoc(m){obLoc=m; obSearchOn=false; obRender(); if(m==='B') obFocusSearch();}
+function obOpenSearch(){obSearchOn=true; obRender(); obFocusSearch();}
+function obCloseSearch(){obSearchOn=false; obRender();}
+function obFocusSearch(){const i=document.getElementById('obSearchInput'); if(i){i.focus(); const v=i.value; i.value=''; i.value=v;}}
+function obDetectLoc(){
+  const g=document.getElementById('obGeo'); if(!g) return;
+  g.classList.add('loading');
+  g.innerHTML=`<span class="geoic">${I.pin}</span><span class="geotx"><b>위치 확인 중…</b><small>네이버 지오코딩으로 상권 매칭</small></span>`;
+  setTimeout(()=>{ obGeoArea='강남·강남역'; ob.region.add(obGeoArea); obRender(); }, 700);
+}
+
+/* ---------- RATIONALE ---------- */
+const rat=[
+  {tab:'① 회원가입',t:'간편가입 + 본인·소속 인증',
+    pts:[
+      '카카오·네이버·<b>구글 간편 로그인</b>으로 시작(직장인·대학생 전용가 자격).',
+      '<b>PASS 본인인증</b>(통신사·SMS)으로 안전한 진료 예약 기반 확보.',
+      '<b>소속(회사) 이메일 인증</b>으로 복지 혜택가 자격 확인.',
+      '가입 완료 직후 <b>관심정보 온보딩</b>으로 자연스럽게 연결.'],
+    src:'회원가입 실제 플로우 스크린샷 walkthrough(12단계)'},
+  {tab:'② 가입 온보딩',t:'관심정보 수집으로 첫 홈부터 개인화',
+    pts:[
+      '진료과 <b>17종 전체</b> 노출(<b>carebridge.io/menu</b> 동기화, 기존 데모 7종 → 전체).',
+      '신규 유저 기준 <b>가나다순</b> 1차 정렬 → 로그 쌓이면 <b>‘많이 찾는 순’ 자동 재정렬</b>.',
+      '<b>진료과 → 세부 시술 → 관심 지역</b> 순 3스텝 수집(세부 시술은 /menu와 동일).'],
+    ev:[['핵심','예약 전환 KPI'],['상위','시술상세 조회']],
+    src:'api.carebridge.io/department/list · 아이디어 「온보딩 정보 획득」'},
+  {tab:'③ 개선 메인',t:'검색·개인화 상단, 저활동 위젯 축소',
+    pts:[
+      '<b>관심 지역 선택(최대 3곳)</b> 신설 → 추천·특가를 지역 우선 노출.',
+      '<b>검색바 최상단 고정</b>(실제는 배너에 밀려 하단에 묻힘) — 탐색형 유저 즉시 진입.',
+      '<b>개인화 추천 영역 신설</b> + 진료과 <b>인기순 정렬·개수 축소</b>.',
+      '인기·주변 병원, 메인 리뷰 등 <b>저활동 위젯 축소·제거</b>로 밀도 개선.'],
+    ev:[['1위','진료과 활동'],['2위','검색 활동'],['최하위','인기·주변·리뷰','warn']],
+    src:'welfaremall.stage 대비 · 활동순위 · 아이디어 「메인 간소화」'},
+  {tab:'④ 시술리스트',t:'검색·지역 기반 리스트 개편',
+    pts:[
+      '상단에 <b>검색창·연관 검색어·AD 배너·[시술/병원] 탭</b> 추가(검색 결과와 동일 구조).',
+      '<b>지역 선택 → 즉시 재조회</b>(AD 2건 방어 후 인기순 정렬).',
+      '시술 <b>0건이면 병원 탭 자동 전환</b> + 희망 시술 요청 유도.',
+      '지역별 <b>시술·병원 수 자동 표시</b>, 카드에 <b>병원·지역·지하철역</b> 표기.'],
+    src:'2026-07-06 회의 · 지역 재조회 · 결과없음 병원 폴백'},
+  {tab:'⑤ 예약플로우',t:'선(先)신청 · 후(後)상세입력',
+    pts:[
+      '<b>내원 희망 일시 + 약관 동의</b>만으로 즉시 신청(대상·전달사항·상담시술 <s>제거</s>).',
+      '완료 <s>팝업</s> 대신 <b>접수 페이지 전환</b>으로 신청 접수 안내.',
+      '접수 직후 <b>상세정보 후속 수집 → DB 업데이트</b>(‘나중에 입력’ 허용).'],
+    ev:[['대다수','취소사유=일정/정보 변경','warn']],
+    src:'회의 7번 예약 취소 방어 · 취소사유 분석'},
+  {tab:'⑥ 광고·특가',t:'미활용 사이드바 → 개인화 인벤토리',
+    pts:[
+      '데스크톱 <b>좌측 사이드바</b>(꿀팁·공지·QR 저활동)를 <b>광고·특가 인벤토리</b>로 전환.',
+      '<b>이달의 제휴 특가전</b> 전면 배치 + <b>실시간 인기 시술 Top 10</b>(타 플랫폼 형).',
+      '관심 진료과·지역 <b>개인화 매칭 + 스폰서(AD) 우선 노출</b>로 광고 매출·전환 동시 확보.'],
+    src:'타 플랫폼 참고 · 미활용 인벤토리 수익화 · AS-IS/TO-BE 토글'}
+];
+document.getElementById('ratCards').innerHTML = rat.map(r=>`
+  <div class="rc">
+    <div class="rc-top"><span class="rc-tab">${r.tab}</span></div>
+    <h4>${r.t}</h4>
+    <ul class="pts">${r.pts.map(p=>`<li>${p}</li>`).join('')}</ul>
+    ${r.ev?`<div class="ev">${r.ev.map(e=>`<div class="metric ${e[2]||''}"><span class="v">${e[0]}</span><span class="l">${e[1]}</span></div>`).join('')}</div>`:''}
+    <div class="src"><b>근거·출처</b> · ${r.src}</div></div>`).join('');
+
+
+
+/* ---------- 예약 플로우 (선신청 · 후상세입력) ---------- */
+let rvStep='form', rvDate=16, rvTime='', rvAgree=false, rvNote='', rvExtra='', rvSaved=false;
+let rvTargets=[{n:'김하늘',rel:'본인',tel:'010-1234-5678',birth:'1990.03.12',sex:'♂'}];
+const rvTimesDis=['12:00','12:30','02:00','02:30','03:00','03:30','04:00','04:30'];
+const rvTimesOpen=['05:00','05:30','06:00'];
+const rvExtraOpts=['스케일링','잇몸치료','신경치료','치아미백','사랑니 발치'];
+function rvCalendar(){
+  let cells=''; for(let i=0;i<3;i++) cells+='<span class="rv-e"></span>';
+  for(let d=1;d<=31;d++){const past=d<16,sel=d===rvDate; cells+=`<button class="rv-day${past?' past':''}${sel?' sel':''}" ${past?'disabled':''} onclick="rvSetDate(${d})">${d}</button>`;}
+  return `<div class="rv-cal-h"><b>2026년 07월</b><span class="rv-cal-nav">‹　›</span></div>
+    <div class="rv-wd"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+    <div class="rv-cal">${cells}</div>`;
+}
+function rvTimeGrid(){
+  return `<div class="rv-times">${rvTimesDis.map(t=>`<button class="rv-time" disabled>${t}</button>`).join('')}${rvTimesOpen.map(t=>`<button class="rv-time${rvTime===t?' sel':''}" onclick="rvSetTime('${t}')">${t}</button>`).join('')}</div>`;
+}
+function rvProgram(){
+  return `<div class="rv-head"><button class="rv-back">${I.back}</button><span>원데이치과</span></div>
+    <div class="rv-prog"><div class="rv-prog-th"></div><div><div class="rv-prog-nm">오스템 BA 임플란트</div><div class="rv-prog-pr">450,000원</div></div></div>`;
+}
+function renderReserve(){
+  const el=document.getElementById('rvScroll');
+  if(rvStep==='form'){
+    el.innerHTML=`${rvProgram()}
+      <div class="rv-benefit"><div class="rv-benefit-h">병원으로 직접 예약 시, 아래 혜택은 제공되지 않아요</div>
+        <ul><li>예약할 때마다 케어브릿지 회원 전용 우대가 적용</li><li>의료 분쟁 발생 시, 전문 법률 상담 무료 지원</li><li>병원 이용 불편 시, 케어브릿지가 신속 조율 지원</li></ul></div>
+      <div class="rv-point"><b>예약하고 리뷰 쓰면 최대 10,000P 적립!</b><small>포인트로 기프티콘 교환해 보세요!</small></div>
+      <div class="rv-sec"><div class="rv-sec-t">내원 희망 일시 선택</div>
+        <div class="rv-warn"><b>본 신청은 예약 확정이 아니에요</b><p>일정 조율 및 예약 확정은 병원에서 별도 안내 드려요. 예약 신청 후 병원의 연락을 기다려 주세요.</p></div>
+        ${rvCalendar()}<div class="rv-ampm">오후</div>${rvTimeGrid()}</div>
+      <div class="rv-moved">진료 대상 · 병원 전달사항 · 추가 상담은 <b>신청 접수 후</b> 입력합니다</div>
+      <div class="rv-foot"><button class="rv-cta" ${rvTime?'':'disabled'} onclick="rvSubmit()">예약 신청하기</button></div>`;
+  } else {
+    el.innerHTML=`<div class="rv-head"><button class="rv-back">${I.back}</button><span>예약 신청 접수</span></div>
+      <div class="rv-done"><div class="rv-done-ic">${I.check}</div><div class="rv-done-tx"><b>예약 신청이 접수되었어요</b><p>예약 확정 안내를 위해 병원에서 연락 드릴 예정이에요</p></div></div>
+      <div class="rv-summary">원데이치과 · 오스템 BA 임플란트<br><b>2026.07.${String(rvDate).padStart(2,'0')} (희망) · 오후 ${rvTime}</b></div>
+      <div class="rv-extra-h">예약을 더 빠르게 — <b>추가 정보 입력</b><span>지금 입력하면 병원 연락·상담이 빨라져요</span></div>
+      <div class="rv-sec"><div class="rv-sec-t">진료 대상 <small>진료 받는 분만 선택해주세요.</small></div>
+        ${rvTargets.map(t=>`<div class="rv-target"><div class="rv-target-h"><b>${t.sex} ${t.n}</b> <span class="rv-badge">${t.rel}</span></div><div class="rv-target-d">연락처 ${t.tel}</div><div class="rv-target-d">생년월일 ${t.birth}</div></div>`).join('')}
+        <button class="rv-addfam" ${rvTargets.length>=5?'disabled':''} onclick="rvAddTarget()">+ 가족 · 지인 추가하기</button>
+        <ul class="rv-notes"><li>가족/지인도 동일한 우대가로 이용 가능합니다.</li><li>상담/예약 진행을 위해 이름, 전화번호를 정확하게 입력해주세요.</li><li>가족/지인은 최대 5명까지 등록이 가능합니다.</li></ul></div>
+      <div class="rv-sec"><div class="rv-sec-t">병원 전달사항 (선택)</div>
+        <textarea class="rv-ta" maxlength="200" placeholder="병원에 전달하실 내용을 적어주세요. (0/200)" oninput="rvNote=this.value">${rvNote}</textarea></div>
+      <div class="rv-sec"><div class="rv-sec-t">추가 상담 희망 시술</div>
+        <select class="rv-sel" onchange="rvExtra=this.value"><option value="">추가로 상담을 원하는 시술을 선택해주세요</option>${rvExtraOpts.map(o=>`<option ${rvExtra===o?'selected':''}>${o}</option>`).join('')}</select></div>
+      <div class="rv-foot">${rvSaved?`<button class="rv-cta ok" disabled>저장 완료 ✓ · 예약 건에 반영(DB 업데이트)</button>`:`<button class="rv-cta" onclick="rvSaveExtra()">입력 완료 · 저장하기</button><button class="rv-cta ghost" onclick="rvReset()">나중에 입력</button>`}</div>`;
+  }
+  el.scrollTop=0;
+}
+function rvSetDate(d){rvDate=d; renderReserve();}
+function rvSetTime(t){rvTime=t; renderReserve();}
+function rvToggleAgree(){rvAgree=!rvAgree; renderReserve();}
+function rvSubmit(){ if(!rvTime)return; rvStep='done'; rvSaved=false; renderReserve(); }
+function rvAddTarget(){ if(rvTargets.length<5){const n=rvTargets.length; rvTargets.push({n:'가족 '+n,rel:'가족',tel:'010-****-****',birth:'직접 입력',sex:'○'}); renderReserve();} }
+function rvSaveExtra(){ rvSaved=true; renderReserve(); }
+function rvReset(){ rvStep='form'; rvTime=''; rvAgree=false; rvNote=''; rvExtra=''; rvSaved=false; rvTargets=[{n:'김하늘',rel:'본인',tel:'010-1234-5678',birth:'1990.03.12',sex:'♂'}]; renderReserve(); }
+
+/* ---------- 광고·특가 인벤토리 (타 플랫폼 형) ---------- */
+const adHotRank=[
+  {n:'스마일라식',d:'up',badge:'BEST'},{n:'임플란트',d:'same'},{n:'보톡스',d:'up',badge:'BEST'},{n:'치아교정',d:'down'},{n:'건강검진',d:'new'},
+  {n:'제모',d:'up'},{n:'지방이식',d:'same'},{n:'라식/라섹',d:'down'},{n:'필러',d:'up'},{n:'모발이식',d:'same'}
+];
+const adSponsored=[
+  {ad:true, nm:'보톡스 이마 100U', hos:'강남 SW피부과', dept:'피부과', region:'강남', station:'강남역', price:'9,900원', was:'39,000원', rate:'9.8', rv:'1,284', coupon:true},
+  {ad:true, nm:'물광주사 3cc', hos:'압구정 라비앙', dept:'피부과', region:'압구정', station:'압구정로데오역', price:'59,000원', was:'120,000원', rate:'9.6', rv:'860', coupon:true},
+  {nm:'스마일라식', hos:'강남밝은눈안과', dept:'안과', region:'강남', station:'강남역', price:'1,490,000원', was:'1,900,000원', rate:'9.7', rv:'2,010', coupon:true}
+];
+function adRankItem(r,i){
+  const tr=r.d==='up'?'<span class="ad-tr up">▲</span>':r.d==='down'?'<span class="ad-tr down">▼</span>':r.d==='new'?'':'<span class="ad-tr same">－</span>';
+  const bd=r.badge?`<span class="ad-bd ${r.badge==='NEW'?'new':'best'}">${r.badge}</span>`:'';
+  return `<button class="ad-rk" onclick="runSearch('${r.n}')"><span class="ad-rk-n${i<3?' hot':''}">${i+1}</span><span class="ad-rk-nm">${r.n}</span>${bd}${tr}</button>`;
+}
+let adMode='tobe';
+function adMiniCard(d){
+  const p=won(d.price),w=won(d.was),pct=w>0?Math.round((1-p/w)*100)+'%':'';
+  return `<div class="ad-mini">${d.ad?'<span class="ad-mini-ad">AD</span>':''}<div class="ad-mini-th"></div>
+    <div class="ad-mini-b"><div class="ad-mini-hos">${d.hos}${d.station?' · '+d.station:''}</div><div class="ad-mini-nm">${d.nm}</div>
+      <div class="ad-mini-pr">${pct?`<span class="pct">${pct}</span>`:''}${d.price}</div></div></div>`;
+}
+function renderAdSide(){
+  const el=document.getElementById('adSide'); if(!el) return;
+  if(adMode==='asis'){
+    el.innerHTML=`<div class="ws-label asis">AS-IS · 저활동 콘텐츠로 영역 낭비</div>
+      <div class="ws-card blue"><span class="ws-tag">케어브릿지 꿀팁</span><div class="ws-t">다이소·올영 기프티콘 받으셨나요?</div><div class="ws-s">이용할 때마다 포인트가 와르르!</div></div>
+      <div class="ws-card green"><span class="ws-tag g">공지사항</span><div class="ws-t">병원 예약 전 꼭 확인하세요!</div><div class="ws-s">놓치면 손해인 케어브릿지 안심혜택 5가지</div></div>
+      <div class="ws-qr"><b>QR 찍고<br>앱에서 만나요!</b><div class="ws-qr-codes"><span></span><span></span></div></div>
+      <div class="ws-foot">기업 제휴 문의 · 병원 입점 문의 · 원하는 병원 요청하기</div>`;
+  } else {
+    el.innerHTML=`<div class="ws-label tobe">TO-BE · 개인화 광고·특가 인벤토리</div>
+      <div class="ad-fair small" onclick="switchView('proclist')"><div class="ad-fair-l"><div class="ad-fair-tag">이달의 제휴 특가</div><div class="ad-fair-t">7월 인기 시술 특가전</div><div class="ad-fair-s">직장인·대학생 최저가 혜택</div></div><span class="ad-fair-go">›</span></div>
+      <div class="ws-sec">실시간 <b>인기 시술</b> <span class="tag hot">LIVE</span></div>
+      <div class="ad-rank single">${adHotRank.map((r,i)=>adRankItem(r,i)).join('')}</div>
+      <div class="ws-sec">하늘님 <b>맞춤</b> <span class="tag">스폰서</span></div>
+      <div class="ad-spon-note small"><b>AD</b> 광고비 지불 제휴 병원 · 관심 진료과·지역 매칭 시 우선 노출</div>
+      ${adSponsored.slice(0,2).map(adMiniCard).join('')}`;
+  }
+}
+function renderAdApp(){
+  const el=document.getElementById('adApp'); if(!el) return;
+  const promo=['특가전','당일할인','포인트','최저가보상','인기시술'];
+  const wd=[['치과','tooth'],['안과','eye'],['피부과','skin'],['성형외과','face'],['건강검진','steth'],['다이어트','body'],['비뇨기과','man'],['정형외과','bone']];
+  const recent=[{nm:'나노 신경차단 수술',hos:'블루비뇨기과 강남점',price:'470,000원',g:'linear-gradient(150deg,#12275F,#2E5BD0)'},{nm:'오스템 BA 임플란트',hos:'원데이치과 신논현역',price:'450,000원',g:'linear-gradient(150deg,#1550E0,#4E86FF)'},{nm:'동대문 레이저',hos:'케어브릿지치과 동대문',price:'380,000원',g:'linear-gradient(150deg,#3E7C4E,#7CB889)'}];
+  el.innerHTML=`<div class="wa-head"><span class="wa-logo">CARE BRIDGE</span><span class="wa-hic">${I.search}</span></div>
+    <div class="wa-promo">${promo.map(x=>`<div class="wa-p"><span class="wa-pic"></span>${x}</div>`).join('')}</div>
+    <div class="wa-banner"><small>서울매스티지치과 × CAREBRIDGE</small><b>치과 트리플 할인 혜택</b><span>#임플란트 #치아교정 · UP TO 49%</span></div>
+    <div class="wa-depts">${wd.map(([n,ic])=>`<div class="wa-d"><i>${I[ic]||I.cross}</i>${n}</div>`).join('')}</div>
+    <div class="wa-sec">김하늘님이 최근 본 시술</div>
+    <div class="wa-cards">${recent.map(r=>`<div class="wa-c"><div class="wa-c-th" style="background:${r.g}"></div><div class="wa-c-nm">${r.nm}</div><div class="wa-c-hos">${r.hos}</div><div class="wa-c-pr">${r.price}</div></div>`).join('')}</div>`;
+}
+function renderAd(){ renderAdSide(); renderAdApp(); }
+function setAdMode(m){ adMode=m; document.getElementById('adAsis').className=m==='asis'?'on':''; document.getElementById('adTobe').className=m==='tobe'?'on':''; renderAdSide(); }
+
+/* ---------- view switching ---------- */
+function switchView(v){
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-selected', b.dataset.view===v));
+  document.querySelectorAll('.view').forEach(s=>s.classList.remove('active'));
+  document.getElementById('v-'+v).classList.add('active');
+  if(v==='proclist'){ plCat='전체'; plTab='시술'; plQuery=''; plRegion='강남'; closeRegionPicker(); renderProcList(); }
+  if(v==='reserve'){ rvReset(); }
+  if(v==='ad'){ adMode='tobe'; document.getElementById('adAsis').className=''; document.getElementById('adTobe').className='on'; renderAd(); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
+
+/* init */
+renderMain();
+renderProcList();
+renderReserve();
+renderAd();
+obRender();
+</script>
+
+</body>
+</html>
