@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>콘텐츠 관리(Admin) 가이드 — CareBridge Global</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  :root{
+    --blue:#1B59FA; --blue-soft:#eef3ff; --ink:#000F2C; --sub:#2B3858; --mute:#6A7896;
+    --line:#E5E7EC; --bg:#F7F8FA; --green:#1E8E5C; --amber:#92660a; --amber-bg:#fff7e6; --amber-line:#ffe1a8;
+    --red:#e5484d; --red-bg:#fdecec;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px 80px}
+  header{background:linear-gradient(135deg,#0b2a7a,#1B59FA);color:#fff;padding:44px 0 40px;margin-bottom:28px}
+  header .wrap{padding-bottom:0}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin-bottom:10px}
+  header h1{font-size:30px;font-weight:800;margin:0 0 12px;letter-spacing:-.02em}
+  .url{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:7px 15px;font-size:13.5px;font-weight:600}
+  .url a{color:#fff;text-decoration:none}
+  h2{font-size:21px;font-weight:800;margin:40px 0 6px;letter-spacing:-.01em;padding-top:14px;border-top:1px solid var(--line)}
+  h2 .n{color:var(--blue);font-weight:800;margin-right:8px}
+  h3{font-size:15.5px;font-weight:800;color:var(--sub);margin:22px 0 8px}
+  p{margin:8px 0}
+  a{color:var(--blue)}
+  code{background:#eef1f6;border-radius:5px;padding:1px 6px;font-size:.9em;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace}
+  strong{color:var(--ink)}
+  ol,ul{margin:8px 0;padding-left:22px}
+  li{margin:5px 0}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0;
+    box-shadow:0 4px 18px rgba(15,23,42,.04)}
+  .tldr{background:var(--blue-soft);border:1px solid #cfe2ff;border-radius:14px;padding:16px 20px;margin:18px 0}
+  .tldr ol{margin:6px 0 0;padding-left:20px}
+  .tldr b{color:#123a8f}
+  .note{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber);
+    border-radius:12px;padding:12px 16px;margin:14px 0;font-size:14px}
+  .warn{background:var(--red-bg);border:1px solid #f6c6c6;color:#8a2a2d;
+    border-radius:12px;padding:12px 16px;margin:14px 0;font-size:14px}
+  .tip{background:#e7f7ee;border:1px solid #b8e6cd;color:#155e3b;
+    border-radius:12px;padding:12px 16px;margin:14px 0;font-size:14px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;background:#fff;
+    border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f2f5fb;font-weight:800;font-size:12.5px;color:var(--sub)}
+  tr:last-child td{border-bottom:0}
+  .diagram{background:#0f172a;color:#d7e3ff;border-radius:12px;padding:16px 18px;margin:14px 0;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5;
+    white-space:pre;overflow-x:auto}
+  .pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+  .pill{background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:12.5px;
+    font-weight:600;color:var(--sub)}
+  .steps{counter-reset:s;list-style:none;padding-left:0}
+  .steps>li{position:relative;padding:2px 0 2px 40px;margin:10px 0}
+  .steps>li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;
+    width:27px;height:27px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:13px;
+    display:grid;place-items:center}
+  kbd{background:#fff;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;
+    padding:1px 7px;font-size:12.5px;font-weight:600}
+  .btn-eg{display:inline-block;background:var(--blue);color:#fff;border-radius:7px;padding:2px 10px;
+    font-size:12.5px;font-weight:700}
+  .check li{list-style:none}
+  .check{padding-left:4px}
+  .check li::before{content:"☐ ";color:var(--mute);font-weight:700}
+  footer{color:var(--mute);font-size:12.5px;margin-top:40px;padding-top:16px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">CareBridge Global · 운영 가이드</div>
+    <h1>콘텐츠 관리(Admin) 가이드</h1>
+    <span class="url">🔗 <a href="https://kennethkarl.github.io/korea-care2/admin/" target="_blank" rel="noreferrer">kennethkarl.github.io/korea-care2/admin</a></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="tldr">
+    <strong>3줄 요약</strong>
+    <ol>
+      <li><code>/admin</code>에서 콘텐츠를 <b>편집 → 저장</b>하면 <b>내 브라우저</b>에서만 미리보기됩니다.</li>
+      <li><b>발행</b>(GitHub 토큰 필요)을 눌러야 <b>실제 사이트의 모든 방문자</b>에게 반영됩니다(~1분).</li>
+      <li>저장만 하면 실제 사이트는 안 바뀝니다 — <b>꼭 “발행”까지</b> 하세요.</li>
+    </ol>
+  </div>
+
+  <h2><span class="n">1</span>동작 원리 — 왜 저장/발행 2단계인가</h2>
+  <p>이 사이트는 서버·DB 없이 GitHub Pages로 도는 <strong>정적 사이트</strong>라 저장 단계가 둘로 나뉩니다.</p>
+  <table>
+    <tr><th>단계</th><th>버튼</th><th>저장 위치</th><th>누가 봄</th><th>반영</th></tr>
+    <tr><td>편집 미리보기</td><td><span class="btn-eg">저장</span></td><td>내 브라우저(localStorage)</td><td>나만</td><td>즉시</td></tr>
+    <tr><td>실제 발행</td><td><span class="btn-eg">발행</span></td><td>레포 <code>content.json</code></td><td>전 방문자</td><td>~1분 후</td></tr>
+  </table>
+  <p>공개 페이지는 접속 시 <code>content.json</code>(발행본)을 읽어 표시하고, 없으면 기본값(시드)으로 표시합니다 → 아무것도 안 해도 사이트는 정상입니다.</p>
+
+  <h2><span class="n">2</span>발행용 GitHub 토큰 만들기 <span style="font-size:14px;color:var(--mute);font-weight:600">(최초 1회)</span></h2>
+  <p><code>KennethKarl</code> 계정으로 GitHub에 로그인한 상태에서:</p>
+  <ol class="steps">
+    <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">github.com/settings/personal-access-tokens/new</a> 접속<br>
+      <span style="color:var(--mute);font-size:13px">경로: 프로필 → Settings → Developer settings → Personal access tokens → <b>Fine-grained tokens</b> → Generate new token</span></li>
+    <li><strong>Token name</strong>: 예) <code>korea-care2 admin</code></li>
+    <li><strong>Expiration</strong>: 원하는 만료일 (예: 90 days)</li>
+    <li><strong>Resource owner</strong>: <code>KennethKarl</code></li>
+    <li><strong>Repository access</strong> → <b>Only select repositories</b> → <code>KennethKarl/korea-care2</code> 선택</li>
+    <li><strong>Permissions → Repository permissions → Contents → <span style="color:var(--blue)">Read and write</span></strong> 로 변경 (나머지 그대로)</li>
+    <li><strong>Generate token</strong> → 나오는 <code>github_pat_…</code> 문자열 <b>복사</b></li>
+    <li><code>/admin</code> 상단 <b>발행</b> 칸에 붙여넣기</li>
+  </ol>
+  <div class="warn">⚠️ 토큰 문자열은 <b>생성 직후 한 번만</b> 보입니다. 창을 닫기 전에 복사하세요(놓치면 새로 발급).</div>
+  <div class="tip">🔒 붙여넣은 토큰은 <b>내 브라우저 세션에만</b> 저장되고 코드·사이트엔 포함되지 않습니다. 다음 접속 시 재입력 불필요.</div>
+
+  <h2><span class="n">3</span>화면 구성</h2>
+  <div class="diagram">┌─ 콘텐츠 관리 ──────────────────────────────────────┐
+│ [안내 배너]                                        │
+│ 발행 │ [GitHub 토큰___] [발행] [JSON 다운로드] [로컬 편집 비우기] │
+├──────────────┬─────────────────────────────────────┤
+│ 컬렉션 탭     │  선택한 컬렉션의 항목 리스트          │
+│ · 시술/예약   │  [+ 추가]  [시드 복원]               │
+│ · 파트너 병원 │  1  항목명       ↑ ↓ 복제 편집 삭제   │
+│ · 건강검진…   │  2  항목명       ↑ ↓ 복제 편집 삭제   │
+│ · …(총 12개)  │  …                                  │
+└──────────────┴─────────────────────────────────────┘</div>
+  <h3>편집 가능한 12개 컬렉션</h3>
+  <div class="pills">
+    <span class="pill">시술/예약</span><span class="pill">파트너 병원</span><span class="pill">건강검진 패키지</span>
+    <span class="pill">MRI·CT 스캔 메뉴</span><span class="pill">리바이탈 전문영역</span><span class="pill">부가 서비스</span>
+    <span class="pill">FAQ</span><span class="pill">방문자 후기</span><span class="pill">블로그</span>
+    <span class="pill">Why Korea 통계</span><span class="pill">정부 인증</span><span class="pill">이용 방법 단계</span>
+  </div>
+
+  <h2><span class="n">4</span>콘텐츠 편집하기</h2>
+  <ol class="steps">
+    <li>왼쪽 <strong>컬렉션 탭</strong> 선택 (예: <code>시술/예약</code>)</li>
+    <li>항목 행 버튼 — <b>편집</b>(폼 열기) · <b>복제</b>(복사해 아래 추가) · <b>삭제</b> · <b>↑ ↓</b>(순서) / 상단 <b>+ 추가</b> · <b>시드 복원</b>(기본값 되돌리기)</li>
+    <li><b>편집</b> 폼에서 수정 후 반드시 <span class="btn-eg">저장</span> 클릭</li>
+  </ol>
+  <h3>필드 입력 규칙</h3>
+  <ul>
+    <li><strong>EN / KO 두 칸</strong>: 텍스트는 영문·한글 두 칸이 함께 나옵니다 — <b>둘 다</b> 채우세요(각 언어 화면에 노출).</li>
+    <li><strong>이미지</strong>: 이미지 <b>주소(URL)</b> 입력 → 아래 미리보기 표시(파일 업로드 아님).</li>
+    <li><strong>리스트</strong>(포함 내역·단계 등): <code>+ 추가</code>로 줄 추가, <code>✕</code>로 삭제.</li>
+    <li><strong>숫자</strong>(평점·가격 등)는 숫자만, <strong>체크박스</strong>(영어지원 등)는 켜기/끄기.</li>
+  </ul>
+  <div class="tip">💡 <b>저장 = 미리보기</b>. 저장 후 새 탭에서 실제 페이지(예 <code>/treatments</code>)를 새로고침하면 <b>내 브라우저</b>에서는 바뀐 게 보입니다. 다른 사람은 아직 못 봅니다.</div>
+
+  <h2><span class="n">5</span>발행하기 (실제 반영)</h2>
+  <ol class="steps">
+    <li>상단 <b>발행</b> 칸에 토큰이 들어있는지 확인</li>
+    <li><span class="btn-eg">발행</span> 클릭 → 확인창 <b>확인</b></li>
+    <li>“발행 완료 …” 메시지 + <b>커밋 보기</b> 링크 표시</li>
+    <li><strong>약 1분 뒤</strong> 전 방문자 대상 반영 (새로고침으로 확인)</li>
+  </ol>
+  <h3>토큰 없이 발행 (대안)</h3>
+  <p><b>JSON 다운로드</b>로 <code>content.json</code>을 받아 <code>KennethKarl/korea-care2</code> 레포 <b>루트</b>에 직접 커밋해도 동일하게 반영됩니다.</p>
+  <p><b>로컬 편집 비우기</b>: 내 브라우저의 미편집분을 지우고 <i>현재 발행본(또는 기본값)</i>으로 되돌립니다(실제 사이트엔 영향 없음).</p>
+
+  <h2><span class="n">6</span>문제 해결</h2>
+  <table>
+    <tr><th>증상</th><th>원인 / 해결</th></tr>
+    <tr><td>“GitHub 토큰을 입력하세요.”</td><td>발행 칸이 빔 → §2로 토큰 발급 후 입력</td></tr>
+    <tr><td>“토큰이 유효하지 않음” (401)</td><td>토큰 만료/오타 → 새로 발급</td></tr>
+    <tr><td>“레포/경로 또는 토큰 권한 확인” (404)</td><td>토큰 권한 <b>Contents: Read and write</b> 누락 또는 레포 미선택 → §2 5·6번 재확인</td></tr>
+    <tr><td>발행했는데 안 바뀜</td><td>① 아직 1분 안 지남 ② 캐시 → 강력 새로고침 <kbd>Cmd/Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd></td></tr>
+    <tr><td>저장했는데 다른 사람이 못 봄</td><td><b>발행</b>을 안 함 → 발행 필수</td></tr>
+    <tr><td>실수로 다 지움</td><td>컬렉션 <b>시드 복원</b>, 또는 발행 전이면 <b>로컬 편집 비우기</b></td></tr>
+  </table>
+
+  <h2><span class="n">7</span>한계 / 주의 <span style="font-size:14px;color:var(--mute);font-weight:600">(개발자 영역)</span></h2>
+  <ul>
+    <li><strong>새로 추가한 항목의 상세 페이지</strong>: 목록·카드엔 바로 뜨지만, 새 시술·병원의 개별 <b>상세페이지</b>(<code>/treatments/새ID</code> 등)는 정적 생성 대상이라 <b>재배포</b>가 있어야 만들어집니다. <i>기존 항목 수정</i>은 발행만으로 반영됩니다.</li>
+    <li><strong>코드 재배포 시 발행본 보존</strong>: 사이트 코드 재배포 때 <code>content.json</code>이 덮이지 않도록 보존 필요(누락 시 기본값 환원). 재배포 후 한 번 더 발행하면 안전.</li>
+    <li>현재 편집 대상은 <b>핵심 CMS 리스트 12종</b>(Phase 1). 상단 배너·네비게이션·푸터·약관은 아직 대상 아님(후속 단계).</li>
+  </ul>
+
+  <h2><span class="n">8</span>요약 체크리스트</h2>
+  <ul class="check">
+    <li>GitHub 토큰 발급 (§2, 최초 1회)</li>
+    <li><code>/admin</code> 접속 → 컬렉션 선택 → 편집 → <b>저장</b></li>
+    <li>미리보기 확인 (내 브라우저에서 실제 페이지 새로고침)</li>
+    <li><b>발행</b> 클릭 → ~1분 후 실제 사이트 확인</li>
+  </ul>
+
+  <footer>CareBridge Global — 콘텐츠 관리 가이드 · 편집 대상: 핵심 CMS 리스트 12종(Phase 1)</footer>
+</div>
+</body>
+</html>

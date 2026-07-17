@@ -1,0 +1,306 @@
+{
+  "baseUrl": "https://kennethkarl.github.io/korea-care2",
+  "capturedAt": "2026-07-02T02:31:43.378Z",
+  "screens": [
+    {
+      "key": "home",
+      "route": "/",
+      "viewport": "desktop",
+      "file": "home--desktop.png"
+    },
+    {
+      "key": "company",
+      "route": "/company",
+      "viewport": "desktop",
+      "file": "company--desktop.png"
+    },
+    {
+      "key": "service",
+      "route": "/service",
+      "viewport": "desktop",
+      "file": "service--desktop.png"
+    },
+    {
+      "key": "checkup",
+      "route": "/service/health-checkup",
+      "viewport": "desktop",
+      "file": "checkup--desktop.png"
+    },
+    {
+      "key": "checkup-mri-scan",
+      "route": "/service/health-checkup/mri-scan",
+      "viewport": "desktop",
+      "file": "checkup-mri-scan--desktop.png"
+    },
+    {
+      "key": "checkup-detail",
+      "route": "/service/health-checkup/comprehensive",
+      "viewport": "desktop",
+      "file": "checkup-detail--desktop.png"
+    },
+    {
+      "key": "revital",
+      "route": "/service/revital",
+      "viewport": "desktop",
+      "file": "revital--desktop.png"
+    },
+    {
+      "key": "service-transportation",
+      "route": "/service/transportation",
+      "viewport": "desktop",
+      "file": "service-transportation--desktop.png"
+    },
+    {
+      "key": "service-accommodation",
+      "route": "/service/accommodation",
+      "viewport": "desktop",
+      "file": "service-accommodation--desktop.png"
+    },
+    {
+      "key": "service-tour",
+      "route": "/service/tour",
+      "viewport": "desktop",
+      "file": "service-tour--desktop.png"
+    },
+    {
+      "key": "service-association",
+      "route": "/service/association",
+      "viewport": "desktop",
+      "file": "service-association--desktop.png"
+    },
+    {
+      "key": "providers",
+      "route": "/providers",
+      "viewport": "desktop",
+      "file": "providers--desktop.png"
+    },
+    {
+      "key": "provider-detail",
+      "route": "/providers/samsung-mc",
+      "viewport": "desktop",
+      "file": "provider-detail--desktop.png"
+    },
+    {
+      "key": "treatments",
+      "route": "/treatments",
+      "viewport": "desktop",
+      "file": "treatments--desktop.png"
+    },
+    {
+      "key": "treatment-detail",
+      "route": "/treatments/smile-lasik",
+      "viewport": "desktop",
+      "file": "treatment-detail--desktop.png"
+    },
+    {
+      "key": "booking",
+      "route": "/booking",
+      "viewport": "desktop",
+      "file": "booking--desktop.png"
+    },
+    {
+      "key": "cart",
+      "route": "/cart",
+      "viewport": "desktop",
+      "file": "cart--desktop.png"
+    },
+    {
+      "key": "mypage",
+      "route": "/mypage",
+      "viewport": "desktop",
+      "file": "mypage--desktop.png"
+    },
+    {
+      "key": "contact",
+      "route": "/contact",
+      "viewport": "desktop",
+      "file": "contact--desktop.png"
+    },
+    {
+      "key": "faq",
+      "route": "/faq",
+      "viewport": "desktop",
+      "file": "faq--desktop.png"
+    },
+    {
+      "key": "blog",
+      "route": "/blog",
+      "viewport": "desktop",
+      "file": "blog--desktop.png"
+    },
+    {
+      "key": "blog-post",
+      "route": "/blog/korea-checkup-guide",
+      "viewport": "desktop",
+      "file": "blog-post--desktop.png"
+    },
+    {
+      "key": "legal-terms",
+      "route": "/legal/terms",
+      "viewport": "desktop",
+      "file": "legal-terms--desktop.png"
+    },
+    {
+      "key": "account",
+      "route": "/account",
+      "viewport": "desktop",
+      "file": "account--desktop.png"
+    },
+    {
+      "key": "admin",
+      "route": "/admin",
+      "viewport": "desktop",
+      "file": "admin--desktop.png"
+    },
+    {
+      "key": "home",
+      "route": "/",
+      "viewport": "mobile",
+      "file": "home--mobile.png"
+    },
+    {
+      "key": "company",
+      "route": "/company",
+      "viewport": "mobile",
+      "file": "company--mobile.png"
+    },
+    {
+      "key": "service",
+      "route": "/service",
+      "viewport": "mobile",
+      "file": "service--mobile.png"
+    },
+    {
+      "key": "checkup",
+      "route": "/service/health-checkup",
+      "viewport": "mobile",
+      "file": "checkup--mobile.png"
+    },
+    {
+      "key": "checkup-mri-scan",
+      "route": "/service/health-checkup/mri-scan",
+      "viewport": "mobile",
+      "file": "checkup-mri-scan--mobile.png"
+    },
+    {
+      "key": "checkup-detail",
+      "route": "/service/health-checkup/comprehensive",
+      "viewport": "mobile",
+      "file": "checkup-detail--mobile.png"
+    },
+    {
+      "key": "revital",
+      "route": "/service/revital",
+      "viewport": "mobile",
+      "file": "revital--mobile.png"
+    },
+    {
+      "key": "service-transportation",
+      "route": "/service/transportation",
+      "viewport": "mobile",
+      "file": "service-transportation--mobile.png"
+    },
+    {
+      "key": "service-accommodation",
+      "route": "/service/accommodation",
+      "viewport": "mobile",
+      "file": "service-accommodation--mobile.png"
+    },
+    {
+      "key": "service-tour",
+      "route": "/service/tour",
+      "viewport": "mobile",
+      "file": "service-tour--mobile.png"
+    },
+    {
+      "key": "service-association",
+      "route": "/service/association",
+      "viewport": "mobile",
+      "file": "service-association--mobile.png"
+    },
+    {
+      "key": "providers",
+      "route": "/providers",
+      "viewport": "mobile",
+      "file": "providers--mobile.png"
+    },
+    {
+      "key": "provider-detail",
+      "route": "/providers/samsung-mc",
+      "viewport": "mobile",
+      "file": "provider-detail--mobile.png"
+    },
+    {
+      "key": "treatments",
+      "route": "/treatments",
+      "viewport": "mobile",
+      "file": "treatments--mobile.png"
+    },
+    {
+      "key": "treatment-detail",
+      "route": "/treatments/smile-lasik",
+      "viewport": "mobile",
+      "file": "treatment-detail--mobile.png"
+    },
+    {
+      "key": "booking",
+      "route": "/booking",
+      "viewport": "mobile",
+      "file": "booking--mobile.png"
+    },
+    {
+      "key": "cart",
+      "route": "/cart",
+      "viewport": "mobile",
+      "file": "cart--mobile.png"
+    },
+    {
+      "key": "mypage",
+      "route": "/mypage",
+      "viewport": "mobile",
+      "file": "mypage--mobile.png"
+    },
+    {
+      "key": "contact",
+      "route": "/contact",
+      "viewport": "mobile",
+      "file": "contact--mobile.png"
+    },
+    {
+      "key": "faq",
+      "route": "/faq",
+      "viewport": "mobile",
+      "file": "faq--mobile.png"
+    },
+    {
+      "key": "blog",
+      "route": "/blog",
+      "viewport": "mobile",
+      "file": "blog--mobile.png"
+    },
+    {
+      "key": "blog-post",
+      "route": "/blog/korea-checkup-guide",
+      "viewport": "mobile",
+      "file": "blog-post--mobile.png"
+    },
+    {
+      "key": "legal-terms",
+      "route": "/legal/terms",
+      "viewport": "mobile",
+      "file": "legal-terms--mobile.png"
+    },
+    {
+      "key": "account",
+      "route": "/account",
+      "viewport": "mobile",
+      "file": "account--mobile.png"
+    },
+    {
+      "key": "admin",
+      "route": "/admin",
+      "viewport": "mobile",
+      "file": "admin--mobile.png"
+    }
+  ]
+}

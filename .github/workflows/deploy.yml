@@ -1,0 +1,61 @@
+name: Deploy Portfolio to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/korea-care2/package-lock.json
+
+      # korea-care2 (Vite + vite-react-ssg) 를 /portfolio/korea-care2/ 서브경로로 빌드
+      - name: Build korea-care2
+        working-directory: apps/korea-care2
+        env:
+          VITE_BASE: /portfolio/korea-care2/
+          VITE_SITE_URL: https://kennethkarl.github.io/portfolio/korea-care2
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+
+      # 정적 루트(index.html·site-apply-voc·performance-dashboard·_archive 등) + 빌드된 korea-care2 를 하나로 조립
+      - name: Assemble _site
+        run: |
+          mkdir -p _site
+          rsync -a --exclude 'apps' --exclude '.git' --exclude '.github' --exclude 'node_modules' --exclude '_site' ./ _site/
+          mkdir -p _site/korea-care2
+          rsync -a apps/korea-care2/dist/ _site/korea-care2/
+          touch _site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
