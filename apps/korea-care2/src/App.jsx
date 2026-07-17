@@ -48,6 +48,17 @@ function useIsMobile(maxWidth = 960) {
 /* ========================================================================
    LAYOUT
    ======================================================================== */
+/* 데모 안내 배너 — 포트폴리오 목업임을 상단 중앙에 강조 (전 페이지·admin 포함) */
+function DemoBanner() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center", padding: "10px 16px", background: "#fff" }}>
+      <div style={{ maxWidth: 760, textAlign: "center", background: "#FDE68A", border: "1px solid #F3CD57", borderRadius: 12, padding: "9px 22px", fontSize: 13.5, fontWeight: 800, color: "#7A5B0B", lineHeight: 1.5, boxShadow: "0 1px 3px rgba(0,0,0,.08)" }}>
+        ⚠️ 데모(포트폴리오) 페이지입니다 · 모든 데이터는 목업(mockup)이며 실제와 무관합니다
+      </div>
+    </div>
+  );
+}
+
 function Layout() {
   const isMobile = useIsMobile(960);
   const location = useLocation();
@@ -70,6 +81,7 @@ function Layout() {
   return (
     <div style={{ fontFamily: "Pretendard, system-ui, sans-serif", background: "#fff", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <LandingStyles />
+      <DemoBanner />
       <Nav lang={lang} onLang={switchLang} isMobile={isMobile} navigate={navigate} pathname={location.pathname} />
       <PromoBanner lang={lang} navigate={navigate} />
       <main style={{ flex: 1 }}>
