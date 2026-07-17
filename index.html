@@ -3,28 +3,29 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>최재원 · Product Owner 포트폴리오</title>
-<meta name="description" content="B2B2C 헬스케어 Product Owner 최재원 — 병원·기업·임직원 3자를 잇는 프로덕트를 정책부터 QA까지 오너십으로 딜리버리합니다." />
+<title>최재원 · Senior Product Owner 포트폴리오</title>
+<meta name="description" content="16년차 시니어 Product Owner 최재원 — 병원·기업·임직원 3자를 잇는 B2B·B2B2C 헬스케어 프로덕트를 전략·정책 의사결정부터 QA·지표까지 오너십으로 이끕니다." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Mulish:wght@400;500;600;700;800&family=Noto+Serif+KR:wght@500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --ink:#12211d;
-    --paper:#f5f6f2;
-    --paper-2:#eef0ea;
-    --card:#fbfcfa;
-    --emerald:#0e7a63;
-    --emerald-deep:#0a5b49;
-    --amber:#a9772e;
-    --body:#4c5852;
-    --muted:#7c8781;
-    --line:#dde2db;
-    --line-strong:#c7cec6;
-    --sans:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+    --ink:#16261f;
+    --paper:#ffffff;
+    --paper-2:#f2f6f4;
+    --card:#ffffff;
+    --emerald:#15675b;      /* FIDO teal — headings, links, accents */
+    --emerald-deep:#0d4a42;  /* FIDO deep teal — hero banner, primary buttons */
+    --amber:#a9781c;         /* readable gold-brown for small labels on white */
+    --gold:#f4b63d;          /* FIDO gold — table header fills, primary CTA on teal */
+    --body:#39443f;
+    --muted:#6c7772;
+    --line:#e4e8e6;
+    --line-strong:#ccd4cf;
+    --sans:"Mulish","IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
     --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace;
-    --serif:"Noto Serif KR",serif;
-    --maxw:820px;
+    --serif:"Mulish","Noto Serif KR",serif;
+    --maxw:860px;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -45,7 +46,7 @@
 
   /* ---------- top bar ---------- */
   .topbar{
-    position:sticky;top:0;z-index:50;background:rgba(245,246,242,.86);
+    position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
     backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);
   }
   .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
@@ -56,22 +57,31 @@
   .nav a:hover{color:var(--emerald)}
   @media(max-width:640px){.nav{display:none}}
 
-  /* ---------- hero ---------- */
-  .hero{padding:88px 0 64px;border-bottom:1px solid var(--line)}
+  /* ---------- hero (FIDO deep-teal banner) ---------- */
+  .hero{background:var(--emerald-deep);color:#fff;padding:92px 0 78px;border-bottom:none}
   .hero .role{
     font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--emerald);margin-bottom:26px;
+    color:var(--gold);margin-bottom:26px;
   }
-  .hero h1{font-size:clamp(30px,5.4vw,50px);font-weight:600;letter-spacing:-.01em;margin-bottom:8px}
-  .hero .name-en{font-family:var(--mono);font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:34px}
-  .lede{font-size:clamp(19px,2.6vw,23px);line-height:1.6;color:var(--ink);font-weight:400;max-width:24em}
-  .lede b{font-weight:600;box-shadow:inset 0 -.42em 0 rgba(14,122,99,.14)}
+  .hero h1{color:#fff;font-size:clamp(32px,5.6vw,54px);font-weight:800;letter-spacing:-.015em;margin-bottom:8px}
+  .hero .name-en{font-family:var(--mono);font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:34px}
+  .lede{font-size:clamp(19px,2.6vw,23px);line-height:1.62;color:rgba(255,255,255,.94);font-weight:400;max-width:27em}
+  .lede b{font-weight:700;color:#fff;box-shadow:inset 0 -.42em 0 rgba(244,182,61,.34)}
   .tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:34px}
   .tag{
-    font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--emerald-deep);
-    background:rgba(14,122,99,.07);border:1px solid rgba(14,122,99,.2);
+    font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:#fff;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.28);
     padding:6px 12px;border-radius:2px;
   }
+  /* hero buttons + quick-links on dark */
+  .hero .btn-primary{background:var(--gold);color:#0c3a33;border-color:var(--gold)}
+  .hero .btn-primary:hover{background:#ffca5a;border-color:#ffca5a}
+  .hero .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.42)}
+  .hero .btn-ghost:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.08)}
+  .hero .demo-quick .dq-cap{color:rgba(255,255,255,.6)}
+  .hero .demo-quick a{color:#fff;background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.26)}
+  .hero .demo-quick a:hover{background:rgba(255,255,255,.17);border-color:#fff;color:#fff}
+  .hero .demo-quick a .ext{opacity:.75}
   .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
   .btn{
     display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;
@@ -87,7 +97,7 @@
   section{padding:66px 0;border-bottom:1px solid var(--line)}
   .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:34px}
   .sec-num{font-family:var(--mono);font-size:13px;color:var(--line-strong);font-weight:500}
-  .sec-title{font-size:clamp(21px,3vw,27px);font-weight:600}
+  .sec-title{font-size:clamp(21px,3vw,27px);font-weight:700;color:var(--emerald)}
   .sec-lead{max-width:34em;font-size:16.5px;line-height:1.7;color:var(--body);margin:-14px 0 30px}
   .sec-lead b{color:var(--ink);font-weight:600}
 
@@ -135,8 +145,8 @@
   table{border-collapse:collapse;width:100%;font-size:14px;min-width:440px}
   th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.55}
   thead th{
-    font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;
-    color:var(--muted);font-weight:500;background:var(--paper-2);
+    font-family:var(--sans);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:#3a2c06;font-weight:700;background:var(--gold);
   }
   tbody tr:last-child td{border-bottom:none}
   td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
@@ -203,10 +213,51 @@
     margin-top:16px;padding-left:14px;border-left:2px solid var(--line);line-height:1.6;
   }
 
+  /* ---------- hero quick artifacts ---------- */
+  .demo-quick{margin-top:30px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  .demo-quick .dq-cap{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--muted);margin-right:2px;
+  }
+  .demo-quick a{
+    display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;
+    color:var(--emerald-deep);text-decoration:none;background:rgba(14,122,99,.06);
+    border:1px solid rgba(14,122,99,.22);border-radius:2px;padding:6px 11px;transition:all .18s;
+  }
+  .demo-quick a:hover{background:rgba(14,122,99,.12);border-color:var(--emerald);color:var(--emerald-deep)}
+  .demo-quick a .ext{opacity:.55;font-size:11px}
+
   /* reveal */
   .rv{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
   .rv.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+  /* ---------- print / PDF ---------- */
+  @media print{
+    @page{margin:14mm}
+    html{font-size:12px}
+    body{background:#fff;color:#1a2521}
+    .topbar{display:none}
+    .rv{opacity:1 !important;transform:none !important}
+    a{color:inherit;text-decoration:none}
+    .hero{padding:0 0 22px}
+    section{padding:22px 0;break-inside:avoid}
+    .case,.principle,.art,.ai-block,.reflect,.meta,.tbl-wrap{break-inside:avoid}
+    .case-top{break-inside:auto}
+    /* hide navigational buttons + redundant hero quick-links */
+    .btn[href^="#"],.demo-quick{display:none !important}
+    /* real live/contact links: print as plain text with URL on paper */
+    .btn:not([href^="#"]){
+      display:inline !important;padding:0;margin:0 14px 0 0;border:none !important;
+      background:none !important;color:#0a5b49 !important;font-family:var(--mono);font-size:11px;
+    }
+    .btn:not([href^="#"]) svg{display:none}
+    .demo-row a[href^="http"]::after,.contact a[href^="http"]::after{
+      content:" (" attr(href) ")";font-family:var(--mono);font-size:10px;color:#6b756f;
+    }
+    .demo-row{display:block !important}
+    .flow,.ai-flow{white-space:normal}
+  }
 </style>
 </head>
 <body>
@@ -218,6 +269,8 @@
       <a href="#about">방식</a>
       <a href="#case-1">쿠폰팩</a>
       <a href="#case-2">글로벌</a>
+      <a href="#case-3">데이터</a>
+      <a href="#case-4">금융권</a>
       <a href="#artifacts">산출물</a>
       <a href="#contact">연락</a>
     </nav>
@@ -226,26 +279,31 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="role">AI-Native Product Owner · B2B2C Healthcare</div>
+    <div class="role">Senior Product Owner · 16 Years · B2B · B2B2C Healthcare</div>
     <h1>최재원</h1>
     <div class="name-en">Choi Jaewon</div>
-    <p class="lede"><b>AI를 지렛대 삼아</b> 병원·기업·임직원 3자를 잇는 프로덕트를, 정책·스펙·QA부터 <b>동작하는 프로토타입</b>까지 직접 만들고 딜리버리합니다.</p>
+    <p class="lede"><b>16년차 프로덕트 오너</b>로서 병원·기업·임직원 3자를 잇는 B2B·B2B2C 헬스케어 프로덕트를, <b>전략·정책 의사결정부터 QA·지표까지</b> 오너십으로 이끕니다. 여기에 AI를 실무 지렛대로 얹어 <b>동작하는 프로토타입</b>으로 방향을 증명합니다.</p>
     <div class="tags">
-      <span class="tag">AI 프로토타이핑</span>
+      <span class="tag">프로덕트 전략 · 의사결정</span>
+      <span class="tag">이해관계자 · 규제 리더십</span>
       <span class="tag">요구사항 정의 (SRS)</span>
       <span class="tag">크로스서피스 설계</span>
       <span class="tag">데이터 기반 의사결정</span>
+      <span class="tag">AI 프로토타이핑</span>
     </div>
     <div class="links">
       <a class="btn btn-primary" href="#case-1">대표 프로젝트 보기</a>
-      <a class="btn btn-ghost" href="https://kennethkarl.github.io/portfolio/korea-care2/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
-        라이브 데모
-      </a>
       <a class="btn btn-ghost" href="mailto:kennethkarl.choi@gmail.com">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
         연락하기
       </a>
+    </div>
+    <div class="demo-quick">
+      <span class="dq-cap">동작하는 작업물</span>
+      <a href="https://kennethkarl.github.io/portfolio/korea-care2/" target="_blank" rel="noopener">글로벌 사이트 <span class="ext">↗</span></a>
+      <a href="https://kennethkarl.github.io/portfolio/korea-care2/admin/" target="_blank" rel="noopener">운영 Admin <span class="ext">↗</span></a>
+      <a href="https://kennethkarl.github.io/portfolio/performance-dashboard/" target="_blank" rel="noopener">운영 대시보드 <span class="ext">↗</span></a>
+      <a href="https://kennethkarl.github.io/portfolio/site-apply-voc/" target="_blank" rel="noopener">메인 개편 데모 <span class="ext">↗</span></a>
     </div>
   </div>
 </header>
@@ -254,9 +312,9 @@
   <div class="wrap">
     <div class="sec-head rv">
       <span class="sec-num">01</span>
-      <h2 class="sec-title">AI를 활용한 PO의 일하는 방식</h2>
+      <h2 class="sec-title">일하는 방식 — 16년의 프로덕트 오너십</h2>
     </div>
-    <p class="sec-lead rv">AI를 코드 보조 도구가 아니라 <b>PM/PO 실무의 지렛대</b>로 씁니다. 정책·요구사항·QA 문서화부터 동작하는 프로토타입까지 직접 만들어, <b>의사결정 속도와 딜리버리 폭</b>을 함께 끌어올립니다.</p>
+    <p class="sec-lead rv">16년간 B2B·B2B2C 헬스케어 프로덕트를 <b>전략·정책 의사결정부터 QA·지표까지</b> 오너십으로 이끌어 왔습니다. 여기에 AI를 실무 지렛대로 더해, <b>의사결정의 근거와 딜리버리 속도</b>를 함께 끌어올립니다.</p>
     <div class="about-grid">
       <div class="principle rv">
         <div class="k">Decision</div>
@@ -318,6 +376,7 @@
                   <tr><td>예외 처리</td><td>병원 업셀 시 쿠폰 재추천 · 취소 시 쿠폰/유효기간 원복 · 제휴 종료 시 전 임직원 즉시 차단</td></tr>
                   <tr><td>규제 대응</td><td>동의 3종 버전 스냅샷 관리, 주요 개정 시 재동의 트리거</td></tr>
                   <tr><td>기획-디자인</td><td>정책은 노션 정본, 디자인은 <b>노션 → Claude 스토리보드 → Token JSON → Figma</b> 파이프라인 확립</td></tr>
+                  <tr><td>QA 자동화</td><td>발급→적용→예약→취소 <b>크로스서피스 E2E(BO·UM·PA)</b>를 <b>AI + Playwright로 자동화</b> — 네거티브·엣지케이스 중심 회귀 검증을 반복 가능하게 설계</td></tr>
                   <tr><td>운영 준비</td><td>알림톡 13종 템플릿 설계·심사, 병원관리자·앱 사용자 매뉴얼 작성</td></tr>
                 </tbody>
               </table>
@@ -353,7 +412,7 @@
 
         <div class="reflect">
           <div class="cap">Reflection</div>
-          크로스서피스 프로덕트는 취소·업셀·종료 같은 <b>엣지케이스의 데이터 정합성</b>이 승부처였다. E2E를 해피패스가 아닌 네거티브 케이스 중심으로 설계해 결함을 개발 초기에 잡을 수 있었다.
+          여러 서피스가 하나의 쿠폰을 공유하다 보니, 취소·업셀·제휴 종료처럼 <b>정상 흐름을 벗어나는 순간 데이터가 가장 어긋나기 쉬웠다.</b> 그래서 E2E를 정상 흐름이 아니라 이런 예외 케이스 중심으로 설계했고, 덕분에 결함을 개발 초기에 걸러낼 수 있었다.
         </div>
       </div>
     </article>
@@ -375,7 +434,7 @@
         <div class="star">
           <div class="beat">
             <div class="label">문제<small>Situation</small></div>
-            <p>미국 보험 환자를 한국 의료(성형·피부·정형·회복)로 유치하는 글로벌 브랜드 사이트가 필요했다. 핵심 KPI는 <b>SEO·GEO 검색 노출</b>. 사내에선 “SEO에 유리하니 WordPress로 만들자”는 제안이 있었다.</p>
+            <p>미국 보험 환자를 한국 의료(성형·피부·정형·회복)와 연결하는 글로벌 브랜드 사이트가 필요했다. 핵심 KPI는 <b>SEO·GEO 검색 노출</b>이었다. 사내에서는 진입장벽이 낮다는 이유로 WordPress로 시작하자는 의견이 있었다.</p>
           </div>
           <div class="beat">
             <div class="label">과정<small>Action</small></div>
@@ -383,7 +442,7 @@
               <table>
                 <thead><tr><th>이슈</th><th>판단 · 실행</th></tr></thead>
                 <tbody>
-                  <tr><td>구축 방식</td><td>WordPress 제안을 그대로 수용하지 않고 운영·확장·측정 관점에서 <b>자체 구축(React+SSG)</b>으로 판단 — SEO는 사전렌더+구조화데이터로 대응</td></tr>
+                  <tr><td>구축 방식</td><td>WordPress는 원하는 화면·운영으로 커스터마이징하기 어려워, <b>AI 바이브 코딩으로 직접 구축(React+SSG)</b>하는 쪽으로 판단 — 화면과 운영을 자유롭게 만들고 SEO는 SSG 사전렌더+구조화데이터로 대응</td></tr>
                   <tr><td>콘텐츠 운영</td><td><b>비개발자가 코드 없이</b> 시술·가격·제휴병원을 라이브 편집하는 Admin 설계 (12개 콘텐츠 컬렉션)</td></tr>
                   <tr><td>배포·데이터</td><td>Admin 변경 → 커밋 → 자동 배포 파이프라인, Admin ↔ DB 연결</td></tr>
                   <tr><td>성과 측정</td><td><b>노출률·인입률·유입수</b> 계측을 Admin 대시보드에 노출하도록 요구사항 정의</td></tr>
@@ -401,9 +460,9 @@
           <div class="ai-head"><span class="ai-badge">AI Leverage</span> PO가 AI로 직접 수행한 일</div>
           <div class="ai-flow">요구사항<span class="a">→</span>AI 구현(Claude Code)<span class="a">→</span>동작하는 사이트 + Admin<span class="a">→</span>의사결정·설득</div>
           <ul class="ai-list">
-            <li><b>비개발 PO가 AI로 React+SSG 사이트를 직접 프로토타이핑</b> — "문서가 아닌 동작하는 제품"으로 방향을 증명하고 설득</li>
+            <li><b>AI 바이브 코딩으로 React+SSG 사이트를 직접 구축</b> — "문서가 아닌 동작하는 제품"으로 방향을 증명하고 설득</li>
             <li>비개발자용 <b>Admin·SEO 구조화데이터·EN/KO 다국어를 AI로 구현</b>해 요구사항을 즉시 검증</li>
-            <li>노출률·인입률 계측 설계까지 AI로 빠르게 반영해 <b>가설→구현→측정 루프</b>를 단축</li>
+            <li><b>SEO·GEO 설계로 검색 노출률을 끌어올리는 기반 마련</b> — SSG 사전렌더·구조화데이터·사이트맵 자동화를 AI로 빠르게 구현·검증</li>
           </ul>
         </div>
 
@@ -416,6 +475,134 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
             Admin (콘텐츠 편집)
           </a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="case-3">
+  <div class="wrap">
+    <article class="case rv">
+      <div class="case-top">
+        <div class="case-kicker">📊 Case File — Data Ops</div>
+        <h3>케어브릿지 복지몰 · 데이터로 읽고 개선하는 운영</h3>
+        <div class="meta">
+          <div><div class="mk">Role</div><div class="mv">PO · 데이터 분석 · UX 개편</div></div>
+          <div><div class="mk">Scope</div><div class="mv">운영 대시보드 + 메인 개편</div></div>
+          <div><div class="mk">Domain</div><div class="mv">B2B2C 복지몰</div></div>
+        </div>
+
+        <div class="star">
+          <div class="beat">
+            <div class="label">문제<small>Situation</small></div>
+            <p>컨택·예약·매출·프로젝트 현황이 여러 도구에 흩어져 있어, <b>어디서 성과가 새는지 한눈에 보기 어려웠다.</b> 예약이 전년보다 <b>18.4% 줄고</b> 컨택한 양에 비해 실제 성사로 이어지는 비율이 낮다는 정황은 있었지만, 근거가 흩어져 있어 확신하기 어려웠다.</p>
+          </div>
+          <div class="beat">
+            <div class="label">과정<small>Action</small></div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>영역</th><th>핵심 의사결정 · 실행</th></tr></thead>
+                <tbody>
+                  <tr><td>운영 가시화</td><td>일일 지표 · 컨택→성사 퍼널 · CRM <b>67개 딜</b> · 프로젝트 진행을 <b>한 대시보드로 통합</b>하고 인원별 기여를 자동 귀속</td></tr>
+                  <tr><td>신호 해석</td><td>“컨택 물량 대비 <b>전환이 얇다</b>”를 핵심 신호로 특정 → 문제를 유입·전환 단계로 좁힘</td></tr>
+                  <tr><td>가설→화면</td><td>Amplitude·취소 데이터에서 이탈 지점을 뽑아 복지몰 메인을 재설계 — <b>지역선택 · 검색 상단고정 · 개인화 추천 · 예약 마찰 축소</b></td></tr>
+                  <tr><td>검증 방식</td><td>개편안을 <b>동작하는 데모</b>로 만들어 현행(stage) 대비 개선 논리를 즉시 리뷰 가능하게</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="beat">
+            <div class="label">결과<small>Result</small></div>
+            <p>흩어진 지표를 <b>단일 운영 대시보드</b>로 통합해 “어디서 새는지”를 즉시 보이게 했고, 데이터에서 도출한 개선 가설을 문서가 아닌 <b>동작하는 개편 데모</b>로 검증 가능하게 만들었다.</p>
+          </div>
+        </div>
+
+        <div class="ai-block">
+          <div class="ai-head"><span class="ai-badge">AI Leverage</span> PO가 AI로 직접 수행한 일</div>
+          <div class="ai-flow">흩어진 지표<span class="a">→</span>AI 대시보드 통합<span class="a">→</span>신호 해석<span class="a">→</span>개편 데모</div>
+          <ul class="ai-list">
+            <li><b>운영 대시보드를 AI로 직접 프로토타이핑</b> — 흩어진 지표를 통합해 데이터 읽는 도구를 스스로 만듦</li>
+            <li>Amplitude·취소 데이터 해석 → <b>개선 가설을 동작하는 메인 개편 데모로 즉시 구현</b></li>
+            <li>분석 → 가설 → 화면 <b>루프를 문서 왕복 없이 단축</b>해 검증 속도를 끌어올림</li>
+          </ul>
+        </div>
+
+        <div class="demo-row">
+          <a class="btn btn-primary" href="https://kennethkarl.github.io/portfolio/performance-dashboard/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+            운영 대시보드
+          </a>
+          <a class="btn btn-ghost" href="https://kennethkarl.github.io/portfolio/site-apply-voc/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+            메인 개편 데모
+          </a>
+        </div>
+
+        <div class="reflect">
+          <div class="cap">Reflection</div>
+          PO의 핵심은 숫자의 <b>‘개수’가 아니라 ‘의미’</b>를 읽는 것. 대시보드로 새는 지점을 특정하고, 그 신호를 화면 개선 가설로 옮겨 동작하는 데모로 증명하는 <b>루프를 직접 돌렸다.</b>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="case-4">
+  <div class="wrap">
+    <article class="case rv">
+      <div class="case-top">
+        <div class="case-kicker">🏦 Case File — Enterprise · 금융권</div>
+        <h3>삼성생명 · 금융권 건강검진 서비스 구축 (프로젝트 턴어라운드)</h3>
+        <div class="meta">
+          <div><div class="mk">Role</div><div class="mv">PM · 프로젝트 정상화 투입</div></div>
+          <div><div class="mk">Scale</div><div class="mv">8억 규모 · 81 M/M · 7개월</div></div>
+          <div><div class="mk">Domain</div><div class="mv">금융권(생명보험) B2B 헬스케어</div></div>
+        </div>
+
+        <div class="star">
+          <div class="beat">
+            <div class="label">문제<small>Situation</small></div>
+            <p>삼성생명 B2B 건강검진 서비스(더헬스) 구축 프로젝트가 이전 단계에서 <b>요구사항 정의가 표류하며 좌초 위기</b>에 놓였다. 대기업·금융권 프로젝트라 보안·규제·산출물·보고 기준이 높아, 일정 지연은 곧 사업 리스크였다.</p>
+          </div>
+          <div class="beat">
+            <div class="label">역할<small>Task</small></div>
+            <p>위기 시점에 <b>PM으로 교체 투입</b>됐다. 기술 쟁점을 빠르게 정리하고, 난항을 겪던 요구사항 협의와 대기업 산출물·보고 체계를 다시 정상 궤도로 올리는 것이 임무였다.</p>
+          </div>
+          <div class="beat">
+            <div class="label">과정<small>Action</small></div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>영역</th><th>핵심 의사결정 · 실행</th></tr></thead>
+                <tbody>
+                  <tr><td>요구사항 정상화</td><td>표류하던 요구사항을 <b>기술 쟁점부터 정리</b>하고 삼성생명·GC케어 양사 협의를 주도해 스코프를 확정</td></tr>
+                  <tr><td>보안 · 개인정보</td><td>건강·금융 <b>민감정보를 다루는 서비스</b>로 인증·암호화·접근통제 등 금융권 수준 보안·개인정보 기준을 설계에 반영</td></tr>
+                  <tr><td>규제 · 심사</td><td>본인확인·ISMS-P·KISA 등 <b>규제·심사 관점의 리스크</b>를 사전 식별해 변경관리 절차에 반영</td></tr>
+                  <tr><td>산출물 · 보고</td><td>대기업 SI 기준 <b>정식 산출물 + 중간·최종 보고(스테이지 게이트)</b>로 진척과 리스크를 투명하게 공유</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="beat">
+            <div class="label">결과<small>Result</small></div>
+            <p>좌초 위기의 프로젝트를 <b>종료 시점 지연 0으로 완수</b> — 대기업·금융권 이해관계자 앞에서 정식 절차·보고를 지키며 정시에 성공적으로 런칭했다.</p>
+          </div>
+        </div>
+
+        <div class="ai-block">
+          <div class="ai-head"><span class="ai-badge">Enterprise</span> 대기업·금융권 딜리버리에서 지킨 것</div>
+          <div class="ai-flow">위기 투입<span class="a">→</span>요구사항 정상화<span class="a">→</span>보안·규제·보고<span class="a">→</span>정시 런칭</div>
+          <ul class="ai-list">
+            <li><b>지체되고 있던 프로젝트에 PM으로 교체 투입</b>돼 요구사항·일정·보고 체계를 정상화하고 지연 없이 완수</li>
+            <li>건강·금융 민감정보 서비스로 <b>보안·규제·개인정보 기준을 요구사항·설계 단계부터</b> 반영</li>
+            <li>정식 산출물과 <b>중간·최종 보고(스테이지 게이트)</b>로 대기업 이해관계자와 진척·리스크를 투명하게 관리</li>
+            <li>별도 금융보안 경력(<b>FIDO·PKI·ISMS-P·KISA 실질심사 대응</b>)이 규제·보안 판단의 근거</li>
+          </ul>
+        </div>
+
+        <div class="reflect">
+          <div class="cap">Reflection</div>
+          대기업·금융권 프로젝트는 속도만큼 <b>절차·보안·보고의 신뢰</b>가 성패를 가른다. 표류하던 프로젝트를 정상 궤도로 되돌린 경험은, 지금 AI로 빠르게 만드는 실행력과 만나 <b>‘빠르면서도 믿을 수 있는 딜리버리’</b>의 기준이 됐다.
         </div>
       </div>
     </article>
@@ -435,6 +622,8 @@
       <div class="art rv"><span class="ico">DATA</span><div><h4>지표 설계</h4><p>Amplitude 이벤트 택소노미로 발급→적용→완료 퍼널 계측.</p></div></div>
       <div class="art rv"><span class="ico">OPS</span><div><h4>운영 자산</h4><p>알림톡 13종 템플릿, 병원·사용자 매뉴얼, Decisions 로그.</p></div></div>
       <div class="art rv"><span class="ico">AI</span><div><h4>기획-디자인 파이프라인</h4><p>노션 정책 → 스토리보드 → Token JSON → Figma 워크플로우 설계.</p></div></div>
+      <div class="art rv"><span class="ico">SPEED</span><div><h4>AI 기반 빠른 실행력</h4><p>요구사항·정책을 AI로 곧장 동작하는 프로토타입·데모로 — 문서 대신 실물로 방향을 빠르게 검증.</p></div></div>
+      <div class="art rv"><span class="ico">SEC</span><div><h4>보안 · 규제 대응</h4><p>의료 개인정보·동의 버전, 권한(RBAC)·인증, 결제·정산 데이터 보호를 요구사항 단계부터 정의하고 리스크를 사전 점검.</p></div></div>
     </div>
     <p class="note">※ 계약사 수·발급량·전환율 등 실측 비즈니스 수치는 마스킹 정책에 따라 별도 자료로 제공합니다.</p>
   </div>
@@ -443,8 +632,7 @@
 <section id="contact" class="closing">
   <div class="wrap">
     <div class="sec-head rv"><span class="sec-num">04</span><h2 class="sec-title">함께 만들기</h2></div>
-    <h2 class="rv">근거로 결정하고, 정본으로 딜리버리하는 PO를 찾고 계신가요?</h2>
-    <p class="rv">B2B2C 헬스케어에서 병원·기업·임직원을 잇는 프로덕트를 정책부터 지표까지 오너십으로 끌고 왔습니다. 언제든 편하게 연락 주세요.</p>
+    <h2 class="rv">말보다 동작하는 결과로 증명합니다.</h2>
     <div class="contact rv">
       <a class="btn btn-primary" href="mailto:kennethkarl.choi@gmail.com">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
@@ -457,7 +645,7 @@
 
 <footer>
   <div class="wrap">
-    <span>© 2026 최재원 · Product Owner</span>
+    <span>© 2026 최재원 · Senior Product Owner · 16 Years</span>
     <span>Built as an operational dossier</span>
   </div>
 </footer>
