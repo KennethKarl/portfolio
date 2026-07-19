@@ -12,7 +12,7 @@
     --gold:#c9962f; --gold-lt:#f0c65a; --line:#b79a5e;
     --p0:#c0392b; --p1:#2471a3; --p2:#1e8449; --p3:#b7950b;
     --card:#fbf5e6; --shadow:0 8px 30px rgba(30,20,5,.28);
-    --asia:#c0392b; --europe:#2471a3; --medi:#138d75; --newworld:#7d3c98; --silkroad:#a0672a; --atlantic:#0e7c9b;
+    --asia:#c0392b; --europe:#2471a3; --medi:#138d75; --newworld:#7d3c98; --atlantic:#0e7c9b; --orient:#c77d10;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -31,6 +31,10 @@
   header.top h1{font-size:26px;letter-spacing:.5px;font-weight:800}
   header.top .en{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#f0c65a;font-weight:700}
   header.top .sub{font-size:12.5px;color:#bfe0f0;margin-left:auto}
+  .mute-btn{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:#f4ead0;
+    width:34px;height:34px;border-radius:9px;font-size:16px;cursor:pointer;flex:0 0 auto}
+  .mute-btn:hover{background:rgba(255,255,255,.2)}
+  .mute-btn.off{opacity:.55}
 
   /* ===== Setup screen ===== */
   .setup{background:var(--card);border:2px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
@@ -77,6 +81,14 @@
   .tile.hl{outline:3px solid var(--gold-lt);outline-offset:-1px;z-index:5;cursor:pointer}
   .tile.clickable{cursor:pointer}
   .tile.clickable:hover{filter:brightness(1.06)}
+  /* small port chips on sea routes */
+  .tile.sea{border-width:1px;box-shadow:0 1px 3px rgba(0,0,0,.35);z-index:3}
+  .tile.sea .band{height:4px}
+  .tile.sea .body{padding:0 1px;justify-content:center}
+  .tile.sea .nm{font-size:7.5px;font-weight:800;line-height:1.0}
+  .tile.sea .pr{display:none}
+  .tile.sea .lvl{font-size:7px;height:7px;letter-spacing:0}
+  .tile.sea .owner-badge{width:8px;height:8px;top:1px;right:1px;border-width:1px}
   .center-crest{position:absolute;left:23%;top:40%;transform:translate(-50%,-50%);text-align:center;color:#eaf4fb;pointer-events:none;width:22%}
   .center-crest .compass{font-size:46px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.4))}
   .center-crest .ttl{font-size:18px;font-weight:800;letter-spacing:1px;margin-top:2px;color:#f0c65a}
@@ -157,7 +169,6 @@
     .side{flex-basis:100%}
   }
   @media (max-width:640px){
-    .board-wrap{zoom:.58}
     .app{padding:12px 12px 40px}
     header.top h1{font-size:22px}
   }
@@ -169,12 +180,13 @@
     <span class="en">Voyage Marble</span>
     <h1>⚓ 대항해 마블</h1>
     <span class="sub">모두의 마블 × 모노폴리 · 대항해시대 세계지도판</span>
+    <button id="muteBtn" class="mute-btn" title="소리 켜기/끄기">🔊</button>
   </header>
 
   <!-- Setup -->
   <section class="setup" id="setup">
     <h2>새 항해 준비</h2>
-    <p class="desc">주사위를 굴려 세계 도시를 매입하고 통행료로 상대를 파산시키세요. 기본은 <b>육로 세계일주</b>입니다. <b>리스본 항구</b>에 멈추거나 <b>6칸 미만</b>으로 지나가면 자동으로 <b>⛵ 대서양 항로</b>를 타고 <b>미국 동부(뉴욕)</b>까지 질러갑니다.</p>
+    <p class="desc">주사위를 굴려 세계 도시를 매입하고 통행료로 상대를 파산시키세요. 기본은 <b>육로 세계일주</b>입니다. 항구에서 주사위 합이 <b>홀수면 바닷길</b>, <b>짝수면 육로</b>로 갑니다 — <b>⛵ 대서양 항로</b>(리스본→뉴욕) / <b>⛵ 동방 항로</b>(암스테르담→서울).</p>
     <h3 style="font-size:12px;letter-spacing:1px;color:var(--ink-soft);font-weight:800;margin-bottom:8px">플레이어 수</h3>
     <div class="count-row" id="countRow"></div>
     <div id="slots"></div>
@@ -222,13 +234,47 @@ const CFG = {
   TAX: 200000,
   ISLAND_FEE: 300000,
   AI_SAFE_BUFFER: 350000,
-  CELL: 72, TILE: 66, PAD: 4,
+  CELL: 72, TILE: 66, SEA_TILE: 34, PAD: 4,
   BUILD_LABELS:["","별장","빌딩","호텔","랜드마크"],
   TOLL_MULT:[0.10,0.50,1.50,4.00,7.00],   // land, villa, building, hotel, landmark
   PORT_LANDMARK_MULT:9.00,
   BUILD_COST_RATE:0.60,
 };
-const GROUP_KO = {asia:"아시아",europe:"유럽",medi:"지중해",newworld:"신대륙",atlantic:"대서양"};
+const GROUP_KO = {asia:"아시아",europe:"유럽",medi:"지중해",newworld:"신대륙",atlantic:"대서양",orient:"동방"};
+
+/* ---------- SFX (Web Audio, synthesized — no external files) ---------- */
+const SFX={
+  ctx:null, on:true,
+  ensure(){
+    if(!this.ctx){ try{ this.ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ this.on=false; return; } }
+    if(this.ctx.state==="suspended") this.ctx.resume();
+  },
+  play(fn){ if(!this.on)return; this.ensure(); if(!this.ctx)return; try{ fn(); }catch(e){} },
+  tone(freq,start,dur,type,peak){
+    const c=this.ctx,o=c.createOscillator(),g=c.createGain(),t=c.currentTime+start;
+    o.type=type||"sine"; o.frequency.setValueAtTime(freq,t); o.connect(g); g.connect(c.destination);
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(peak||0.2,t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.start(t); o.stop(t+dur+0.02);
+  },
+  noise(start,dur,cutoff,type,peak){
+    const c=this.ctx,n=Math.max(1,Math.floor(c.sampleRate*dur)),b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<n;i++) d[i]=Math.random()*2-1;
+    const s=c.createBufferSource(); s.buffer=b;
+    const f=c.createBiquadFilter(); f.type=type||"lowpass"; f.frequency.value=cutoff||1000;
+    const g=c.createGain(),t=c.currentTime+start;
+    s.connect(f); f.connect(g); g.connect(c.destination);
+    g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(peak||0.2,t+dur*0.25);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    s.start(t); s.stop(t+dur+0.02);
+  },
+  dice(){ this.play(()=>{ for(let i=0;i<6;i++) this.noise(i*0.055,0.045,2600,"bandpass",0.22); }); },   // 주사위 달그락
+  key(){ this.play(()=>{ [784,1047,1319,1568].forEach((f,i)=>this.tone(f,i*0.08,0.28,"triangle",0.16)); }); }, // 황금열쇠 반짝
+  gain(){ this.play(()=>{ [660,880,1100].forEach((f,i)=>this.tone(f,i*0.07,0.22,"triangle",0.15)); }); },      // 수입 상승음
+  spend(){ this.play(()=>{ [520,390,300].forEach((f,i)=>this.tone(f,i*0.075,0.22,"triangle",0.13)); }); },     // 지출 하강음
+  wave(){ this.play(()=>{ this.noise(0,0.30,650,"lowpass",0.16); this.noise(0.04,0.16,1400,"bandpass",0.07); }); }, // 배·바닷물
+  hoof(){ this.play(()=>{ this.tone(190,0,0.08,"triangle",0.24); this.noise(0,0.045,2400,"bandpass",0.10); }); },   // 말발굽 clop
+};
 
 /* ---------- Board definition ----------
    Main loop = 28 nodes on an 8x8 perimeter, clockwise from START (bottom-right).
@@ -257,6 +303,10 @@ function city(id,name,group,price,isPort){
 function special(id,name,stype,icon){
   const [gx,gy]=LOOP[id];
   return {id,name,type:stype,icon,gx,gy,next:[(id+1)%28]};
+}
+// sea-route port node (interior tile with explicit coords + next)
+function seaCity(id,name,group,price,gx,gy,nextId){
+  return {id,name,type:"port",group,price,gx,gy,owner:null,level:0,festival:false,next:[nextId]};
 }
 
 const BOARD=[
@@ -289,17 +339,36 @@ const BOARD=[
   city(26,"부에노스아이레스","newworld",140000,false),
   city(27,"하바나","newworld",190000,true),
 ];
-// Atlantic sea route (OPTIONAL, sea): 리스본(8) -> 아조레스 -> 버뮤다 -> 뉴욕(22, 미국 동부)
+// ===== Optional SEA routes (LAND is the base; boarding is AUTOMATIC on dock / <6-step pass) =====
+// 대서양 항로(서항로): 리스본(8) -> 8 ports -> 뉴욕(22, 미국 동부).  하단 대각선.
 const ATLANTIC=[
-  {id:32,name:"아조레스",type:"port",group:"atlantic",price:160000,gx:1.7,gy:5.0,owner:null,level:0,festival:false,next:[33]},
-  {id:33,name:"버뮤다",type:"port",group:"atlantic",price:180000,gx:5.0,gy:2.7,owner:null,level:0,festival:false,next:[22]},
+  seaCity(34,"메데이라","atlantic",140000, 0.85,5.45, 32),
+  seaCity(32,"아조레스","atlantic",160000, 1.60,4.90, 33),
+  seaCity(33,"버뮤다","atlantic",180000, 2.35,4.35, 35),
+  seaCity(35,"산토도밍고","atlantic",190000, 3.15,3.80, 36),
+  seaCity(36,"포트로얄","atlantic",210000, 3.90,3.25, 37),
+  seaCity(37,"베라크루즈","atlantic",200000, 4.70,2.70, 38),
+  seaCity(38,"산티아고","atlantic",170000, 5.50,2.15, 39),
+  seaCity(39,"과테말라","atlantic",150000, 6.20,1.65, 22),
 ];
-ATLANTIC.forEach(n=>BOARD.push(n));
+// 동방 항로(동항로): 암스테르담(15) -> 8 ports -> 서울(1, 한국).  좌상단→우하단 대각선.
+const ORIENT=[
+  seaCity(40,"희망봉","orient",150000, 1.56,0.78, 41),
+  seaCity(41,"모잠비크","orient",130000, 2.11,1.56, 42),
+  seaCity(42,"고아","orient",190000, 2.67,2.33, 43),
+  seaCity(43,"콜롬보","orient",170000, 3.22,3.11, 44),
+  seaCity(44,"말라카","orient",220000, 3.78,3.89, 45),
+  seaCity(45,"마카오","orient",240000, 4.33,4.67, 46),
+  seaCity(46,"마닐라","orient",200000, 4.89,5.44, 47),
+  seaCity(47,"부산","orient",210000, 5.44,6.22, 1),
+];
+[...ATLANTIC,...ORIENT].forEach(n=>BOARD.push(n));
 
-// Base = overland loop (LAND is the default route). The sea route is OPTIONAL:
-// 리스본 항구에 멈추거나(정박), 6칸 미만 걸음으로 통과할 때 자동으로 대서양 항로(바닷길)로 항해한다.
-BOARD[8].next=[9,32];   // [육로 계속, 대서양 항로]
-BOARD[8].seaPort={seaId:32, landId:9, routeName:"대서양 항로", dest:"뉴욕(미국 동부)"};
+// Sea-port entries: LAND is base; ODD roll -> board sea route, EVEN -> stay land.
+BOARD[8].next=[9,34];    // 리스본: [육로, 대서양 항로]  (bottom-left -> top-right)
+BOARD[8].seaPort={seaId:34, landId:9, routeName:"대서양 항로", dest:"뉴욕(미국 동부)"};
+BOARD[15].next=[16,40];  // 암스테르담: [육로, 동방 항로]  (top-left -> bottom-right)
+BOARD[15].seaPort={seaId:40, landId:16, routeName:"동방 항로", dest:"서울(한국)"};
 
 const NODE=id=>BOARD.find(n=>n.id===id);
 
@@ -308,6 +377,7 @@ const state={players:[],cur:0,phase:"setup",started:false};
 
 function currentPlayer(){return state.players[state.cur];}
 function isCity(n){return n && (n.type==="city"||n.type==="port");}
+function isSea(n){return n && (n.group==="atlantic"||n.group==="orient");}
 function groupCities(group){return BOARD.filter(n=>isCity(n)&&n.group===group);}
 function hasMonopoly(owner,group){
   if(owner==null)return false;
@@ -387,29 +457,28 @@ function buildBoardDOM(){
     path.setAttribute("opacity","0.9");
     svg.appendChild(path);
   };
-  drawRoute([8,32,33,22],"#8fd3ff");         // ⛵ 대서양 항로 (바닷길)
+  drawRoute([8,34,32,33,35,36,37,38,39,22],"#8fd3ff");   // ⛵ 대서양 항로 (서항로, 하좌→상우)
+  drawRoute([15,40,41,42,43,44,45,46,47,1],"#f0b24a");   // ⛵ 동방 항로 (동항로, 상좌→하우)
   board.appendChild(svg);
 
-  // center crest (tucked into open ocean, left-upper interior)
-  const crest=document.createElement("div");crest.className="center-crest";
-  crest.innerHTML=`<div class="compass">🧭</div><div class="ttl">大航海</div><div class="en2">Voyage Marble</div>`;
-  board.appendChild(crest);
-
-  // route labels
-  const mkLabel=(node,dx,dy,text,color)=>{
-    const el=document.createElement("div");el.className="silk-label";
-    const c=tileCenter(node);el.style.left=(c.x+dx)+"px";el.style.top=(c.y+dy)+"px";
-    if(color)el.style.color=color;el.textContent=text;board.appendChild(el);
-  };
-  mkLabel(NODE(33),0,-CFG.TILE*0.72,"⛵ 대서양 항로","#bfe6ff");
+  // route legend (open water, lower-center)
+  const legend=document.createElement("div");
+  legend.style.cssText="position:absolute;left:44%;top:73%;transform:translate(-50%,-50%);display:flex;gap:16px;"+
+    "background:rgba(4,42,64,.5);padding:5px 13px;border-radius:9px;pointer-events:none;z-index:2;white-space:nowrap";
+  legend.innerHTML=`<span style="color:#bfe6ff;font-size:11px;font-weight:800">⛵ 대서양 항로</span>`+
+    `<span style="color:#f6c77e;font-size:11px;font-weight:800">⛵ 동방 항로</span>`;
+  board.appendChild(legend);
 
   // tiles
   BOARD.forEach(n=>{
-    const t=document.createElement("div");t.className="tile"+(isCity(n)?"":" special")+(n.type==="port"?" port":"");
+    const sea=isSea(n);
+    const t=document.createElement("div");
+    t.className="tile"+(isCity(n)?"":" special")+(n.type==="port"?" port":"")+(sea?" sea":"");
     t.id="tile-"+n.id;
-    const pos=tilePos(n);
-    t.style.left=pos.x+"px";t.style.top=pos.y+"px";
-    t.style.width=CFG.TILE+"px";t.style.height=CFG.TILE+"px";
+    const size=sea?CFG.SEA_TILE:CFG.TILE;
+    if(sea){ const c=tileCenter(n); t.style.left=(c.x-size/2)+"px"; t.style.top=(c.y-size/2)+"px"; }
+    else { const pos=tilePos(n); t.style.left=pos.x+"px"; t.style.top=pos.y+"px"; }
+    t.style.width=size+"px";t.style.height=size+"px";
     if(isCity(n)){
       const gc=groupColor(n.group);
       t.innerHTML=`<div class="band" style="background:${gc}"></div>
@@ -501,8 +570,24 @@ function moneyToast(p,delta,reason){
   setTimeout(()=>t.classList.add("out"),2000);
   setTimeout(()=>t.remove(),2450);
 }
-function gainMoney(p,amt,reason){p.money+=amt;moneyToast(p,amt,reason);}
-function spendMoney(p,amt,reason){p.money-=amt;moneyToast(p,-amt,reason);}
+function gainMoney(p,amt,reason){p.money+=amt;moneyToast(p,amt,reason);if(!p.isAI)SFX.gain();}
+function spendMoney(p,amt,reason){p.money-=amt;moneyToast(p,-amt,reason);if(!p.isAI)SFX.spend();}
+// blocking money popup for the HUMAN (click to proceed); AI uses toast so the game flows
+async function moneyEvent(p,delta,reason){
+  if(!delta)return;
+  p.money+=delta;updateBoard();
+  if(p.isAI){moneyToast(p,delta,reason);return;}
+  if(delta>=0)SFX.gain();else SFX.spend();
+  const gain=delta>=0;
+  await modalChoice(gain?"💰 수입":"💸 지출",
+    `<div style="text-align:center;line-height:1.6">
+       <span style="font-size:22px">${PLAYER_EMOJI[p.id]}</span> <b>${p.name}</b><br>
+       <span class="big" style="font-size:22px;color:${gain?'#1e8449':'#c0392b'}">${gain?'+':'−'}${won(Math.abs(delta))}</span><br>
+       <span style="color:var(--ink-soft);font-size:12.5px">${reason||''}</span><br>
+       <span style="font-size:12.5px">잔액 <b>${won(p.money)}</b></span>
+     </div>`,
+    [{label:"확인",value:true,primary:true}]);
+}
 function hopToken(p){
   const tk=document.getElementById("tok-"+p.id);if(!tk)return;
   tk.classList.remove("hop");void tk.offsetWidth;tk.classList.add("hop");
@@ -542,25 +627,26 @@ function modalPick(title,bodyHTML,options){ // options:[{label,value}]
      - the player is docked here (stopped on this port last turn), OR
      - fewer than 6 steps remain to travel from this port (passing with a small number).
 */
-function pickNext(p,node,stepsRemaining){
+// LAND is the base. At a sea port, ODD dice total -> board the sea route, EVEN -> stay on land.
+function pickNext(p,node,rollTotal){
   if(node.next.length===1)return node.next[0];
-  const sp=node.seaPort;
-  const takeSea=(p.docked===node.id)||(stepsRemaining<6);
-  if(p.docked===node.id)p.docked=null;
-  if(takeSea)log(`${pname(p)} ⛵ ${sp.routeName} 출항 — ${sp.dest} 방면`);
-  return takeSea?node.next[1]:node.next[0];
+  const sp=node.seaPort, odd=(rollTotal%2===1);
+  if(odd)log(`${pname(p)} ⛵ ${sp.routeName} 출항 (홀수 ${rollTotal}) — ${sp.dest} 방면`);
+  else log(`${pname(p)} 🛤️ ${node.name} 육로 통과 (짝수 ${rollTotal})`);
+  return odd?node.next[1]:node.next[0];
 }
 async function movePlayer(p,steps){
   for(let i=0;i<steps;i++){
     const node=NODE(p.nodeId);
-    const nextId=pickNext(p,node,steps-i);   // steps-i = steps left to travel from this node
+    const nextId=pickNext(p,node,steps);   // steps = full roll total → parity decides sea/land
     p.nodeId=nextId;
     if(nextId===0 && i<steps-1){ // passing START (not final landing)
-      gainMoney(p,CFG.SALARY,"출발 통과 봉급");
       log(`${pname(p)} 출발 통과 · 봉급 +${won(CFG.SALARY)}`);
+      await moneyEvent(p,CFG.SALARY,"출발 통과 봉급");
     }
     updateBoard();
     hopToken(p);
+    if(isSea(NODE(nextId))) SFX.wave(); else SFX.hoof();   // 배=바닷물 / 육지=말발굽
     await delay(215);
   }
 }
@@ -568,10 +654,6 @@ async function movePlayer(p,steps){
 /* ---------- Landing resolution ---------- */
 async function resolveLanding(p){
   const n=NODE(p.nodeId);
-  if(n.seaPort){ // stopped on a sea port -> next departure sails automatically
-    p.docked=n.id;
-    log(`${pname(p)} ⚓ ${n.name} 항구 정박 — 다음 턴 ${n.seaPort.routeName}로 출항`);
-  }
   if(isCity(n)){
     if(n.owner==null){ await tryBuy(p,n); }
     else if(n.owner===p.id){ await tryBuild(p,n); }
@@ -580,7 +662,7 @@ async function resolveLanding(p){
   }
   switch(n.type){
     case "start":
-      gainMoney(p,CFG.SALARY,"출발 봉급");log(`${pname(p)} 출발 도착 · 봉급 +${won(CFG.SALARY)}`);break;
+      log(`${pname(p)} 출발 도착 · 봉급 +${won(CFG.SALARY)}`);await moneyEvent(p,CFG.SALARY,"출발 봉급");break;
     case "island":
       p.inJail=true;p.jailTurns=0;log(`${pname(p)} 🏝️ 무인도에 정박 (탈출까지 대기)`);break;
     case "tax":
@@ -649,15 +731,14 @@ async function payToll(p,n){
 /* charge: pay `amount` to `to` (player or null=bank). Bankrupt if insufficient. */
 async function charge(p,amount,to){
   if(p.money>=amount){
-    spendMoney(p,amount,to?"통행료":"지출");
-    if(to)gainMoney(to,amount,"통행료 수입");
-    updateBoard();return;
+    await moneyEvent(p,-amount, to?`${to.name} 통행료`:"세금·지출");
+    if(to) await moneyEvent(to,amount,`${p.name} 통행료 수입`);
+    return;
   }
   // insufficient -> bankruptcy (MVP: no mortgaging)
   const remaining=p.money;
-  spendMoney(p,remaining,"파산 정산");
-  if(to)gainMoney(to,remaining,"통행료 수입");
-  p.money=0;
+  if(to){to.money+=remaining;moneyToast(to,remaining,`${p.name} 통행료 수입`);}
+  p.money=0;updateBoard();
   if(!p.isAI){
     await modalChoice("💀 파산",
       `${p.name} 님은 ${won(amount)}를 지불할 수 없어 <span class="big">파산</span>했습니다.<br>보유 도시는 모두 무주공산이 됩니다.`,
@@ -703,15 +784,20 @@ const CHANCE=[
 ];
 async function doChance(p){
   const c=CHANCE[Math.floor(Math.random()*CHANCE.length)];
+  SFX.key();
   log(`${pname(p)} 🗝️ 황금열쇠: ${c.t}`);
-  if(!p.isAI){
-    await modalChoice("🗝️ 황금열쇠",`${c.t}${c.m?`<br><span class="big">${c.m>0?"+":""}${won(c.m)}</span>`:""}`,
-      [{label:"확인",value:true,primary:true}]);
-  }else{await delay(500);}
-  if(c.island){p.nodeId=7;p.inJail=true;p.jailTurns=0;updateBoard();return;}
-  if(c.go!==undefined){p.nodeId=c.go;gainMoney(p,CFG.SALARY,"세계일주 봉급");updateBoard();await delay(250);await resolveLanding(p);return;}
-  if(c.m>0){gainMoney(p,c.m,"황금열쇠");updateBoard();}
-  else if(c.m<0){await charge(p,-c.m,null);}
+  const reason="🗝️ "+c.t;
+  if(c.island){
+    if(!p.isAI)await modalChoice("🗝️ 황금열쇠",`${c.t}<br><span class="big">무인도로 표류!</span>`,[{label:"확인",value:true,primary:true}]);
+    else await delay(400);
+    p.nodeId=7;p.inJail=true;p.jailTurns=0;updateBoard();return;
+  }
+  if(c.go!==undefined){p.nodeId=c.go;updateBoard();await moneyEvent(p,CFG.SALARY,reason);await delay(250);await resolveLanding(p);return;}
+  if(c.m>0){await moneyEvent(p,c.m,reason);}
+  else if(c.m<0){
+    if(p.money>=-c.m)await moneyEvent(p,c.m,reason);
+    else await charge(p,-c.m,null);
+  }
 }
 async function doFestival(p){
   const mine=ownedCities(p.id);
@@ -767,6 +853,7 @@ async function rollAndResolve(p){
 }
 async function animateDice(a,b){
   const d1=document.getElementById("d1"),d2=document.getElementById("d2");
+  SFX.dice();
   d1.classList.remove("pop");d2.classList.remove("pop");
   d1.classList.add("roll");d2.classList.add("roll");
   for(let i=0;i<14;i++){showDice(1+Math.floor(Math.random()*6),1+Math.floor(Math.random()*6));await delay(62);}
@@ -828,6 +915,27 @@ function nextStep(){
   else{humanTurn();}
 }
 
+/* ---------- Fit board to viewport height (transform scale, DPR-safe) ---------- */
+function fitBoard(){
+  const wrap=document.querySelector('.board-wrap');
+  const board=document.getElementById('board');
+  if(!wrap||!board||!state.started)return;
+  const BORDER=6;
+  board.style.transform='none';
+  wrap.style.width='';wrap.style.height='';
+  const BW=board.offsetWidth, BH=board.offsetHeight;   // intrinsic board size
+  const top=wrap.getBoundingClientRect().top;
+  const availH=window.innerHeight-top-16;
+  const narrow=window.innerWidth<860;
+  const availW=narrow?(window.innerWidth-20):(window.innerWidth-330); // reserve side panel on desktop
+  let z=Math.min(availH/(BH+2*BORDER), availW/(BW+2*BORDER));
+  z=Math.max(0.4,Math.min(z,2.4));
+  board.style.transformOrigin='top left';
+  board.style.transform='scale('+z+')';
+  wrap.style.width=(BW*z+2*BORDER)+'px';
+  wrap.style.height=(BH*z+2*BORDER)+'px';
+}
+
 /* ---------- Start game ---------- */
 function startGame(){
   state.players=[];
@@ -841,15 +949,21 @@ function startGame(){
   state.cur=0;state.phase="play";state.started=true;
   document.getElementById("setup").style.display="none";
   document.getElementById("game").classList.add("live");
-  buildBoardDOM();updateBoard();
+  buildBoardDOM();updateBoard();fitBoard();
   document.getElementById("log").innerHTML="";
   log("⚓ 대항해 출발! 각 항해사 자금 "+won(CFG.START_MONEY));
   nextStep();
 }
 
 /* ---------- Init ---------- */
-document.getElementById("startBtn").onclick=startGame;
+document.getElementById("startBtn").onclick=()=>{SFX.ensure();startGame();};
 document.getElementById("rollBtn").onclick=onRollClick;
+document.getElementById("muteBtn").onclick=function(){
+  SFX.on=!SFX.on; this.textContent=SFX.on?"🔊":"🔇"; this.classList.toggle("off",!SFX.on);
+  if(SFX.on){SFX.ensure();SFX.key();}
+};
+window.addEventListener("resize",fitBoard);
+window.addEventListener("orientationchange",fitBoard);
 renderSetup();
 </script>
 </body>
