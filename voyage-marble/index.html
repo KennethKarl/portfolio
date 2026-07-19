@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>대항해 마블 · Voyage Marble</title>
+<style>
+  :root{
+    --parch:#efe2c4; --parch-2:#e3d2a8; --ink:#2b2113; --ink-soft:#6b5a3a;
+    --sea:#2a6f97; --sea-deep:#014f86; --sea-light:#61a5c2;
+    --gold:#c9962f; --gold-lt:#f0c65a; --line:#b79a5e;
+    --p0:#c0392b; --p1:#2471a3; --p2:#1e8449; --p3:#b7950b;
+    --card:#fbf5e6; --shadow:0 8px 30px rgba(30,20,5,.28);
+    --asia:#c0392b; --europe:#2471a3; --medi:#138d75; --newworld:#7d3c98; --silkroad:#a0672a; --atlantic:#0e7c9b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Pretendard","Apple SD Gothic Neo",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 700px at 15% -10%, #1c5878 0%, transparent 60%),
+      radial-gradient(900px 600px at 110% 120%, #0b3a56 0%, transparent 55%),
+      linear-gradient(160deg,#0e3f5c 0%,#08324b 100%);
+    min-height:100%;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:1180px;margin:0 auto;padding:14px 18px 48px}
+  header.top{display:flex;align-items:baseline;gap:14px;color:#f4ead0;margin-bottom:12px;flex-wrap:wrap}
+  header.top h1{font-size:26px;letter-spacing:.5px;font-weight:800}
+  header.top .en{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#f0c65a;font-weight:700}
+  header.top .sub{font-size:12.5px;color:#bfe0f0;margin-left:auto}
+
+  /* ===== Setup screen ===== */
+  .setup{background:var(--card);border:2px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+    padding:26px 26px 24px;max-width:560px;margin:6vh auto 0}
+  .setup h2{font-size:20px;margin-bottom:4px}
+  .setup p.desc{color:var(--ink-soft);font-size:13.5px;margin-bottom:18px;line-height:1.5}
+  .count-row{display:flex;gap:8px;margin-bottom:18px}
+  .count-row button{flex:1;padding:10px;border:2px solid var(--line);background:#fff;border-radius:10px;
+    font-weight:700;font-size:15px;cursor:pointer;color:var(--ink)}
+  .count-row button.active{background:var(--sea-deep);color:#fff;border-color:var(--sea-deep)}
+  .slot{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--line);
+    border-radius:10px;margin-bottom:8px;background:#fff}
+  .slot .dot{width:18px;height:18px;border-radius:50%;flex:0 0 auto;border:2px solid rgba(0,0,0,.15)}
+  .slot input{flex:1;border:none;font-size:15px;font-weight:600;color:var(--ink);background:transparent;outline:none;min-width:0}
+  .slot .toggle{display:flex;border:1.5px solid var(--line);border-radius:8px;overflow:hidden}
+  .slot .toggle button{border:none;background:#fff;padding:6px 12px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--ink-soft)}
+  .slot .toggle button.on{background:var(--gold);color:#3a2c0a}
+  .start-btn{width:100%;margin-top:14px;padding:13px;border:none;border-radius:11px;background:var(--gold);
+    color:#3a2c0a;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #a9781c}
+  .start-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #a9781c}
+
+  /* ===== Game layout ===== */
+  .game{display:none;gap:18px;align-items:flex-start}
+  .game.live{display:flex;flex-wrap:wrap}
+  .board-wrap{background:var(--sea);border:6px solid var(--gold);border-radius:14px;box-shadow:var(--shadow);
+    position:relative;flex:0 0 auto}
+  #board{position:relative;background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 12px, transparent 12px 24px),
+      radial-gradient(circle at 50% 45%, #3f88ad 0%, #1f5f83 55%, #0b3f5e 100%);
+  }
+  .tile{position:absolute;background:var(--parch);border:1.5px solid var(--line);border-radius:7px;
+    overflow:hidden;display:flex;flex-direction:column;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);cursor:default}
+  .tile .band{height:8px;flex:0 0 auto}
+  .tile .body{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2px 3px;text-align:center}
+  .tile .nm{font-size:9.5px;font-weight:800;line-height:1.05;color:var(--ink)}
+  .tile .pr{font-size:8.5px;color:var(--ink-soft);margin-top:1px;font-weight:600}
+  .tile .lvl{font-size:8.5px;color:var(--gold);font-weight:800;letter-spacing:1px;height:10px}
+  .tile.special .body{padding:2px}
+  .tile.special .ic{font-size:20px;line-height:1}
+  .tile.special .nm{font-size:9.5px;margin-top:2px}
+  .tile.port .body{background:linear-gradient(180deg,#fbf5e6,#f3e6c4)}
+  .tile .owner-badge{position:absolute;top:2px;right:2px;width:11px;height:11px;border-radius:50%;border:1.5px solid #fff;display:none}
+  .tile.festival-on::after{content:"🎪";position:absolute;top:1px;left:2px;font-size:11px}
+  .tile.hl{outline:3px solid var(--gold-lt);outline-offset:-1px;z-index:5;cursor:pointer}
+  .tile.clickable{cursor:pointer}
+  .tile.clickable:hover{filter:brightness(1.06)}
+  .center-crest{position:absolute;left:23%;top:40%;transform:translate(-50%,-50%);text-align:center;color:#eaf4fb;pointer-events:none;width:22%}
+  .center-crest .compass{font-size:46px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.4))}
+  .center-crest .ttl{font-size:18px;font-weight:800;letter-spacing:1px;margin-top:2px;color:#f0c65a}
+  .center-crest .en2{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#cfe6f2}
+  .silk-label{position:absolute;color:#f3d9a6;font-size:10px;font-weight:800;letter-spacing:1px;transform:translate(-50%,-50%);
+    text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none}
+  .token{position:absolute;width:28px;height:28px;border-radius:50%;border:3px solid #fff;z-index:8;background:#fff;
+    box-shadow:0 3px 6px rgba(0,0,0,.45);transition:left .21s ease,top .21s ease;display:flex;align-items:center;justify-content:center;
+    font-size:17px;line-height:1}
+  .token.hop{animation:hop .22s ease}
+  @keyframes hop{0%{transform:translateY(0)}45%{transform:translateY(-13px) scale(1.18)}100%{transform:translateY(0)}}
+  svg.silk-path{position:absolute;left:0;top:0;pointer-events:none;z-index:1}
+
+  /* ===== Side panel ===== */
+  .side{flex:1;min-width:290px;display:flex;flex-direction:column;gap:12px}
+  .panel{background:var(--card);border:2px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:12px 13px}
+  .players{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .pcard{border:1.5px solid var(--line);border-radius:9px;padding:8px 9px;background:#fff;position:relative;overflow:hidden}
+  .pcard .bar{position:absolute;left:0;top:0;bottom:0;width:5px}
+  .pcard.turn{box-shadow:0 0 0 2px var(--gold);border-color:var(--gold)}
+  .pcard.out{opacity:.45;filter:grayscale(.6)}
+  .pcard .pn{font-size:13px;font-weight:800;padding-left:6px;display:flex;align-items:center;gap:5px}
+  .pcard .pn .ai{font-size:9px;background:var(--ink-soft);color:#fff;border-radius:4px;padding:1px 4px;font-weight:700}
+  .pcard .money{font-size:15.5px;font-weight:800;padding-left:6px;margin-top:2px;color:var(--sea-deep)}
+  .pcard .meta{font-size:10.5px;color:var(--ink-soft);padding-left:6px;margin-top:1px}
+
+  .diebox{display:flex;align-items:center;gap:12px;justify-content:center}
+  .die{width:44px;height:44px;border-radius:10px;background:#fff;border:2px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;box-shadow:0 3px 0 rgba(0,0,0,.2)}
+  .die.roll{animation:tumble .3s linear infinite}
+  @keyframes tumble{0%{transform:translateY(0) rotate(0) scale(1)}25%{transform:translateY(-9px) rotate(90deg) scale(1.12)}
+    50%{transform:translateY(0) rotate(180deg) scale(1)}75%{transform:translateY(-6px) rotate(270deg) scale(1.12)}100%{transform:translateY(0) rotate(360deg) scale(1)}}
+  .die.pop{animation:diepop .26s ease}
+  @keyframes diepop{0%{transform:scale(1.4)}55%{transform:scale(.9)}100%{transform:scale(1)}}
+  .turn-line{text-align:center;font-size:13.5px;font-weight:700;margin-bottom:9px;min-height:19px}
+  .roll-btn{width:100%;margin-top:11px;padding:12px;border:none;border-radius:10px;background:var(--sea-deep);
+    color:#fff;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #013a63}
+  .roll-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #013a63}
+  .roll-btn:disabled{background:#9fb4c0;box-shadow:0 4px 0 #7d9099;cursor:default}
+
+  .log{font-size:12px;line-height:1.55;color:var(--ink);max-height:150px;overflow-y:auto;display:flex;flex-direction:column-reverse}
+  .log .l{padding:2px 0;border-bottom:1px dashed #e2d3ac}
+  .log .l b{color:var(--sea-deep)}
+  .panel h3{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px;font-weight:800}
+
+  /* ===== Modal ===== */
+  .modal-bg{position:fixed;inset:0;background:rgba(10,25,40,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--card);border:2px solid var(--gold);border-radius:14px;box-shadow:var(--shadow);
+    padding:20px 20px 18px;max-width:420px;width:100%;max-height:82vh;overflow-y:auto}
+  .modal h3{font-size:18px;margin-bottom:6px;color:var(--ink)}
+  .modal .mbody{font-size:13.5px;color:var(--ink);line-height:1.55;margin-bottom:14px}
+  .modal .mbody .big{font-size:15px;font-weight:800}
+  .mbtns{display:flex;gap:9px;flex-wrap:wrap}
+  .mbtns button{flex:1;min-width:110px;padding:11px;border:none;border-radius:9px;font-size:14px;font-weight:800;cursor:pointer}
+  .mb-primary{background:var(--gold);color:#3a2c0a;box-shadow:0 3px 0 #a9781c}
+  .mb-ghost{background:#fff;border:1.5px solid var(--line)!important;color:var(--ink-soft)}
+  .mb-primary:active,.mb-ghost:active{transform:translateY(2px)}
+  .pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+  .pick-grid button{padding:8px;border:1.5px solid var(--line);background:#fff;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;text-align:left;color:var(--ink)}
+  .pick-grid button:hover{background:var(--parch)}
+  .win-emoji{font-size:46px;text-align:center}
+  /* ===== Money toast ===== */
+  #toastBox{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:7px;align-items:center;pointer-events:none}
+  .toast{background:var(--card);border:2px solid var(--line);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:700;
+    box-shadow:var(--shadow);display:flex;align-items:center;gap:8px;animation:tin .25s ease;white-space:nowrap}
+  .toast .te{font-size:16px}
+  .toast .tv{font-weight:800;font-size:14px}
+  .toast.gain{border-color:#7fc99b}.toast.gain .tv{color:#1e8449}
+  .toast.spend{border-color:#e0a39c}.toast.spend .tv{color:#c0392b}
+  .toast .tr{font-size:10.5px;color:var(--ink-soft);font-weight:600}
+  .toast.out{opacity:0;transform:translateY(-10px);transition:.4s ease}
+  @keyframes tin{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+  footer.foot{margin-top:26px;text-align:center;color:#9dc2d6;font-size:11.5px;letter-spacing:.4px}
+  footer.foot a{color:#f0c65a;text-decoration:none}
+  @media (max-width:760px){
+    .game.live{justify-content:center}
+    .side{flex-basis:100%}
+  }
+  @media (max-width:640px){
+    .board-wrap{zoom:.58}
+    .app{padding:12px 12px 40px}
+    header.top h1{font-size:22px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <span class="en">Voyage Marble</span>
+    <h1>⚓ 대항해 마블</h1>
+    <span class="sub">모두의 마블 × 모노폴리 · 대항해시대 세계지도판</span>
+  </header>
+
+  <!-- Setup -->
+  <section class="setup" id="setup">
+    <h2>새 항해 준비</h2>
+    <p class="desc">주사위를 굴려 세계 도시를 매입하고 통행료로 상대를 파산시키세요. 기본은 <b>육로 세계일주</b>입니다. <b>리스본 항구</b>에 멈추거나 <b>6칸 미만</b>으로 지나가면 자동으로 <b>⛵ 대서양 항로</b>를 타고 <b>미국 동부(뉴욕)</b>까지 질러갑니다.</p>
+    <h3 style="font-size:12px;letter-spacing:1px;color:var(--ink-soft);font-weight:800;margin-bottom:8px">플레이어 수</h3>
+    <div class="count-row" id="countRow"></div>
+    <div id="slots"></div>
+    <button class="start-btn" id="startBtn">⚓ 항해 시작</button>
+  </section>
+
+  <!-- Game -->
+  <section class="game" id="game">
+    <div class="board-wrap">
+      <div id="board"></div>
+    </div>
+    <div class="side">
+      <div class="panel">
+        <h3>선단 현황</h3>
+        <div class="players" id="players"></div>
+      </div>
+      <div class="panel">
+        <div class="turn-line" id="turnLine"></div>
+        <div class="diebox"><div class="die" id="d1">?</div><div class="die" id="d2">?</div></div>
+        <button class="roll-btn" id="rollBtn">🎲 주사위 굴리기</button>
+      </div>
+      <div class="panel">
+        <h3>항해 일지</h3>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">데모 프로토타입 · 자체완결 단일 HTML · <a href="https://kennethkarl.github.io/portfolio/" target="_blank" rel="noopener">← 포트폴리오</a></footer>
+</div>
+
+<div id="toastBox"></div>
+<div class="modal-bg" id="modalBg"><div class="modal" id="modal"></div></div>
+
+<script>
+"use strict";
+/* ============================================================
+   대항해 마블 (Voyage Marble)
+   자체완결 단일 HTML 보드게임 — 바닐라 JS
+   ============================================================ */
+
+const CFG = {
+  START_MONEY: 2000000,
+  SALARY: 200000,
+  TAX: 200000,
+  ISLAND_FEE: 300000,
+  AI_SAFE_BUFFER: 350000,
+  CELL: 72, TILE: 66, PAD: 4,
+  BUILD_LABELS:["","별장","빌딩","호텔","랜드마크"],
+  TOLL_MULT:[0.10,0.50,1.50,4.00,7.00],   // land, villa, building, hotel, landmark
+  PORT_LANDMARK_MULT:9.00,
+  BUILD_COST_RATE:0.60,
+};
+const GROUP_KO = {asia:"아시아",europe:"유럽",medi:"지중해",newworld:"신대륙",atlantic:"대서양"};
+
+/* ---------- Board definition ----------
+   Main loop = 28 nodes on an 8x8 perimeter, clockwise from START (bottom-right).
+   Grid (gx=col 0..7, gy=row 0..7). Corners are specials.
+   Atlantic sea route = optional ocean crossing 리스본(8) -> 아조레스 -> 버뮤다 -> 뉴욕(22).
+*/
+function makeLoopCoords(){
+  const c=[];
+  // bottom row: col 7..0 at row7  (idx 0..7)
+  for(let col=7;col>=0;col--) c.push([col,7]);
+  // left col: row 6..0 at col0    (idx 8..14)
+  for(let row=6;row>=0;row--) c.push([0,row]);
+  // top row: col 1..7 at row0     (idx 15..21)
+  for(let col=1;col<=7;col++) c.push([col,0]);
+  // right col: row 1..6 at col7   (idx 22..27)
+  for(let row=1;row<=6;row++) c.push([7,row]);
+  return c; // length 28
+}
+const LOOP=makeLoopCoords();
+
+// helper to build a city node
+function city(id,name,group,price,isPort){
+  const [gx,gy]=LOOP[id];
+  return {id,name,type:isPort?"port":"city",group,price,gx,gy,owner:null,level:0,festival:false,next:[(id+1)%28]};
+}
+function special(id,name,stype,icon){
+  const [gx,gy]=LOOP[id];
+  return {id,name,type:stype,icon,gx,gy,next:[(id+1)%28]};
+}
+
+const BOARD=[
+  special(0,"출발","start","⛵"),
+  city(1,"서울","asia",80000,false),
+  city(2,"도쿄","asia",100000,false),
+  special(3,"황금열쇠","chance","🗝️"),
+  city(4,"이스탄불","medi",180000,true),
+  city(5,"알렉산드리아","medi",160000,true),
+  city(6,"카사블랑카","medi",90000,false),
+  special(7,"무인도","island","🏝️"),
+  city(8,"리스본","europe",170000,true),
+  city(9,"세비야","europe",150000,true),
+  city(10,"마드리드","europe",110000,false),
+  special(11,"황금열쇠","chance","🗝️"),
+  city(12,"파리","europe",240000,false),
+  city(13,"런던","europe",260000,false),
+  special(14,"세계여행","worldtour","🧭"),
+  city(15,"암스테르담","europe",210000,true),
+  city(16,"베네치아","medi",220000,true),
+  special(17,"축제","festival","🎪"),
+  city(18,"나가사키","asia",200000,true),
+  city(19,"상하이","asia",120000,false),
+  city(20,"홍콩","asia",140000,false),
+  special(21,"국세청","tax","🏛️"),
+  city(22,"뉴욕","newworld",300000,false),
+  city(23,"샌프란시스코","newworld",200000,false),
+  special(24,"황금열쇠","chance","🗝️"),
+  city(25,"리우데자네이루","newworld",130000,false),
+  city(26,"부에노스아이레스","newworld",140000,false),
+  city(27,"하바나","newworld",190000,true),
+];
+// Atlantic sea route (OPTIONAL, sea): 리스본(8) -> 아조레스 -> 버뮤다 -> 뉴욕(22, 미국 동부)
+const ATLANTIC=[
+  {id:32,name:"아조레스",type:"port",group:"atlantic",price:160000,gx:1.7,gy:5.0,owner:null,level:0,festival:false,next:[33]},
+  {id:33,name:"버뮤다",type:"port",group:"atlantic",price:180000,gx:5.0,gy:2.7,owner:null,level:0,festival:false,next:[22]},
+];
+ATLANTIC.forEach(n=>BOARD.push(n));
+
+// Base = overland loop (LAND is the default route). The sea route is OPTIONAL:
+// 리스본 항구에 멈추거나(정박), 6칸 미만 걸음으로 통과할 때 자동으로 대서양 항로(바닷길)로 항해한다.
+BOARD[8].next=[9,32];   // [육로 계속, 대서양 항로]
+BOARD[8].seaPort={seaId:32, landId:9, routeName:"대서양 항로", dest:"뉴욕(미국 동부)"};
+
+const NODE=id=>BOARD.find(n=>n.id===id);
+
+/* ---------- Runtime state ---------- */
+const state={players:[],cur:0,phase:"setup",started:false};
+
+function currentPlayer(){return state.players[state.cur];}
+function isCity(n){return n && (n.type==="city"||n.type==="port");}
+function groupCities(group){return BOARD.filter(n=>isCity(n)&&n.group===group);}
+function hasMonopoly(owner,group){
+  if(owner==null)return false;
+  const g=groupCities(group);
+  return g.every(n=>n.owner===owner);
+}
+function ownedCities(pid){return BOARD.filter(n=>isCity(n)&&n.owner===pid);}
+function netWorth(p){
+  let w=p.money;
+  ownedCities(p.id).forEach(n=>{ w+=n.price; for(let l=1;l<=n.level;l++) w+=buildCost(n); });
+  return w;
+}
+function buildCost(n){return Math.round(n.price*CFG.BUILD_COST_RATE/1000)*1000;}
+function tollOf(n){
+  const mult = (n.level===4 && n.type==="port")?CFG.PORT_LANDMARK_MULT:CFG.TOLL_MULT[n.level];
+  let toll=Math.round(n.price*mult/1000)*1000;
+  if(hasMonopoly(n.owner,n.group))toll*=2;
+  if(n.festival)toll*=2;
+  return toll;
+}
+const won=v=>v.toLocaleString("ko-KR")+"원";
+
+/* ---------- Setup UI ---------- */
+let setupCount=4;
+const setupSlots=[
+  {name:"나",ai:false},{name:"바스코",ai:true},{name:"콜럼버스",ai:true},{name:"마젤란",ai:true},
+];
+const PCOL=["var(--p0)","var(--p1)","var(--p2)","var(--p3)"];
+const PCOL_HEX=["#c0392b","#2471a3","#1e8449","#b7950b"];
+const PLAYER_EMOJI=["🦁","🐧","🦊","🐵"];   // 항해사 캐릭터 말
+
+function renderSetup(){
+  const cr=document.getElementById("countRow");cr.innerHTML="";
+  [2,3,4].forEach(n=>{
+    const b=document.createElement("button");b.textContent=n+"인";
+    if(n===setupCount)b.classList.add("active");
+    b.onclick=()=>{setupCount=n;renderSetup();};
+    cr.appendChild(b);
+  });
+  const sl=document.getElementById("slots");sl.innerHTML="";
+  for(let i=0;i<setupCount;i++){
+    const s=setupSlots[i];
+    const row=document.createElement("div");row.className="slot";
+    row.innerHTML=`<span class="dot" style="background:${PCOL[i]};display:flex;align-items:center;justify-content:center;font-size:12px;width:22px;height:22px">${PLAYER_EMOJI[i]}</span>`;
+    const inp=document.createElement("input");inp.value=s.name;inp.maxLength=8;
+    inp.oninput=()=>{s.name=inp.value;};
+    row.appendChild(inp);
+    const tg=document.createElement("div");tg.className="toggle";
+    const human=document.createElement("button");human.textContent="사람";
+    const ai=document.createElement("button");ai.textContent="AI봇";
+    const sync=()=>{human.classList.toggle("on",!s.ai);ai.classList.toggle("on",s.ai);};
+    human.onclick=()=>{s.ai=false;sync();};
+    ai.onclick=()=>{s.ai=true;sync();};
+    sync();tg.appendChild(human);tg.appendChild(ai);row.appendChild(tg);
+    sl.appendChild(row);
+  }
+}
+
+/* ---------- Board render ---------- */
+function buildBoardDOM(){
+  const board=document.getElementById("board");
+  const size=CFG.PAD*2+8*CFG.CELL - (CFG.CELL-CFG.TILE);
+  board.style.width=size+"px";board.style.height=size+"px";
+  board.innerHTML="";
+
+  // optional sea route path (SVG): 대서양 항로(바닷길)
+  const svgNS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(svgNS,"svg");
+  svg.setAttribute("class","silk-path");svg.setAttribute("width",size);svg.setAttribute("height",size);
+  const drawRoute=(ids,color)=>{
+    const pts=ids.map(id=>tileCenter(NODE(id)));
+    const d="M "+pts.map(p=>p.x+" "+p.y).join(" L ");
+    const path=document.createElementNS(svgNS,"path");
+    path.setAttribute("d",d);path.setAttribute("fill","none");
+    path.setAttribute("stroke",color);path.setAttribute("stroke-width","5");
+    path.setAttribute("stroke-dasharray","3 7");path.setAttribute("stroke-linecap","round");
+    path.setAttribute("opacity","0.9");
+    svg.appendChild(path);
+  };
+  drawRoute([8,32,33,22],"#8fd3ff");         // ⛵ 대서양 항로 (바닷길)
+  board.appendChild(svg);
+
+  // center crest (tucked into open ocean, left-upper interior)
+  const crest=document.createElement("div");crest.className="center-crest";
+  crest.innerHTML=`<div class="compass">🧭</div><div class="ttl">大航海</div><div class="en2">Voyage Marble</div>`;
+  board.appendChild(crest);
+
+  // route labels
+  const mkLabel=(node,dx,dy,text,color)=>{
+    const el=document.createElement("div");el.className="silk-label";
+    const c=tileCenter(node);el.style.left=(c.x+dx)+"px";el.style.top=(c.y+dy)+"px";
+    if(color)el.style.color=color;el.textContent=text;board.appendChild(el);
+  };
+  mkLabel(NODE(33),0,-CFG.TILE*0.72,"⛵ 대서양 항로","#bfe6ff");
+
+  // tiles
+  BOARD.forEach(n=>{
+    const t=document.createElement("div");t.className="tile"+(isCity(n)?"":" special")+(n.type==="port"?" port":"");
+    t.id="tile-"+n.id;
+    const pos=tilePos(n);
+    t.style.left=pos.x+"px";t.style.top=pos.y+"px";
+    t.style.width=CFG.TILE+"px";t.style.height=CFG.TILE+"px";
+    if(isCity(n)){
+      const gc=groupColor(n.group);
+      t.innerHTML=`<div class="band" style="background:${gc}"></div>
+        <div class="owner-badge" id="ob-${n.id}"></div>
+        <div class="body">
+          <div class="lvl" id="lv-${n.id}"></div>
+          <div class="nm">${n.name}${n.type==="port"?" ⚓":""}</div>
+          <div class="pr">${(n.price/10000)}만</div>
+        </div>`;
+    }else{
+      t.innerHTML=`<div class="body"><div class="ic">${n.icon}</div><div class="nm">${n.name}</div></div>`;
+    }
+    board.appendChild(t);
+  });
+
+  // token layer
+  state.players.forEach(p=>{
+    const tk=document.createElement("div");tk.className="token";tk.id="tok-"+p.id;
+    tk.style.borderColor=PCOL_HEX[p.id];tk.textContent=PLAYER_EMOJI[p.id];
+    board.appendChild(tk);
+  });
+}
+function groupColor(g){return getComputedStyle(document.documentElement).getPropertyValue("--"+g).trim();}
+function tilePos(n){return {x:CFG.PAD+n.gx*CFG.CELL, y:CFG.PAD+n.gy*CFG.CELL};}
+function tileCenter(n){const p=tilePos(n);return {x:p.x+CFG.TILE/2,y:p.y+CFG.TILE/2};}
+
+function updateBoard(){
+  BOARD.forEach(n=>{
+    if(!isCity(n))return;
+    const ob=document.getElementById("ob-"+n.id);
+    const lv=document.getElementById("lv-"+n.id);
+    const tile=document.getElementById("tile-"+n.id);
+    if(n.owner!=null){ob.style.display="block";ob.style.background=PCOL_HEX[n.owner];}
+    else{ob.style.display="none";}
+    lv.textContent = n.level>0 ? ("★".repeat(Math.min(n.level,4))) : "";
+    tile.classList.toggle("festival-on",!!n.festival);
+  });
+  // tokens (offset when sharing a tile)
+  const byNode={};
+  state.players.forEach(p=>{if(!p.bankrupt){(byNode[p.nodeId]=byNode[p.nodeId]||[]).push(p);}});
+  state.players.forEach(p=>{
+    const tk=document.getElementById("tok-"+p.id);
+    if(p.bankrupt){tk.style.display="none";return;}
+    tk.style.display="flex";
+    const n=NODE(p.nodeId);const c=tileCenter(n);
+    const group=byNode[p.nodeId];const idx=group.indexOf(p);
+    const off=[[-9,-9],[9,-9],[-9,9],[9,9]][idx]||[0,0];
+    tk.style.left=(c.x+off[0]-14)+"px";
+    tk.style.top=(c.y+off[1]-14)+"px";
+  });
+  renderPlayers();
+}
+function renderPlayers(){
+  const box=document.getElementById("players");box.innerHTML="";
+  state.players.forEach((p,i)=>{
+    const c=document.createElement("div");
+    c.className="pcard"+(i===state.cur&&!p.bankrupt?" turn":"")+(p.bankrupt?" out":"");
+    const props=ownedCities(p.id).length;
+    c.innerHTML=`<div class="bar" style="background:${PCOL[i]}"></div>
+      <div class="pn">${PLAYER_EMOJI[i]} ${p.name}${p.isAI?'<span class="ai">AI</span>':''}${p.bankrupt?' 💀':''}</div>
+      <div class="money">${p.bankrupt?"파산":won(p.money)}</div>
+      <div class="meta">도시 ${props} · 자산 ${won(netWorth(p))}</div>`;
+    box.appendChild(c);
+  });
+}
+
+/* ---------- Log & dice ---------- */
+function log(msg){
+  const l=document.getElementById("log");
+  const d=document.createElement("div");d.className="l";d.innerHTML=msg;
+  l.insertBefore(d,l.firstChild);
+  while(l.children.length>40)l.removeChild(l.lastChild);
+}
+function pname(p){return `<b style="color:${PCOL_HEX[p.id]}">${p.name}</b>`;}
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+const PIP=["","⚀","⚁","⚂","⚃","⚄","⚅"];
+function showDice(a,b){document.getElementById("d1").textContent=PIP[a];document.getElementById("d2").textContent=PIP[b];}
+
+/* ---------- Money change (with toast alert) ---------- */
+function moneyToast(p,delta,reason){
+  if(!delta)return;
+  const box=document.getElementById("toastBox");if(!box)return;
+  const t=document.createElement("div");
+  t.className="toast "+(delta>=0?"gain":"spend");
+  const sign=delta>=0?"+":"−";
+  t.innerHTML=`<span class="te">${PLAYER_EMOJI[p.id]}</span><b>${p.name}</b>`+
+    `<span class="tv">${sign}${won(Math.abs(delta))}</span>`+(reason?`<span class="tr">${reason}</span>`:"");
+  box.appendChild(t);
+  setTimeout(()=>t.classList.add("out"),2000);
+  setTimeout(()=>t.remove(),2450);
+}
+function gainMoney(p,amt,reason){p.money+=amt;moneyToast(p,amt,reason);}
+function spendMoney(p,amt,reason){p.money-=amt;moneyToast(p,-amt,reason);}
+function hopToken(p){
+  const tk=document.getElementById("tok-"+p.id);if(!tk)return;
+  tk.classList.remove("hop");void tk.offsetWidth;tk.classList.add("hop");
+}
+
+/* ---------- Modal ---------- */
+function modalChoice(title,bodyHTML,buttons){
+  return new Promise(res=>{
+    const bg=document.getElementById("modalBg");const m=document.getElementById("modal");
+    m.innerHTML=`<h3>${title}</h3><div class="mbody">${bodyHTML}</div>`;
+    const bwrap=document.createElement("div");bwrap.className="mbtns";
+    buttons.forEach(b=>{
+      const btn=document.createElement("button");btn.textContent=b.label;
+      btn.className=b.primary?"mb-primary":"mb-ghost";
+      btn.onclick=()=>{bg.classList.remove("show");res(b.value);};
+      bwrap.appendChild(btn);
+    });
+    m.appendChild(bwrap);bg.classList.add("show");
+  });
+}
+function modalPick(title,bodyHTML,options){ // options:[{label,value}]
+  return new Promise(res=>{
+    const bg=document.getElementById("modalBg");const m=document.getElementById("modal");
+    m.innerHTML=`<h3>${title}</h3><div class="mbody">${bodyHTML}</div>`;
+    const grid=document.createElement("div");grid.className="pick-grid";
+    options.forEach(o=>{
+      const btn=document.createElement("button");btn.innerHTML=o.label;
+      btn.onclick=()=>{bg.classList.remove("show");res(o.value);};
+      grid.appendChild(btn);
+    });
+    m.appendChild(grid);bg.classList.add("show");
+  });
+}
+
+/* ---------- Movement ----------
+   LAND is the base route. At a sea port, divert to the SEA route automatically when:
+     - the player is docked here (stopped on this port last turn), OR
+     - fewer than 6 steps remain to travel from this port (passing with a small number).
+*/
+function pickNext(p,node,stepsRemaining){
+  if(node.next.length===1)return node.next[0];
+  const sp=node.seaPort;
+  const takeSea=(p.docked===node.id)||(stepsRemaining<6);
+  if(p.docked===node.id)p.docked=null;
+  if(takeSea)log(`${pname(p)} ⛵ ${sp.routeName} 출항 — ${sp.dest} 방면`);
+  return takeSea?node.next[1]:node.next[0];
+}
+async function movePlayer(p,steps){
+  for(let i=0;i<steps;i++){
+    const node=NODE(p.nodeId);
+    const nextId=pickNext(p,node,steps-i);   // steps-i = steps left to travel from this node
+    p.nodeId=nextId;
+    if(nextId===0 && i<steps-1){ // passing START (not final landing)
+      gainMoney(p,CFG.SALARY,"출발 통과 봉급");
+      log(`${pname(p)} 출발 통과 · 봉급 +${won(CFG.SALARY)}`);
+    }
+    updateBoard();
+    hopToken(p);
+    await delay(215);
+  }
+}
+
+/* ---------- Landing resolution ---------- */
+async function resolveLanding(p){
+  const n=NODE(p.nodeId);
+  if(n.seaPort){ // stopped on a sea port -> next departure sails automatically
+    p.docked=n.id;
+    log(`${pname(p)} ⚓ ${n.name} 항구 정박 — 다음 턴 ${n.seaPort.routeName}로 출항`);
+  }
+  if(isCity(n)){
+    if(n.owner==null){ await tryBuy(p,n); }
+    else if(n.owner===p.id){ await tryBuild(p,n); }
+    else { await payToll(p,n); }
+    return;
+  }
+  switch(n.type){
+    case "start":
+      gainMoney(p,CFG.SALARY,"출발 봉급");log(`${pname(p)} 출발 도착 · 봉급 +${won(CFG.SALARY)}`);break;
+    case "island":
+      p.inJail=true;p.jailTurns=0;log(`${pname(p)} 🏝️ 무인도에 정박 (탈출까지 대기)`);break;
+    case "tax":
+      log(`${pname(p)} 🏛️ 국세청 · 세금 ${won(CFG.TAX)}`);await charge(p,CFG.TAX,null);break;
+    case "worldtour":
+      await doWorldTour(p);break;
+    case "chance":
+      await doChance(p);break;
+    case "festival":
+      await doFestival(p);break;
+  }
+}
+
+async function tryBuy(p,n){
+  const price=n.price;
+  if(p.money<price){log(`${pname(p)} ${n.name} 매입 불가 (자금 부족)`);return;}
+  let buy;
+  if(p.isAI){
+    const completes=groupCities(n.group).filter(c=>c.owner===p.id).length===groupCities(n.group).length-1;
+    buy=(p.money-price>CFG.AI_SAFE_BUFFER)&&(completes||p.money-price>CFG.AI_SAFE_BUFFER+price*0.5);
+  }else{
+    const v=await modalChoice(`🏙️ ${n.name} ${n.type==="port"?"⚓ 항구도시":""}`,
+      `<b>${GROUP_KO[n.group]}</b> 대륙 · 매입가 <span class="big">${won(price)}</span><br>
+       기본 통행료 ${won(tollOf({...n,level:0}))} · 독점 시 2배<br>보유 자금 ${won(p.money)}`,
+      [{label:"패스",value:false},{label:`매입 (${won(price)})`,value:true,primary:true}]);
+    buy=v;
+  }
+  if(buy){
+    spendMoney(p,price,`${n.name} 매입`);n.owner=p.id;n.level=0;
+    log(`${pname(p)} ${n.name} 매입 · -${won(price)}`);
+    updateBoard();
+  }else if(!p.isAI){log(`${pname(p)} ${n.name} 매입 패스`);}
+}
+async function tryBuild(p,n){
+  if(n.level>=4){log(`${pname(p)} ${n.name}(랜드마크) 도착`);return;}
+  const cost=buildCost(n);const nextLbl=CFG.BUILD_LABELS[n.level+1];
+  if(p.money<cost){return;}
+  let build;
+  if(p.isAI){
+    const mono=hasMonopoly(p.id,n.group);
+    build=(p.money-cost>CFG.AI_SAFE_BUFFER)&&(mono||n.level<2);
+  }else{
+    const v=await modalChoice(`🏗️ ${n.name} 건설`,
+      `현재 ${n.level>0?CFG.BUILD_LABELS[n.level]:"토지"} → <span class="big">${nextLbl}</span><br>
+       건설비 ${won(cost)} · 건설 후 통행료 ${won(tollOf({...n,level:n.level+1}))}<br>보유 자금 ${won(p.money)}`,
+      [{label:"패스",value:false},{label:`건설 (${won(cost)})`,value:true,primary:true}]);
+    build=v;
+  }
+  if(build){
+    spendMoney(p,cost,`${n.name} ${nextLbl}`);n.level++;
+    log(`${pname(p)} ${n.name} ${nextLbl} 건설 · -${won(cost)}`);
+    updateBoard();
+  }
+}
+async function payToll(p,n){
+  const owner=state.players[n.owner];
+  const toll=tollOf(n);
+  const tags=[];
+  if(hasMonopoly(n.owner,n.group))tags.push("독점2배");
+  if(n.festival)tags.push("축제2배");
+  if(n.level===4)tags.push(n.type==="port"?"항구랜드마크":"랜드마크");
+  log(`${pname(p)} → ${pname(owner)} 통행료 ${won(toll)}${tags.length?" ("+tags.join("·")+")":""}`);
+  await charge(p,toll,owner);
+}
+
+/* charge: pay `amount` to `to` (player or null=bank). Bankrupt if insufficient. */
+async function charge(p,amount,to){
+  if(p.money>=amount){
+    spendMoney(p,amount,to?"통행료":"지출");
+    if(to)gainMoney(to,amount,"통행료 수입");
+    updateBoard();return;
+  }
+  // insufficient -> bankruptcy (MVP: no mortgaging)
+  const remaining=p.money;
+  spendMoney(p,remaining,"파산 정산");
+  if(to)gainMoney(to,remaining,"통행료 수입");
+  p.money=0;
+  if(!p.isAI){
+    await modalChoice("💀 파산",
+      `${p.name} 님은 ${won(amount)}를 지불할 수 없어 <span class="big">파산</span>했습니다.<br>보유 도시는 모두 무주공산이 됩니다.`,
+      [{label:"확인",value:true,primary:true}]);
+  }
+  declareBankrupt(p);
+}
+function declareBankrupt(p){
+  p.bankrupt=true;
+  ownedCities(p.id).forEach(n=>{n.owner=null;n.level=0;n.festival=false;});
+  log(`💀 ${pname(p)} 파산 — 탈락`);
+  updateBoard();
+}
+
+/* ---------- Special tiles ---------- */
+async function doWorldTour(p){
+  log(`${pname(p)} 🧭 세계여행 — 원하는 도시로 이동`);
+  const dests=BOARD.filter(n=>isCity(n)).map(n=>({
+    label:`${n.name}${n.type==="port"?" ⚓":""}<br><small style="color:var(--ink-soft)">${n.owner==null?"미소유":(n.owner===p.id?"내 도시":state.players[n.owner].name)}</small>`,
+    value:n.id
+  }));
+  let destId;
+  if(p.isAI){
+    // AI: prefer an unowned affordable city, else a own-group city, else start
+    const un=BOARD.filter(n=>isCity(n)&&n.owner==null&&n.price<=p.money).sort((a,b)=>b.price-a.price);
+    const mine=ownedCities(p.id).filter(n=>n.level<4).sort((a,b)=>b.price-a.price);
+    destId=(un[0]||mine[0]||NODE(0)).id;
+  }else{
+    destId=await modalPick("🧭 세계여행","이동할 도시를 선택하세요.",dests);
+  }
+  p.nodeId=destId;updateBoard();await delay(300);
+  await resolveLanding(p);
+}
+const CHANCE=[
+  {t:"무역 성공! 향신료를 팔아 큰 이익을 얻습니다.",m:200000},
+  {t:"은행 이자 수령.",m:100000},
+  {t:"세금 환급을 받았습니다.",m:150000},
+  {t:"폭풍우로 화물 일부를 잃었습니다.",m:-100000},
+  {t:"항구 정박료를 냈습니다.",m:-80000},
+  {t:"해적을 만나 몸값을 지불했습니다.",m:-150000},
+  {t:"세계일주 티켓 당첨! 출발점으로 이동(봉급 수령).",go:0},
+  {t:"무인도로 표류했습니다.",island:true},
+];
+async function doChance(p){
+  const c=CHANCE[Math.floor(Math.random()*CHANCE.length)];
+  log(`${pname(p)} 🗝️ 황금열쇠: ${c.t}`);
+  if(!p.isAI){
+    await modalChoice("🗝️ 황금열쇠",`${c.t}${c.m?`<br><span class="big">${c.m>0?"+":""}${won(c.m)}</span>`:""}`,
+      [{label:"확인",value:true,primary:true}]);
+  }else{await delay(500);}
+  if(c.island){p.nodeId=7;p.inJail=true;p.jailTurns=0;updateBoard();return;}
+  if(c.go!==undefined){p.nodeId=c.go;gainMoney(p,CFG.SALARY,"세계일주 봉급");updateBoard();await delay(250);await resolveLanding(p);return;}
+  if(c.m>0){gainMoney(p,c.m,"황금열쇠");updateBoard();}
+  else if(c.m<0){await charge(p,-c.m,null);}
+}
+async function doFestival(p){
+  const mine=ownedCities(p.id);
+  if(mine.length===0){log(`${pname(p)} 🎪 축제 — 보유 도시가 없어 지나갑니다`);return;}
+  // clear previous festival owned by this player
+  BOARD.forEach(n=>{if(isCity(n)&&n.owner===p.id)n.festival=false;});
+  let pick;
+  if(p.isAI){pick=mine.slice().sort((a,b)=>tollOf({...b,festival:true})-tollOf({...a,festival:true}))[0].id;}
+  else{
+    pick=await modalPick("🎪 축제 개최","축제를 열 내 도시를 선택하세요. 통행료가 2배가 됩니다.",
+      mine.map(n=>({label:`${n.name}<br><small style="color:var(--ink-soft)">현재 통행료 ${won(tollOf(n))}</small>`,value:n.id})));
+  }
+  const n=NODE(pick);n.festival=true;
+  log(`${pname(p)} 🎪 ${n.name}에서 축제 개최 · 통행료 2배`);
+  updateBoard();
+}
+
+/* ---------- Turn flow ---------- */
+async function rollAndResolve(p){
+  let again=true,doubles=0;
+  while(again){
+    again=false;
+    // Jail handling
+    if(p.inJail){
+      const a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6);
+      await animateDice(a,b);
+      if(a===b){
+        p.inJail=false;log(`${pname(p)} 더블! 무인도 탈출 🎉`);
+        await movePlayer(p,a+b);await resolveLanding(p);
+      }else{
+        p.jailTurns++;
+        if(p.jailTurns>=3){
+          log(`${pname(p)} 무인도 탈출비 ${won(CFG.ISLAND_FEE)} 지불`);
+          await charge(p,CFG.ISLAND_FEE,null);
+          if(!p.bankrupt){p.inJail=false;await movePlayer(p,a+b);await resolveLanding(p);}
+        }else{log(`${pname(p)} 무인도 정박 중… (${p.jailTurns}/3)`);}
+      }
+      break;
+    }
+    const a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6);
+    await animateDice(a,b);
+    if(a===b){doubles++;log(`${pname(p)} 더블 (${a}·${b})!`);}
+    if(doubles===3){
+      log(`${pname(p)} 더블 3연속 — 무인도로! 🏝️`);
+      p.nodeId=7;p.inJail=true;p.jailTurns=0;updateBoard();break;
+    }
+    await movePlayer(p,a+b);
+    if(!p.bankrupt) await resolveLanding(p);
+    checkWin();
+    if(state.phase==="over")return;
+    if(a===b && !p.bankrupt && !p.inJail){again=true;await delay(450);}
+  }
+}
+async function animateDice(a,b){
+  const d1=document.getElementById("d1"),d2=document.getElementById("d2");
+  d1.classList.remove("pop");d2.classList.remove("pop");
+  d1.classList.add("roll");d2.classList.add("roll");
+  for(let i=0;i<14;i++){showDice(1+Math.floor(Math.random()*6),1+Math.floor(Math.random()*6));await delay(62);}
+  d1.classList.remove("roll");d2.classList.remove("roll");
+  showDice(a,b);
+  void d1.offsetWidth;d1.classList.add("pop");d2.classList.add("pop");   // settle pop
+  await delay(280);
+}
+
+let busy=false;
+async function humanTurn(){
+  const btn=document.getElementById("rollBtn");
+  btn.disabled=false;btn.textContent="🎲 주사위 굴리기";
+  document.getElementById("turnLine").innerHTML=`${pname(currentPlayer())} 님의 차례`;
+}
+function onRollClick(){
+  const p=currentPlayer();
+  if(busy||p.isAI||p.bankrupt||state.phase==="over")return;
+  busy=true;document.getElementById("rollBtn").disabled=true;
+  rollAndResolve(p).then(()=>{busy=false;endTurn();});
+}
+async function aiTurn(){
+  const p=currentPlayer();
+  document.getElementById("turnLine").innerHTML=`${pname(p)} <span style="color:var(--ink-soft)">(AI) 진행 중…</span>`;
+  document.getElementById("rollBtn").disabled=true;
+  busy=true;await delay(650);
+  await rollAndResolve(p);
+  busy=false;endTurn();
+}
+function aliveCount(){return state.players.filter(p=>!p.bankrupt).length;}
+function checkWin(){
+  if(state.phase==="over")return;
+  if(aliveCount()<=1){
+    state.phase="over";
+    const w=state.players.find(p=>!p.bankrupt);
+    setTimeout(()=>showWin(w),400);
+  }
+}
+async function showWin(w){
+  document.getElementById("rollBtn").disabled=true;
+  await modalChoice("🏆 항해 종료",
+    `<div class="win-emoji">🏆</div>
+     <div style="text-align:center;font-size:17px;font-weight:800;margin:6px 0">${w?w.name+" 승리!":"무승부"}</div>
+     <div style="text-align:center;color:var(--ink-soft)">최종 자산 ${w?won(netWorth(w)):"-"}</div>`,
+    [{label:"새 게임",value:true,primary:true}]);
+  location.reload();
+}
+function endTurn(){
+  if(state.phase==="over")return;
+  do{ state.cur=(state.cur+1)%state.players.length; }while(state.players[state.cur].bankrupt);
+  renderPlayers();
+  nextStep();
+}
+function nextStep(){
+  if(state.phase==="over")return;
+  const p=currentPlayer();
+  updateBoard();
+  if(p.isAI){aiTurn();}
+  else{humanTurn();}
+}
+
+/* ---------- Start game ---------- */
+function startGame(){
+  state.players=[];
+  for(let i=0;i<setupCount;i++){
+    const s=setupSlots[i];
+    state.players.push({id:i,name:s.name.trim()||("항해사"+(i+1)),isAI:s.ai,
+      money:CFG.START_MONEY,nodeId:0,inJail:false,jailTurns:0,bankrupt:false,docked:null});
+  }
+  // reset board ownership
+  BOARD.forEach(n=>{if(isCity(n)){n.owner=null;n.level=0;n.festival=false;}});
+  state.cur=0;state.phase="play";state.started=true;
+  document.getElementById("setup").style.display="none";
+  document.getElementById("game").classList.add("live");
+  buildBoardDOM();updateBoard();
+  document.getElementById("log").innerHTML="";
+  log("⚓ 대항해 출발! 각 항해사 자금 "+won(CFG.START_MONEY));
+  nextStep();
+}
+
+/* ---------- Init ---------- */
+document.getElementById("startBtn").onclick=startGame;
+document.getElementById("rollBtn").onclick=onRollClick;
+renderSetup();
+</script>
+</body>
+</html>
