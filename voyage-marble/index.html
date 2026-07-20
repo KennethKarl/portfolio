@@ -120,9 +120,9 @@
   .own-chip b{color:var(--amber);letter-spacing:-1px;font-size:9px}
   .own-none{font-size:10px;color:var(--ink-soft);padding-left:2px;font-style:italic}
 
-  .diebox{display:flex;align-items:center;gap:12px;justify-content:center}
-  .die{width:44px;height:44px;border-radius:10px;background:#fff;border:2px solid var(--ink);
-    display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;box-shadow:0 3px 0 rgba(0,0,0,.2)}
+  .diebox{display:flex;align-items:center;gap:20px;justify-content:center}
+  .die{width:88px;height:88px;border-radius:18px;background:#fff;border:3px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;font-size:56px;font-weight:800;box-shadow:0 5px 0 rgba(0,0,0,.2);line-height:1}
   .die.roll{animation:tumble .3s linear infinite}
   @keyframes tumble{0%{transform:translateY(0) rotate(0) scale(1)}25%{transform:translateY(-9px) rotate(90deg) scale(1.12)}
     50%{transform:translateY(0) rotate(180deg) scale(1)}75%{transform:translateY(-6px) rotate(270deg) scale(1.12)}100%{transform:translateY(0) rotate(360deg) scale(1)}}
@@ -239,6 +239,9 @@ const CFG = {
   TAX: 200000,
   ISLAND_FEE: 300000,
   AI_SAFE_BUFFER: 350000,
+  TRADE_BONUS: 200000,     // 항로 완전 통과(완주) 시 교역 수당
+  TYPHOON_PROB: 0.20,      // 항해 1회당 태풍 확률 (20%)
+  TYPHOON_LOSS: 0.15,      // 태풍 피해 = 현재 자금의 15% (최소 5만원)
   CELL: 72, TILE: 66, SEA_TILE: 34, PAD: 4,
   BUILD_LABELS:["","별장","빌딩","호텔","랜드마크"],
   TOLL_MULT:[0.10,0.50,1.50,4.00,7.00],   // land, villa, building, hotel, landmark
@@ -598,21 +601,23 @@ function showMoneyPopup(p,delta,reason,autoMs){
         <span style="color:var(--ink-soft);font-size:12.5px">${reason||""}</span><br>
         <span style="font-size:12.5px">잔액 <b>${won(p.money)}</b></span>
       </div></div>`;
-    if(autoMs>0){
-      bg.classList.add("show");
-      setTimeout(()=>{ bg.classList.remove("show"); res(); }, autoMs);
-    }else{
-      const bwrap=document.createElement("div");bwrap.className="mbtns";
-      const btn=document.createElement("button");btn.textContent="확인";btn.className="mb-primary";
-      btn.onclick=()=>{ bg.classList.remove("show"); res(); };
-      bwrap.appendChild(btn); m.appendChild(bwrap); bg.classList.add("show");
-    }
+    let done=false,timer=null,onKey=null;
+    const close=()=>{ if(done)return; done=true; if(timer)clearTimeout(timer); if(onKey)document.removeEventListener("keydown",onKey); bg.classList.remove("show"); res(); };
+    const bwrap=document.createElement("div");bwrap.className="mbtns";
+    const btn=document.createElement("button");btn.className="mb-primary";
+    btn.textContent=autoMs>0?"확인 (Enter)":"확인";
+    btn.onclick=close;
+    bwrap.appendChild(btn); m.appendChild(bwrap); bg.classList.add("show");
+    onKey=(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); close(); } };   // 엔터(또는 스페이스)로 닫기
+    document.addEventListener("keydown",onKey);
+    setTimeout(()=>{ try{ btn.focus(); }catch(e){} },0);
+    if(autoMs>0) timer=setTimeout(close,autoMs);   // 자동 닫힘
   });
 }
 async function moneyEvent(p,delta,reason,quietHuman){
   if(!delta)return;
   p.money+=delta;updateBoard();
-  if(p.isAI){ await showMoneyPopup(p,delta,reason,850); return; }   // AI: same popup, auto-close
+  if(p.isAI){ await showMoneyPopup(p,delta,reason,1550); return; }   // AI: same popup, 1.55s 자동 닫힘 / Enter·확인으로 즉시 닫기
   if(delta>=0)SFX.gain();else SFX.spend();
   if(quietHuman){ moneyToast(p,delta,reason); return; }             // human buy/build: confirm already shown -> toast
   await showMoneyPopup(p,delta,reason,0);                           // human involuntary: blocking
@@ -666,16 +671,36 @@ function pickNext(p,node,rollTotal){
 }
 async function movePlayer(p,steps){
   for(let i=0;i<steps;i++){
-    const node=NODE(p.nodeId);
-    const nextId=pickNext(p,node,steps);   // steps = full roll total → parity decides sea/land
+    const prev=NODE(p.nodeId);
+    const nextId=pickNext(p,prev,steps);   // steps = full roll total → parity decides sea/land
     p.nodeId=nextId;
+    const now=NODE(nextId);
+    updateBoard();
+    hopToken(p);
+    if(isSea(now)) SFX.wave(); else SFX.hoof();   // 배=바닷물 / 육지=말발굽
     if(nextId===0 && i<steps-1){ // passing START (not final landing)
       log(`${pname(p)} 출발 통과 · 봉급 +${won(CFG.SALARY)}`);
       await moneyEvent(p,CFG.SALARY,"출발 통과 봉급");
     }
-    updateBoard();
-    hopToken(p);
-    if(isSea(NODE(nextId))) SFX.wave(); else SFX.hoof();   // 배=바닷물 / 육지=말발굽
+    // 항로 진입(육지→바다): 태풍 판정
+    if(!isSea(prev) && isSea(now)){
+      p.voyage=true; p.typhoon=false;
+      if(Math.random()<CFG.TYPHOON_PROB){
+        p.typhoon=true;
+        const loss=Math.min(p.money, Math.max(50000, Math.round(p.money*CFG.TYPHOON_LOSS/10000)*10000));
+        SFX.spend();
+        log(`${pname(p)} 🌀 태풍! 화물 손실 -${won(loss)}`);
+        await moneyEvent(p,-loss,"🌀 태풍 피해 (자금 감소)");
+      }
+    }
+    // 항로 완주(바다→육지): 태풍 없이 완통했으면 교역 수당
+    if(isSea(prev) && !isSea(now)){
+      if(p.voyage && !p.typhoon){
+        log(`${pname(p)} 🚢 교역 수당 +${won(CFG.TRADE_BONUS)} (항로 완주)`);
+        await moneyEvent(p,CFG.TRADE_BONUS,"🚢 교역 수당 (항로 완주)");
+      }
+      p.voyage=false;
+    }
     await delay(215);
   }
 }
