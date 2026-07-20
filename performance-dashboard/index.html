@@ -404,13 +404,29 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   </script>
 
   <div class="secband"><div class="secno">2</div><div class="sectxt"><b>기업/대학 제휴 현황 및 실적</b><span>컨택 → 성사 전환 · CRM 파이프라인 통합·흐름</span></div></div>
-  <div class="gtoggle" id="s2Toggle" style="margin:12px 0 2px"><button class="gbtn active" data-v="month">월별</button><button class="gbtn" data-v="day">일별</button></div>
-  <div class="scroll" id="s2Daily" style="display:none">
-    <div class="ct2" style="margin:6px 0 8px">날짜별 신규 리드 · 딜 <span style="font-weight:400;color:var(--muted);font-size:13px">(CRM 파이프라인 · 리드일 기준)</span></div>
-    <table class="dt">
-      <thead><tr><th>날짜</th><th>신규 건수</th><th>파이프라인</th><th>업체 목록</th></tr></thead>
-      <tbody id="s2DailyBody"></tbody>
-    </table>
+  <style>
+    .togglebox{border:1px solid var(--line);border-radius:14px;background:var(--card);box-shadow:var(--shadow);padding:14px 16px;margin:12px 0 18px}
+    .togglebox-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+    .togglebox-head .tb-title{font-size:16px;font-weight:700}
+    .togglebox-head .tb-title small{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
+  </style>
+  <div class="togglebox">
+    <div class="togglebox-head">
+      <div class="tb-title">신규 리드 · 딜 추이 <small>(CRM 파이프라인 · 리드일 기준)</small></div>
+      <div class="gtoggle" id="s2Toggle"><button class="gbtn active" data-v="month">월별</button><button class="gbtn" data-v="day">일별</button></div>
+    </div>
+    <div class="scroll" id="s2Monthly">
+      <table class="dt">
+        <thead><tr><th>월</th><th>신규 건수</th><th>파이프라인</th><th>업체 (일부)</th></tr></thead>
+        <tbody id="s2MonthlyBody"></tbody>
+      </table>
+    </div>
+    <div class="scroll" id="s2Daily" style="display:none">
+      <table class="dt">
+        <thead><tr><th>날짜</th><th>신규 건수</th><th>파이프라인</th><th>업체 목록</th></tr></thead>
+        <tbody id="s2DailyBody"></tbody>
+      </table>
+    </div>
   </div>
   <!-- ===== CONTACT → RESULT ===== -->
   <style>
@@ -669,21 +685,20 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
 
     renderAll();
 
-    // ── 섹션2 일/월 토글: 날짜별 신규 리드·딜 (리드일 기준) ──
+    // ── 섹션2 일/월 토글: 신규 리드·딜 추이 (리드일 기준) ──
     (function(){
-      var byd={},ord=[];
-      CRM.pipes.forEach(function(p){ p.deals.forEach(function(d){ if(!d.ld)return; if(!byd[d.ld]){byd[d.ld]={r:[]};ord.push(d.ld);} byd[d.ld].r.push({n:d.n,pl:p.label}); }); });
-      ord.sort().reverse();
-      var b='';
-      ord.forEach(function(dt){ var g=byd[dt], pls={}; g.r.forEach(function(x){pls[x.pl]=1;});
-        var list=g.r.map(function(x){return '<span class="chip-k">'+esc(x.n)+' · '+esc(x.pl)+'</span>';}).join('');
-        b+='<tr><td class="d">'+esc(dt)+'</td><td><b>'+g.r.length+'</b></td><td>'+Object.keys(pls).join(', ')+'</td><td style="white-space:normal">'+list+'</td></tr>';
-      });
-      var db=document.getElementById('s2DailyBody'); if(db) db.innerHTML=b;
+      function agg(keyFn){ var by={},ord=[]; CRM.pipes.forEach(function(p){ p.deals.forEach(function(d){ if(!d.ld)return; var k=keyFn(d.ld); if(!by[k]){by[k]={r:[]};ord.push(k);} by[k].r.push({n:d.n,pl:p.label}); }); }); ord.sort().reverse(); return {by:by,ord:ord}; }
+      function rows(a, sample){ var b=''; a.ord.forEach(function(k){ var g=a.by[k], pls={}; g.r.forEach(function(x){pls[x.pl]=1;});
+        var items=sample?g.r.slice(0,6):g.r;
+        var list=items.map(function(x){return '<span class="chip-k">'+esc(x.n)+' · '+esc(x.pl)+'</span>';}).join('')+((sample&&g.r.length>6)?' <span class="ctc">외 '+(g.r.length-6)+'건</span>':'');
+        b+='<tr><td class="d">'+esc(k)+'</td><td><b>'+g.r.length+'</b></td><td>'+Object.keys(pls).join(', ')+'</td><td style="white-space:normal">'+list+'</td></tr>'; }); return b; }
+      var mb=document.getElementById('s2MonthlyBody'); if(mb) mb.innerHTML=rows(agg(function(ld){return ld.slice(0,7);}), true);
+      var db=document.getElementById('s2DailyBody'); if(db) db.innerHTML=rows(agg(function(ld){return ld;}), false);
       var tg=document.getElementById('s2Toggle');
       if(tg) tg.addEventListener('click',function(e){ var btn=e.target.closest('.gbtn'); if(!btn)return; var day=btn.getAttribute('data-v')==='day';
         this.querySelectorAll('.gbtn').forEach(function(x){x.classList.toggle('active',x===btn);});
         document.getElementById('s2Daily').style.display=day?'':'none';
+        document.getElementById('s2Monthly').style.display=day?'none':'';
       });
     })();
   })();
@@ -713,21 +728,23 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   <div class="ct2">병원 영업 파이프라인 (단계별)</div>
   <div class="scroll"><div class="hp-funnel" id="hpFunnel"></div></div>
 
-  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:24px 0 8px">
-    <div class="ct2" id="hpTableTitle" style="margin:0">담당자별 병원 제휴 집계</div>
-    <div class="gtoggle" id="hpToggle"><button class="gbtn active" data-v="month">월별</button><button class="gbtn" data-v="day">일별</button></div>
-  </div>
-  <div class="scroll" id="hpMonthly">
-    <table class="dt">
-      <thead><tr><th>담당자</th><th>지역</th><th>제휴 대상 병원</th><th>제휴완료</th><th>진행중</th><th>진료과 분포</th><th>병원 목록 (단계)</th></tr></thead>
-      <tbody id="hpBody"></tbody>
-    </table>
-  </div>
-  <div class="scroll" id="hpDaily" style="display:none">
-    <table class="dt">
-      <thead><tr><th>날짜</th><th>제휴·컨택 건수</th><th>제휴완료</th><th>병원 (담당자 · 단계)</th></tr></thead>
-      <tbody id="hpDailyBody"></tbody>
-    </table>
+  <div class="togglebox">
+    <div class="togglebox-head">
+      <div class="tb-title" id="hpTableTitle">담당자별 병원 제휴 집계</div>
+      <div class="gtoggle" id="hpToggle"><button class="gbtn active" data-v="month">월별</button><button class="gbtn" data-v="day">일별</button></div>
+    </div>
+    <div class="scroll" id="hpMonthly">
+      <table class="dt">
+        <thead><tr><th>담당자</th><th>지역</th><th>제휴 대상 병원</th><th>제휴완료</th><th>진행중</th><th>진료과 분포</th><th>병원 목록 (단계)</th></tr></thead>
+        <tbody id="hpBody"></tbody>
+      </table>
+    </div>
+    <div class="scroll" id="hpDaily" style="display:none">
+      <table class="dt">
+        <thead><tr><th>날짜</th><th>제휴·컨택 건수</th><th>제휴완료</th><th>병원 (담당자 · 단계)</th></tr></thead>
+        <tbody id="hpDailyBody"></tbody>
+      </table>
+    </div>
   </div>
   <div class="caption" style="text-align:left;margin:6px 0 0">단계: <b>리드 → 컨택 → 미팅 → 제안 → 협의 → 제휴완료</b>. <span style="color:var(--ops);font-weight:600">초록</span> = 제휴완료. 노션 <b>일일 업무보고 DB</b>(병원 담당 템플릿)의 "오늘 제휴·컨택 병원 상세" 표를 이 집계로 옮겨 반영합니다.</div>
 
