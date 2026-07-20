@@ -291,7 +291,10 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
     .gbtn.active{background:var(--card);color:var(--orange);box-shadow:var(--shadow)}
     .month-only{display:none}
   </style>
-  <div class="gtoggle" id="gtoggle"><button class="gbtn active" data-g="day">일별</button><button class="gbtn" data-g="month">월별</button></div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:2px 0 6px">
+    <span id="s1PeriodCtl" style="display:inline-flex;gap:4px;align-items:center"></span>
+    <div class="gtoggle" id="gtoggle"><button class="gbtn" data-g="cal">달력</button><button class="gbtn" data-g="month">월별</button><button class="gbtn active" data-g="day">일별</button></div>
+  </div>
 
   <div class="dstat">
     <div class="dchip"><div class="n down">−18.4%</div><div class="l">7월 예약 누적 vs 전년 (418 vs 512, 07/14)</div></div>
@@ -404,9 +407,9 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
       s+='</svg>';return s;
     }
 
-    function table(){
-      var b='';rows.forEach(function(r){b+='<tr class="'+(r[1]?'we':'')+'"><td class="d">'+r[0]+'</td>';for(var i=2;i<r.length;i++){b+='<td>'+r[i]+'</td>';}b+='</tr>';});
-      document.getElementById('dtbody').innerHTML=b;
+    function table(from,to){
+      var b='';rows.forEach(function(r){ if(from&&(r[0]<from||r[0]>to))return; b+='<tr class="'+(r[1]?'we':'')+'"><td class="d">'+r[0]+'</td>';for(var i=2;i<r.length;i++){b+='<td>'+r[i]+'</td>';}b+='</tr>';});
+      document.getElementById('dtbody').innerHTML=b||'<tr><td colspan="13" class="ctc" style="text-align:center;padding:14px">해당 기간 데이터 없음</td></tr>';
     }
     function timeline(){
       var t='';tl.forEach(function(r){t+='<div class="tlrow"><div class="dd">'+r[0].slice(3)+'</div><div class="ev"><span class="sl">영업</span> '+r[1]+'<br><span class="op">운영</span> '+r[2]+'</div></div>';});
@@ -433,8 +436,10 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
       s+='</svg>';return s;
     }
     var mode='day';
+    var s1from=rows[0][0], s1to=rows[rows.length-1][0];
+    var s1min='2026-'+rows[0][0].replace('/','-'), s1max='2026-'+rows[rows.length-1][0].replace('/','-');
     function render(){
-      var day=(mode==='day');
+      var day=(mode==='day'||mode==='cal'), cal=(mode==='cal');
       document.querySelectorAll('.daily-only').forEach(function(e){e.style.display=day?'':'none';});
       document.querySelectorAll('.month-only').forEach(function(e){e.style.display=day?'none':'block';});
       document.getElementById('cc1title').textContent = day ? '7월 예약 누적 — 당해(26년) vs 전년(25년)' : '월별 예약 — 당해(26년) vs 전년(25년) · 1~7월';
@@ -442,9 +447,18 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
       document.getElementById('cc1legend').innerHTML = day ? '<span><i style="background:var(--orange)"></i>26년 누적</span><span><i style="background:var(--muted)"></i>25년 누적</span><span><i style="background:var(--design);opacity:.5"></i>감소 격차</span>' : '<span><i style="background:var(--orange)"></i>26년</span><span><i style="background:var(--muted)"></i>25년</span>';
       document.getElementById('chart1').innerHTML = day ? lineChart() : monthlyChart();
       if(day) document.getElementById('chart2').innerHTML = barChart();
+      if(day) table(cal?s1from:null, cal?s1to:null);
     }
-    document.getElementById('gtoggle').addEventListener('click',function(e){var b=e.target.closest('.gbtn');if(!b)return;mode=b.getAttribute('data-g');this.querySelectorAll('.gbtn').forEach(function(x){x.classList.toggle('active',x===b);});render();});
-    table();render();
+    var s1ctl=document.getElementById('s1PeriodCtl');
+    var S1INP='style="font:inherit;font-size:13px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)"';
+    function s1RenderCtl(){
+      if(mode==='cal'){ s1ctl.innerHTML='<input type="date" id="s1From" '+S1INP+' value="'+('2026-'+s1from.replace('/','-'))+'" min="'+s1min+'" max="'+s1max+'"><span style="color:var(--muted);font-size:12.5px">~</span><input type="date" id="s1To" '+S1INP+' value="'+('2026-'+s1to.replace('/','-'))+'" min="'+s1min+'" max="'+s1max+'">';
+        document.getElementById('s1From').addEventListener('change',function(){ s1from=this.value.slice(5).replace('-','/'); render(); });
+        document.getElementById('s1To').addEventListener('change',function(){ s1to=this.value.slice(5).replace('-','/'); render(); });
+      } else s1ctl.innerHTML='';
+    }
+    document.getElementById('gtoggle').addEventListener('click',function(e){var b=e.target.closest('.gbtn');if(!b)return;mode=b.getAttribute('data-g');this.querySelectorAll('.gbtn').forEach(function(x){x.classList.toggle('active',x===b);});s1RenderCtl();render();});
+    s1RenderCtl();render();
     // 테마 토글 시 차트 색 갱신
     new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
     if(window.matchMedia){window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);}
@@ -461,18 +475,15 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   <div class="togglebox">
     <div class="togglebox-head">
       <div class="tb-title">신규 리드 · 딜 추이 <small>(CRM 파이프라인 · 리드일 기준)</small></div>
-      <div class="gtoggle" id="s2Toggle"><button class="gbtn active" data-v="month">월별</button><button class="gbtn" data-v="day">일별</button></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span id="s2PeriodCtl" style="display:inline-flex;gap:4px;align-items:center"></span>
+        <div class="gtoggle" id="s2Toggle"><button class="gbtn" data-v="cal">달력</button><button class="gbtn active" data-v="month">월별</button><button class="gbtn" data-v="day">일별</button></div>
+      </div>
     </div>
-    <div class="scroll" id="s2Monthly">
-      <table class="dt">
-        <thead><tr><th>월</th><th>신규 건수</th><th>파이프라인</th><th>업체 (일부)</th></tr></thead>
-        <tbody id="s2MonthlyBody"></tbody>
-      </table>
-    </div>
-    <div class="scroll" id="s2Daily" style="display:none">
+    <div class="scroll">
       <table class="dt">
         <thead><tr><th>날짜</th><th>신규 건수</th><th>파이프라인</th><th>업체 목록</th></tr></thead>
-        <tbody id="s2DailyBody"></tbody>
+        <tbody id="s2Body"></tbody>
       </table>
     </div>
   </div>
@@ -733,21 +744,37 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
 
     renderAll();
 
-    // ── 섹션2 일/월 토글: 신규 리드·딜 추이 (리드일 기준) ──
+    // ── 섹션2 기간 컨트롤: 달력 / 월별 / 일별 (날짜별 신규 리드·딜) ──
     (function(){
-      function agg(keyFn){ var by={},ord=[]; CRM.pipes.forEach(function(p){ p.deals.forEach(function(d){ if(!d.ld)return; var k=keyFn(d.ld); if(!by[k]){by[k]={r:[]};ord.push(k);} by[k].r.push({n:d.n,pl:p.label}); }); }); ord.sort().reverse(); return {by:by,ord:ord}; }
-      function rows(a, sample){ var b=''; a.ord.forEach(function(k){ var g=a.by[k], pls={}; g.r.forEach(function(x){pls[x.pl]=1;});
-        var items=sample?g.r.slice(0,6):g.r;
-        var list=items.map(function(x){return '<span class="chip-k">'+esc(x.n)+' · '+esc(x.pl)+'</span>';}).join('')+((sample&&g.r.length>6)?' <span class="ctc">외 '+(g.r.length-6)+'건</span>':'');
-        b+='<tr><td class="d">'+esc(k)+'</td><td><b>'+g.r.length+'</b></td><td>'+Object.keys(pls).join(', ')+'</td><td style="white-space:normal">'+list+'</td></tr>'; }); return b; }
-      var mb=document.getElementById('s2MonthlyBody'); if(mb) mb.innerHTML=rows(agg(function(ld){return ld.slice(0,7);}), true);
-      var db=document.getElementById('s2DailyBody'); if(db) db.innerHTML=rows(agg(function(ld){return ld;}), false);
+      var deals=[]; CRM.pipes.forEach(function(p){ p.deals.forEach(function(d){ if(d.ld) deals.push({ld:d.ld,n:d.n,pl:p.label}); }); });
+      if(!deals.length) return;
+      var months=[]; deals.forEach(function(d){ var m=d.ld.slice(0,7); if(months.indexOf(m)<0)months.push(m); }); months.sort();
+      var alld=deals.map(function(d){return d.ld;}).sort(); var dmin=alld[0], dmax=alld[alld.length-1];
+      var mode='month', monthSel=months[months.length-1], from=dmin, to=dmax;
+      var ctl=document.getElementById('s2PeriodCtl'), body=document.getElementById('s2Body');
+      var INP='style="font:inherit;font-size:13px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)"';
+      function subset(){ if(mode==='month')return deals.filter(function(d){return d.ld.slice(0,7)===monthSel;}); if(mode==='cal')return deals.filter(function(d){return d.ld>=from&&d.ld<=to;}); return deals; }
+      function render(){
+        var sub=subset(), by={},ord=[];
+        sub.forEach(function(d){ if(!by[d.ld]){by[d.ld]={r:[]};ord.push(d.ld);} by[d.ld].r.push(d); });
+        ord.sort().reverse();
+        var b=''; ord.forEach(function(dt){ var g=by[dt], pls={}; g.r.forEach(function(x){pls[x.pl]=1;});
+          var list=g.r.map(function(x){return '<span class="chip-k">'+esc(x.n)+' · '+esc(x.pl)+'</span>';}).join('');
+          b+='<tr><td class="d">'+esc(dt)+'</td><td><b>'+g.r.length+'</b></td><td>'+Object.keys(pls).join(', ')+'</td><td style="white-space:normal">'+list+'</td></tr>'; });
+        body.innerHTML=b||'<tr><td colspan="4" class="ctc" style="text-align:center;padding:14px">해당 기간 리드 없음</td></tr>';
+      }
+      function renderCtl(){
+        if(mode==='cal'){ ctl.innerHTML='<input type="date" id="s2From" '+INP+' value="'+from+'" min="'+dmin+'" max="'+dmax+'"><span style="color:var(--muted);font-size:12.5px">~</span><input type="date" id="s2To" '+INP+' value="'+to+'" min="'+dmin+'" max="'+dmax+'">';
+          document.getElementById('s2From').addEventListener('change',function(){from=this.value; render();});
+          document.getElementById('s2To').addEventListener('change',function(){to=this.value; render();});
+        } else if(mode==='month'){ ctl.innerHTML='<select id="s2MonthSel" '+INP+'>'+months.map(function(m){return '<option value="'+m+'"'+(m===monthSel?' selected':'')+'>'+m.replace('-','.')+'</option>';}).join('')+'</select>';
+          document.getElementById('s2MonthSel').addEventListener('change',function(){monthSel=this.value; render();});
+        } else { ctl.innerHTML=''; }
+      }
       var tg=document.getElementById('s2Toggle');
-      if(tg) tg.addEventListener('click',function(e){ var btn=e.target.closest('.gbtn'); if(!btn)return; var day=btn.getAttribute('data-v')==='day';
-        this.querySelectorAll('.gbtn').forEach(function(x){x.classList.toggle('active',x===btn);});
-        document.getElementById('s2Daily').style.display=day?'':'none';
-        document.getElementById('s2Monthly').style.display=day?'none':'';
-      });
+      if(tg) tg.addEventListener('click',function(e){ var btn=e.target.closest('.gbtn'); if(!btn)return; mode=btn.getAttribute('data-v');
+        this.querySelectorAll('.gbtn').forEach(function(x){x.classList.toggle('active',x===btn);}); renderCtl(); render(); });
+      renderCtl(); render();
     })();
   })();
   </script>
