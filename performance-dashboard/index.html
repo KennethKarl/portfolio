@@ -195,6 +195,16 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
 
 <div class="wrap">
 
+  <style>
+    .secband{display:flex;align-items:center;gap:14px;margin:46px 0 8px;padding:15px 18px;border-radius:14px;
+      background:linear-gradient(118deg,#000D96 0%,#0A2BD0 46%,#1B59FA 100%);color:#fff;box-shadow:var(--shadow)}
+    .secband.first{margin-top:14px}
+    .secband .secno{width:34px;height:34px;flex:none;border-radius:9px;background:rgba(255,255,255,.2);
+      display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+    .secband .sectxt b{font-size:19.5px;font-weight:800;letter-spacing:-.01em;display:block;line-height:1.25}
+    .secband .sectxt span{font-size:13px;opacity:.86}
+  </style>
+  <div class="secband first"><div class="secno">1</div><div class="sectxt"><b>복지몰 현황</b><span>서비스 유입·예약·검수 등 일일 지표 · 출처 Slack #일일업무보고</span></div></div>
   <!-- ===== DAILY REPORT + TREND ===== -->
   <style>
     .dstat{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:12px 0}
@@ -393,6 +403,7 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   })();
   </script>
 
+  <div class="secband"><div class="secno">2</div><div class="sectxt"><b>기업/대학 제휴 현황 및 실적</b><span>컨택 → 성사 전환 · CRM 파이프라인 통합·흐름</span></div></div>
   <!-- ===== CONTACT → RESULT ===== -->
   <style>
     .funnel{display:flex;gap:6px;align-items:stretch;margin:14px 0 4px;flex-wrap:wrap}
@@ -452,6 +463,43 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   </div>
 
   <div class="caption" style="text-align:left;margin:6px 0 0">담당자별 <b>전용 URL·QR</b>로 고객 진입 → <b>고객사 코드 인증</b> → <a class="nl" href="https://cms.carebridge.io/cs/hospital-reservation" target="_blank" rel="noopener">cms.carebridge.io DB</a>에서 코드별 <b>발생 매출 자동 집계</b>. URL은 발급 방식 예시이며, 매출은 DB 연결 후 실집계됩니다(현재 '연결 예정' 표기).</div>
+
+  <!-- ===== CRM PIPELINE INTEGRATION ===== -->
+  <style>
+    .layer3{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;margin:12px 0}
+    .l3box{flex:1;min-width:170px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
+    .l3box b{font-size:15.5px;display:block;color:var(--orange)}
+    .l3box.b2 b{color:var(--pm)} .l3box.b3 b{color:var(--ops)}
+    .l3box span{font-size:13.2px;color:var(--muted)}
+    .l3arrow{align-self:center;color:var(--arrowline);font-weight:800;font-size:18.4px}
+    .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+    @media(max-width:720px){.pgrid{grid-template-columns:repeat(2,1fr)}}
+    .pcard{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--pc,var(--sales));border-radius:13px;padding:13px 14px;box-shadow:var(--shadow)}
+    .pcard .pt{font-size:16.1px;font-weight:700}
+    .pcard .pteam{font-size:12.1px;color:var(--muted);margin-top:1px}
+    .pcard .pcount{font-size:28.7px;font-weight:800;letter-spacing:-.02em;margin:5px 0 4px;color:var(--pc,var(--sales))}
+    .pcard .pcount small{font-size:13.8px;color:var(--muted);font-weight:600}
+    .pcard a{font-size:12.6px;color:var(--sales);text-decoration:none;font-weight:600}
+    .pcard a:hover{text-decoration:underline}
+    .stagestrip{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin:8px 0;font-size:13.8px}
+    .stagestrip .stg{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px 11px;font-weight:600;color:var(--ink)}
+    .stagestrip .sarr{color:var(--arrowline);font-weight:800}
+    .handover{background:var(--orange-soft);border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:12px;padding:13px 15px;margin:12px 0;font-size:14.9px;line-height:1.6}
+    .handover b{color:var(--ink)}
+  </style>
+
+  <h2>영업 파이프라인 통합 (CRM) <span class="em">데이터 축적 → 담당자 교체에도 이어받는 구조</span></h2>
+  <div class="note">영업 딜의 진행상황·담당자·리드경로·연락처·히스토리를 <b>케어브릿지 CRM</b>에 축적하면 담당자가 바뀌어도 딜을 그대로 이어받습니다. 이 문서를 <b>단일 관리 허브</b>로 삼아 활동→파이프라인→매출을 한 곳에서 관리합니다. (개발 중: <a class="nl" href="https://crm.carebridge.io/pipeline/hospital_sales" target="_blank" rel="noopener">케어브릿지 CRM · 내부</a>)</div>
+
+  <div class="layer3">
+    <div class="l3box"><b>① 활동</b><span>일일업무보고 → 인원별 컨택 (콜·메일·미팅)</span></div>
+    <div class="l3arrow">→</div>
+    <div class="l3box b2"><b>② 파이프라인</b><span>CRM 딜 → 진행상황·히스토리·연락처 축적</span></div>
+    <div class="l3arrow">→</div>
+    <div class="l3box b3"><b>③ 매출</b><span>고객사 코드 → cms.carebridge.io DB 집계</span></div>
+  </div>
+
+  <div class="handover"><b>인수인계 관점</b> — 딜마다 <b>리드일·리드경로·진행상황·연락처·다음 액션</b>이 시스템에 남습니다. 담당자가 교체돼도 신규 담당자가 딜 이력을 즉시 파악해 <b>끊김 없이 이어받습니다</b>(개인 기억 의존 → 시스템 축적). 총 <b>67개 딜 · 연락처 67건</b>이 CRM에 축적 중이며, 위 <b>인원별 컨택·발생 매출</b>과 연결되어 하나로 관리됩니다.</div>
 
   <!-- ===== SALES PIPELINE (interactive, CRM-fed) ===== -->
   <style>
@@ -612,43 +660,7 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   })();
   </script>
 
-  <!-- ===== CRM PIPELINE INTEGRATION ===== -->
-  <style>
-    .layer3{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;margin:12px 0}
-    .l3box{flex:1;min-width:170px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
-    .l3box b{font-size:15.5px;display:block;color:var(--orange)}
-    .l3box.b2 b{color:var(--pm)} .l3box.b3 b{color:var(--ops)}
-    .l3box span{font-size:13.2px;color:var(--muted)}
-    .l3arrow{align-self:center;color:var(--arrowline);font-weight:800;font-size:18.4px}
-    .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
-    @media(max-width:720px){.pgrid{grid-template-columns:repeat(2,1fr)}}
-    .pcard{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--pc,var(--sales));border-radius:13px;padding:13px 14px;box-shadow:var(--shadow)}
-    .pcard .pt{font-size:16.1px;font-weight:700}
-    .pcard .pteam{font-size:12.1px;color:var(--muted);margin-top:1px}
-    .pcard .pcount{font-size:28.7px;font-weight:800;letter-spacing:-.02em;margin:5px 0 4px;color:var(--pc,var(--sales))}
-    .pcard .pcount small{font-size:13.8px;color:var(--muted);font-weight:600}
-    .pcard a{font-size:12.6px;color:var(--sales);text-decoration:none;font-weight:600}
-    .pcard a:hover{text-decoration:underline}
-    .stagestrip{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin:8px 0;font-size:13.8px}
-    .stagestrip .stg{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px 11px;font-weight:600;color:var(--ink)}
-    .stagestrip .sarr{color:var(--arrowline);font-weight:800}
-    .handover{background:var(--orange-soft);border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:12px;padding:13px 15px;margin:12px 0;font-size:14.9px;line-height:1.6}
-    .handover b{color:var(--ink)}
-  </style>
-
-  <h2>영업 파이프라인 통합 (CRM) <span class="em">데이터 축적 → 담당자 교체에도 이어받는 구조</span></h2>
-  <div class="note">영업 딜의 진행상황·담당자·리드경로·연락처·히스토리를 <b>케어브릿지 CRM</b>에 축적하면 담당자가 바뀌어도 딜을 그대로 이어받습니다. 이 문서를 <b>단일 관리 허브</b>로 삼아 활동→파이프라인→매출을 한 곳에서 관리합니다. (개발 중: <a class="nl" href="https://crm.carebridge.io/pipeline/hospital_sales" target="_blank" rel="noopener">케어브릿지 CRM · 내부</a>)</div>
-
-  <div class="layer3">
-    <div class="l3box"><b>① 활동</b><span>일일업무보고 → 인원별 컨택 (콜·메일·미팅)</span></div>
-    <div class="l3arrow">→</div>
-    <div class="l3box b2"><b>② 파이프라인</b><span>CRM 딜 → 진행상황·히스토리·연락처 축적</span></div>
-    <div class="l3arrow">→</div>
-    <div class="l3box b3"><b>③ 매출</b><span>고객사 코드 → cms.carebridge.io DB 집계</span></div>
-  </div>
-
-  <div class="handover"><b>인수인계 관점</b> — 딜마다 <b>리드일·리드경로·진행상황·연락처·다음 액션</b>이 시스템에 남습니다. 담당자가 교체돼도 신규 담당자가 딜 이력을 즉시 파악해 <b>끊김 없이 이어받습니다</b>(개인 기억 의존 → 시스템 축적). 총 <b>67개 딜 · 연락처 67건</b>이 CRM에 축적 중이며, 위 <b>인원별 컨택·발생 매출</b>과 연결되어 하나로 관리됩니다.</div>
-
+  <div class="secband"><div class="secno">3</div><div class="sectxt"><b>진행 중인 프로젝트 현황</b><span>요청 → 기획 → 개발 → QA·안정화 → 배포 · 단계별 참여 팀</span></div></div>
   <!-- ===== SHARED CARD STYLES (팀 로스터 삭제, vlabel/vworks/wcard/secarrow 보존) ===== -->
   <style>
     .vlabel{font-size:12.6px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:36px 0 8px;text-align:center}
@@ -687,7 +699,6 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
     .tc-sales{--tc:#1B59FA} .tc-dev{--tc:#7C3AED} .tc-ops{--tc:#1E8E5C} .tc-design{--tc:#C8321F} .tc-mgmt{--tc:#0E9AA7} .tc-po{--tc:#DB2777}
   </style>
 
-  <h2>진행 중인 프로젝트 현황 <span class="em">요청 → 기획 → 개발 → QA·안정화 → 배포 · 단계별 참여 팀</span></h2>
   <div class="note">개선 요청 취합부터 배포까지 5단계. 각 단계 왼쪽 = 참여 팀(맨 앞 = 리드), 오른쪽 = 활동 내용입니다.</div>
 
   <div class="procm">
