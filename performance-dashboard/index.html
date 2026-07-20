@@ -779,7 +779,10 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   <div class="togglebox">
     <div class="togglebox-head">
       <div class="tb-title" id="hpTableTitle">담당자별 병원 제휴 집계</div>
-      <div class="gtoggle" id="hpToggle"><button class="gbtn active" data-v="month">월별</button><button class="gbtn" data-v="day">일별</button></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span id="hpPeriodCtl" style="display:inline-flex;gap:4px;align-items:center"></span>
+        <div class="gtoggle" id="hpToggle"><button class="gbtn" data-v="cal">달력</button><button class="gbtn active" data-v="month">월별</button><button class="gbtn" data-v="day">일별</button></div>
+      </div>
     </div>
     <div class="scroll" id="hpMonthly">
       <table class="dt">
@@ -848,39 +851,70 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
         '<div class="fname">'+esc(s)+'</div><div class="fcnt">'+c+'<small> 건</small></div></div>';
     }).join('');
 
-    // per-owner aggregate
-    var by={}, order=[];
-    HP.forEach(function(p){ if(!by[p.o]){by[p.o]={o:p.o,regions:{},rows:[],depts:{},won:0};order.push(p.o);} var b=by[p.o];
-      b.regions[p.r]=1; b.rows.push(p); b.depts[p.dept]=(b.depts[p.dept]||0)+1; if(p.s==='제휴완료')b.won++; });
-    order.sort(function(a,b){return by[b].won-by[a].won || by[b].rows.length-by[a].rows.length;});
-    var body='';
-    order.forEach(function(o){ var b=by[o];
-      var depts=Object.keys(b.depts).sort(function(x,y){return b.depts[y]-b.depts[x];})
-        .map(function(k){return '<span class="dept-tag">'+esc(k)+' '+b.depts[k]+'</span>';}).join('');
-      var list=b.rows.slice().sort(function(x,y){return STAGES.indexOf(y.s)-STAGES.indexOf(x.s);})
-        .map(function(p){return '<span class="hchip'+(p.s==='제휴완료'?' won':'')+'">'+esc(p.h)+' · '+esc(p.s)+'</span>';}).join('');
-      body+='<tr><td class="d">'+esc(o)+'</td><td>'+Object.keys(b.regions).join(', ')+'</td>'+
-        '<td><b>'+b.rows.length+'</b></td><td style="color:var(--ops);font-weight:700">'+b.won+'</td>'+
-        '<td>'+(b.rows.length-b.won)+'</td><td class="hplist">'+depts+'</td><td class="hplist">'+list+'</td></tr>';
-    });
-    document.getElementById('hpBody').innerHTML=body;
-
-    // ── 섹션3 일/월 토글: 날짜별 병원 제휴 ──
-    var byDate={}, dord=[];
-    HP.forEach(function(p){ if(!byDate[p.d]){byDate[p.d]={rows:[],won:0};dord.push(p.d);} byDate[p.d].rows.push(p); if(p.s==='제휴완료')byDate[p.d].won++; });
-    dord.sort();
-    var dbody='';
-    dord.forEach(function(d){ var g=byDate[d];
-      var list=g.rows.map(function(p){return '<span class="hchip'+(p.s==='제휴완료'?' won':'')+'">'+esc(p.h)+' · '+esc(p.o)+' · '+esc(p.s)+'</span>';}).join('');
-      dbody+='<tr><td class="d">'+esc(d)+'</td><td><b>'+g.rows.length+'</b></td><td style="color:var(--ops);font-weight:700">'+g.won+'</td><td class="hplist">'+list+'</td></tr>';
-    });
-    document.getElementById('hpDailyBody').innerHTML=dbody;
-    document.getElementById('hpToggle').addEventListener('click',function(e){ var btn=e.target.closest('.gbtn'); if(!btn)return; var day=btn.getAttribute('data-v')==='day';
-      this.querySelectorAll('.gbtn').forEach(function(x){x.classList.toggle('active',x===btn);});
+    // 담당자별 집계 렌더 (기간 필터 적용)
+    function renderAgg(list){
+      var by={}, order=[];
+      list.forEach(function(p){ if(!by[p.o]){by[p.o]={o:p.o,regions:{},rows:[],depts:{},won:0};order.push(p.o);} var b=by[p.o];
+        b.regions[p.r]=1; b.rows.push(p); b.depts[p.dept]=(b.depts[p.dept]||0)+1; if(p.s==='제휴완료')b.won++; });
+      order.sort(function(a,b){return by[b].won-by[a].won || by[b].rows.length-by[a].rows.length;});
+      var body='';
+      order.forEach(function(o){ var b=by[o];
+        var depts=Object.keys(b.depts).sort(function(x,y){return b.depts[y]-b.depts[x];})
+          .map(function(k){return '<span class="dept-tag">'+esc(k)+' '+b.depts[k]+'</span>';}).join('');
+        var lst=b.rows.slice().sort(function(x,y){return STAGES.indexOf(y.s)-STAGES.indexOf(x.s);})
+          .map(function(p){return '<span class="hchip'+(p.s==='제휴완료'?' won':'')+'">'+esc(p.h)+' · '+esc(p.s)+'</span>';}).join('');
+        body+='<tr><td class="d">'+esc(o)+'</td><td>'+Object.keys(b.regions).join(', ')+'</td>'+
+          '<td><b>'+b.rows.length+'</b></td><td style="color:var(--ops);font-weight:700">'+b.won+'</td>'+
+          '<td>'+(b.rows.length-b.won)+'</td><td class="hplist">'+depts+'</td><td class="hplist">'+lst+'</td></tr>';
+      });
+      document.getElementById('hpBody').innerHTML=body||'<tr><td colspan="7" class="ctc" style="text-align:center;padding:14px">해당 기간 제휴 없음</td></tr>';
+    }
+    // 날짜별 렌더 (기간 필터 적용)
+    function renderDaily(list){
+      var byDate={}, dord=[];
+      list.forEach(function(p){ if(!byDate[p.d]){byDate[p.d]={rows:[],won:0};dord.push(p.d);} byDate[p.d].rows.push(p); if(p.s==='제휴완료')byDate[p.d].won++; });
+      dord.sort();
+      var dbody='';
+      dord.forEach(function(d){ var g=byDate[d];
+        var lst=g.rows.map(function(p){return '<span class="hchip'+(p.s==='제휴완료'?' won':'')+'">'+esc(p.h)+' · '+esc(p.o)+' · '+esc(p.s)+'</span>';}).join('');
+        dbody+='<tr><td class="d">'+esc(d)+'</td><td><b>'+g.rows.length+'</b></td><td style="color:var(--ops);font-weight:700">'+g.won+'</td><td class="hplist">'+lst+'</td></tr>';
+      });
+      document.getElementById('hpDailyBody').innerHTML=dbody||'<tr><td colspan="4" class="ctc" style="text-align:center;padding:14px">해당 기간 제휴 없음</td></tr>';
+    }
+    // ── 섹션3 기간 컨트롤: 달력(기간) / 월별(월 선택) / 일별 ──
+    var hmonths=[]; HP.forEach(function(p){ var m=p.d.slice(0,7); if(hmonths.indexOf(m)<0)hmonths.push(m); }); hmonths.sort();
+    var hdates=HP.map(function(p){return p.d;}).sort(); var dmin=hdates[0], dmax=hdates[hdates.length-1];
+    var hmode='month', hmonthSel=hmonths[hmonths.length-1], hfrom=dmin, hto=dmax;
+    var hctl=document.getElementById('hpPeriodCtl');
+    var INP='style="font:inherit;font-size:13px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)"';
+    function hsubset(){
+      if(hmode==='month') return HP.filter(function(p){return p.d.slice(0,7)===hmonthSel;});
+      if(hmode==='cal') return HP.filter(function(p){return p.d>=hfrom && p.d<=hto;});
+      return HP;
+    }
+    function hRenderCtl(){
+      if(hmode==='cal'){
+        hctl.innerHTML='<input type="date" id="hpFrom" '+INP+' value="'+hfrom+'" min="'+dmin+'" max="'+dmax+'"><span style="color:var(--muted);font-size:12.5px">~</span><input type="date" id="hpTo" '+INP+' value="'+hto+'" min="'+dmin+'" max="'+dmax+'">';
+        document.getElementById('hpFrom').addEventListener('change',function(){hfrom=this.value; hApply();});
+        document.getElementById('hpTo').addEventListener('change',function(){hto=this.value; hApply();});
+      } else if(hmode==='month'){
+        hctl.innerHTML='<select id="hpMonthSel" '+INP+'>'+hmonths.map(function(m){return '<option value="'+m+'"'+(m===hmonthSel?' selected':'')+'>'+m.replace('-','.')+'</option>';}).join('')+'</select>';
+        document.getElementById('hpMonthSel').addEventListener('change',function(){hmonthSel=this.value; hApply();});
+      } else { hctl.innerHTML=''; }
+    }
+    function hApply(){
+      var day=(hmode==='day');
       document.getElementById('hpMonthly').style.display=day?'none':'';
       document.getElementById('hpDaily').style.display=day?'':'none';
       document.getElementById('hpTableTitle').textContent=day?'날짜별 병원 제휴':'담당자별 병원 제휴 집계';
+      var sub=hsubset();
+      if(day) renderDaily(sub); else renderAgg(sub);
+    }
+    document.getElementById('hpToggle').addEventListener('click',function(e){ var btn=e.target.closest('.gbtn'); if(!btn)return; hmode=btn.getAttribute('data-v');
+      this.querySelectorAll('.gbtn').forEach(function(x){x.classList.toggle('active',x===btn);});
+      hRenderCtl(); hApply();
     });
+    hRenderCtl(); hApply();
   })();
   </script>
 
