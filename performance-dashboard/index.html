@@ -970,7 +970,14 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   <div class="pm-cards" id="pmCards"></div>
 
   <div class="pm-filter" id="pmFilter"></div>
-  <div class="pipe-tabs" id="pmTabs"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 6px">
+    <div class="pipe-tabs" id="pmTabs" style="margin:0"></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <span style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">제휴일</span>
+      <span id="pmPeriodCtl" style="display:inline-flex;gap:4px;align-items:center"></span>
+      <div class="gtoggle" id="pmPeriod"><button class="gbtn" data-v="cal">달력</button><button class="gbtn" data-v="month">월별</button><button class="gbtn active" data-v="day">일별</button></div>
+    </div>
+  </div>
   <div class="pm-note-audience" id="pmAudience"></div>
 
   <div class="scroll"><table class="dt"><thead id="pmThead"></thead><tbody id="pmBody"></tbody></table></div>
@@ -1005,6 +1012,12 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
 
     var view='list', owner=null;
     var owners=[]; PARTNERS.forEach(function(p){ if(owners.indexOf(p.o)<0)owners.push(p.o); });
+    // 제휴일 기간 컨트롤 (달력/월별/일별)
+    var pmMonths=[]; PARTNERS.forEach(function(p){ if(p.join){var m=p.join.slice(0,7); if(pmMonths.indexOf(m)<0)pmMonths.push(m);} }); pmMonths.sort();
+    var pmDates=PARTNERS.map(function(p){return p.join;}).filter(Boolean).sort(); var pmMin=pmDates[0], pmMax=pmDates[pmDates.length-1];
+    var pmode='day', pmonthSel=pmMonths[pmMonths.length-1], pfrom=pmMin, pto=pmMax;
+    var PINP='style="font:inherit;font-size:13px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)"';
+    function pmPeriodMatch(p){ if(pmode==='month')return p.join&&p.join.slice(0,7)===pmonthSel; if(pmode==='cal')return p.join&&p.join>=pfrom&&p.join<=pto; return true; }
     var cards=document.getElementById('pmCards'), filter=document.getElementById('pmFilter'),
         tabsEl=document.getElementById('pmTabs'), aud=document.getElementById('pmAudience'),
         thead=document.getElementById('pmThead'), tbody=document.getElementById('pmBody');
@@ -1012,6 +1025,7 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
 
     function filtered(){ return PARTNERS.filter(function(p){
       if(owner && p.o!==owner) return false;
+      if(!pmPeriodMatch(p)) return false;
       if(view==='stopped') return STOPPED[p.s];
       return true;
     }); }
@@ -1054,9 +1068,19 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
         tbody.innerHTML=ds.length?ds.map(function(p){return '<tr><td class="d">'+esc(p.co)+'</td><td>'+esc(p.type)+'</td><td>'+esc(p.o)+'</td><td>'+stBadge(p.s)+'</td><td>'+esc(p.c.n)+' · '+esc(p.c.t)+'</td><td>'+esc(p.c.ph)+'</td><td style="white-space:normal">'+esc(p.why||'-')+'</td></tr>';}).join(''):'<tr><td colspan="7" class="ctc" style="text-align:center;padding:14px">보류·중단 제휴처 없음</td></tr>';
       }
     }
-    function renderAll(){ renderCards(); renderFilter(); renderTabs(); renderAudience(); renderTable(); }
+    function renderPeriodCtl(){
+      var ctl=document.getElementById('pmPeriodCtl');
+      if(pmode==='cal'){ ctl.innerHTML='<input type="date" id="pmFrom" '+PINP+' value="'+pfrom+'" min="'+pmMin+'" max="'+pmMax+'"><span style="color:var(--muted);font-size:12.5px">~</span><input type="date" id="pmTo" '+PINP+' value="'+pto+'" min="'+pmMin+'" max="'+pmMax+'">';
+        document.getElementById('pmFrom').addEventListener('change',function(){pfrom=this.value; renderTable();});
+        document.getElementById('pmTo').addEventListener('change',function(){pto=this.value; renderTable();});
+      } else if(pmode==='month'){ ctl.innerHTML='<select id="pmMonthSel" '+PINP+'>'+pmMonths.map(function(m){return '<option value="'+m+'"'+(m===pmonthSel?' selected':'')+'>'+m.replace('-','.')+'</option>';}).join('')+'</select>';
+        document.getElementById('pmMonthSel').addEventListener('change',function(){pmonthSel=this.value; renderTable();});
+      } else { ctl.innerHTML=''; }
+    }
+    function renderAll(){ renderCards(); renderFilter(); renderTabs(); renderPeriodCtl(); renderAudience(); renderTable(); }
     filter.addEventListener('click',function(e){ var b=e.target.closest('.per-chip'); if(!b)return; owner=b.dataset.o||null; renderTable(); this.querySelectorAll('.per-chip').forEach(function(x){x.classList.toggle('active',x===b);}); });
     tabsEl.addEventListener('click',function(e){ var b=e.target.closest('.pipe-tab'); if(!b)return; view=b.dataset.k; renderTabs(); renderAudience(); renderTable(); });
+    document.getElementById('pmPeriod').addEventListener('click',function(e){ var b=e.target.closest('.gbtn'); if(!b)return; pmode=b.getAttribute('data-v'); this.querySelectorAll('.gbtn').forEach(function(x){x.classList.toggle('active',x===b);}); renderPeriodCtl(); renderTable(); });
     renderAll();
   })();
   </script>
