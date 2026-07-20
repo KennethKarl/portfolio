@@ -195,6 +195,54 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
 
 <div class="wrap">
 
+  <!-- ===== SECTION NAV BAR ===== -->
+  <style>
+    .secnav{position:sticky;top:0;z-index:30;display:flex;gap:6px;flex-wrap:wrap;align-items:center;
+      background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      border-bottom:1px solid var(--line);padding:10px 0 9px;margin:0 0 4px}
+    .secnav .snav-btn{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;
+      padding:6px 13px;font-size:13.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:var(--shadow)}
+    .secnav .snav-btn:hover{color:var(--ink)}
+    .secnav .snav-btn .snum{width:18px;height:18px;border-radius:6px;background:var(--panel);color:var(--ink);font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:800}
+    .secnav .snav-btn.active{color:#fff;background:var(--orange);border-color:var(--orange)}
+    .secnav .snav-btn.active .snum{background:rgba(255,255,255,.28);color:#fff}
+    .secnav .snav-btn.all{font-weight:600;color:var(--muted)}
+    .secnav .snav-btn.all.active{color:#fff}
+  </style>
+  <nav class="secnav" id="secNav"></nav>
+  <script>
+  (function(){
+    function init(){
+      var wrap=document.querySelector('.wrap'), nav=document.getElementById('secNav'); if(!wrap||!nav)return;
+      var kids=[].slice.call(wrap.children);
+      var bandIdx=[]; kids.forEach(function(el,i){ if(el.classList&&el.classList.contains('secband')) bandIdx.push(i); });
+      if(bandIdx.length<2)return;
+      var sections=[];
+      bandIdx.forEach(function(start,si){
+        var end=(si+1<bandIdx.length)?bandIdx[si+1]:kids.length;
+        var band=kids[start];
+        var title=band.querySelector('b')?band.querySelector('b').textContent:('섹션'+(si+1));
+        var num=band.querySelector('.secno')?band.querySelector('.secno').textContent:(si+1);
+        var sec=document.createElement('section'); sec.className='dash-sec';
+        band.parentNode.insertBefore(sec, band);
+        for(var j=start;j<end;j++){ sec.appendChild(kids[j]); }
+        sections.push({title:title,num:num,el:sec});
+      });
+      var html=''; sections.forEach(function(s,i){ html+='<button class="snav-btn" data-i="'+i+'"><span class="snum">'+s.num+'</span>'+s.title+'</button>'; });
+      html+='<button class="snav-btn all" data-i="all">전체</button>';
+      nav.innerHTML=html;
+      function show(i){
+        sections.forEach(function(s,k){ s.el.style.display=(i==='all'||k===+i)?'':'none'; });
+        [].forEach.call(nav.children,function(b){ b.classList.toggle('active', b.getAttribute('data-i')===String(i)); });
+        if(i!=='all') window.scrollTo({top:0,behavior:'auto'});
+      }
+      nav.addEventListener('click',function(e){ var b=e.target.closest('.snav-btn'); if(!b)return; var v=b.getAttribute('data-i'); show(v==='all'?'all':+v); });
+      show(0);
+    }
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+  </script>
+
   <style>
     .secband{display:flex;align-items:center;gap:14px;margin:46px 0 8px;padding:15px 18px;border-radius:14px;
       background:linear-gradient(118deg,#000D96 0%,#0A2BD0 46%,#1B59FA 100%);color:#fff;box-shadow:var(--shadow)}
