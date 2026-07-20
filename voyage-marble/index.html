@@ -114,6 +114,11 @@
   .pcard .pn .ai{font-size:9px;background:var(--ink-soft);color:#fff;border-radius:4px;padding:1px 4px;font-weight:700}
   .pcard .money{font-size:15.5px;font-weight:800;padding-left:6px;margin-top:2px;color:var(--sea-deep)}
   .pcard .meta{font-size:10.5px;color:var(--ink-soft);padding-left:6px;margin-top:1px}
+  .pcard .owned{display:flex;flex-wrap:wrap;gap:4px;padding-left:6px;margin-top:6px}
+  .own-chip{font-size:10px;font-weight:700;background:#faf4e4;border:1px solid var(--line);border-left:4px solid var(--line);
+    border-radius:5px;padding:1px 6px;color:var(--ink);line-height:1.5;white-space:nowrap}
+  .own-chip b{color:var(--amber);letter-spacing:-1px;font-size:9px}
+  .own-none{font-size:10px;color:var(--ink-soft);padding-left:2px;font-style:italic}
 
   .diebox{display:flex;align-items:center;gap:12px;justify-content:center}
   .die{width:44px;height:44px;border-radius:10px;background:#fff;border:2px solid var(--ink);
@@ -536,11 +541,18 @@ function renderPlayers(){
   state.players.forEach((p,i)=>{
     const c=document.createElement("div");
     c.className="pcard"+(i===state.cur&&!p.bankrupt?" turn":"")+(p.bankrupt?" out":"");
-    const props=ownedCities(p.id).length;
+    const owned=ownedCities(p.id);
+    const chips = owned.length
+      ? owned.map(n=>{
+          const stars=n.level>0?" <b>"+"★".repeat(Math.min(n.level,4))+"</b>":"";
+          return `<span class="own-chip" style="border-left-color:${groupColor(n.group)}">${n.name}${n.type==="port"?"⚓":""}${stars}</span>`;
+        }).join("")
+      : `<span class="own-none">보유 도시 없음</span>`;
     c.innerHTML=`<div class="bar" style="background:${PCOL[i]}"></div>
       <div class="pn">${PLAYER_EMOJI[i]} ${p.name}${p.isAI?'<span class="ai">AI</span>':''}${p.bankrupt?' 💀':''}</div>
       <div class="money">${p.bankrupt?"파산":won(p.money)}</div>
-      <div class="meta">도시 ${props} · 자산 ${won(netWorth(p))}</div>`;
+      <div class="meta">도시 ${owned.length} · 자산 ${won(netWorth(p))}</div>
+      <div class="owned">${chips}</div>`;
     box.appendChild(c);
   });
 }
@@ -572,21 +584,38 @@ function moneyToast(p,delta,reason){
 }
 function gainMoney(p,amt,reason){p.money+=amt;moneyToast(p,amt,reason);if(!p.isAI)SFX.gain();}
 function spendMoney(p,amt,reason){p.money-=amt;moneyToast(p,-amt,reason);if(!p.isAI)SFX.spend();}
-// blocking money popup for the HUMAN (click to proceed); AI uses toast so the game flows
-async function moneyEvent(p,delta,reason){
+// centered money popup — same design for everyone.
+//  autoMs=0  -> blocking (click 확인)  [used for the human's involuntary events]
+//  autoMs>0  -> auto-dismisses after autoMs  [used for AI, so the game keeps flowing]
+function showMoneyPopup(p,delta,reason,autoMs){
+  return new Promise(res=>{
+    const bg=document.getElementById("modalBg"),m=document.getElementById("modal");
+    const gain=delta>=0;
+    m.innerHTML=`<h3>${gain?"💰 수입":"💸 지출"}</h3>
+      <div class="mbody"><div style="text-align:center;line-height:1.6">
+        <span style="font-size:22px">${PLAYER_EMOJI[p.id]}</span> <b>${p.name}</b>${p.isAI?' <span class="ai">AI</span>':''}<br>
+        <span class="big" style="font-size:22px;color:${gain?'#1e8449':'#c0392b'}">${gain?"+":"−"}${won(Math.abs(delta))}</span><br>
+        <span style="color:var(--ink-soft);font-size:12.5px">${reason||""}</span><br>
+        <span style="font-size:12.5px">잔액 <b>${won(p.money)}</b></span>
+      </div></div>`;
+    if(autoMs>0){
+      bg.classList.add("show");
+      setTimeout(()=>{ bg.classList.remove("show"); res(); }, autoMs);
+    }else{
+      const bwrap=document.createElement("div");bwrap.className="mbtns";
+      const btn=document.createElement("button");btn.textContent="확인";btn.className="mb-primary";
+      btn.onclick=()=>{ bg.classList.remove("show"); res(); };
+      bwrap.appendChild(btn); m.appendChild(bwrap); bg.classList.add("show");
+    }
+  });
+}
+async function moneyEvent(p,delta,reason,quietHuman){
   if(!delta)return;
   p.money+=delta;updateBoard();
-  if(p.isAI){moneyToast(p,delta,reason);return;}
+  if(p.isAI){ await showMoneyPopup(p,delta,reason,850); return; }   // AI: same popup, auto-close
   if(delta>=0)SFX.gain();else SFX.spend();
-  const gain=delta>=0;
-  await modalChoice(gain?"💰 수입":"💸 지출",
-    `<div style="text-align:center;line-height:1.6">
-       <span style="font-size:22px">${PLAYER_EMOJI[p.id]}</span> <b>${p.name}</b><br>
-       <span class="big" style="font-size:22px;color:${gain?'#1e8449':'#c0392b'}">${gain?'+':'−'}${won(Math.abs(delta))}</span><br>
-       <span style="color:var(--ink-soft);font-size:12.5px">${reason||''}</span><br>
-       <span style="font-size:12.5px">잔액 <b>${won(p.money)}</b></span>
-     </div>`,
-    [{label:"확인",value:true,primary:true}]);
+  if(quietHuman){ moneyToast(p,delta,reason); return; }             // human buy/build: confirm already shown -> toast
+  await showMoneyPopup(p,delta,reason,0);                           // human involuntary: blocking
 }
 function hopToken(p){
   const tk=document.getElementById("tok-"+p.id);if(!tk)return;
@@ -691,8 +720,9 @@ async function tryBuy(p,n){
     buy=v;
   }
   if(buy){
-    spendMoney(p,price,`${n.name} 매입`);n.owner=p.id;n.level=0;
+    n.owner=p.id;n.level=0;
     log(`${pname(p)} ${n.name} 매입 · -${won(price)}`);
+    await moneyEvent(p,-price,`${n.name} 매입`,true);   // human=toast, AI=auto popup
     updateBoard();
   }else if(!p.isAI){log(`${pname(p)} ${n.name} 매입 패스`);}
 }
@@ -712,8 +742,9 @@ async function tryBuild(p,n){
     build=v;
   }
   if(build){
-    spendMoney(p,cost,`${n.name} ${nextLbl}`);n.level++;
+    n.level++;
     log(`${pname(p)} ${n.name} ${nextLbl} 건설 · -${won(cost)}`);
+    await moneyEvent(p,-cost,`${n.name} ${nextLbl} 건설`,true);   // human=toast, AI=auto popup
     updateBoard();
   }
 }
@@ -737,8 +768,8 @@ async function charge(p,amount,to){
   }
   // insufficient -> bankruptcy (MVP: no mortgaging)
   const remaining=p.money;
-  if(to){to.money+=remaining;moneyToast(to,remaining,`${p.name} 통행료 수입`);}
   p.money=0;updateBoard();
+  if(to && remaining>0) await moneyEvent(to,remaining,`${p.name} 통행료 수입(파산)`);
   if(!p.isAI){
     await modalChoice("💀 파산",
       `${p.name} 님은 ${won(amount)}를 지불할 수 없어 <span class="big">파산</span>했습니다.<br>보유 도시는 모두 무주공산이 됩니다.`,
