@@ -573,6 +573,7 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
     var WON={'제휴완료':1,'계약완료':1,'계약':1}, LOST={'실패':1}, HOLD={'보류':1};
     function state(s){ return WON[s]?'won':LOST[s]?'lost':HOLD[s]?'hold':'open'; }
     function fill(st){ return st==='won'?'var(--ops)':st==='lost'?'var(--design)':st==='hold'?'#8a93a0':'var(--sales)'; }
+    function blueShade(t){var a=[45,111,237],b=[8,28,150];return 'rgb('+Math.round(a[0]+(b[0]-a[0])*t)+','+Math.round(a[1]+(b[1]-a[1])*t)+','+Math.round(a[2]+(b[2]-a[2])*t)+')';}
     var cur=0, sf=null, py=null, pm=null;
     var tabs=document.getElementById('pipeTabs'), sub=document.getElementById('pipeSub'),
         hint=document.getElementById('pipeHint'), funnel=document.getElementById('pipeFunnel'),
@@ -617,9 +618,11 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
       var p=CRM.pipes[cur], ds=pdeals(p), cnt={};
       ds.forEach(function(d){ cnt[d.s]=(cnt[d.s]||0)+1; });
       funnel.className='pipe-funnel'+(sf?' filtered':'');
+      var openStages=p.stages.filter(function(s){return state(s.name)==='open';});
       funnel.innerHTML=p.stages.map(function(s,i){
         var st=state(s.name), c=cnt[s.name]||0;
-        return '<div class="pfstg'+(i===0?' first':'')+(sf===s.name?' sel':'')+(c===0?' zero':'')+'" data-s="'+esc(s.name)+'" style="background:'+fill(st)+'">'+
+        var bg=st==='open'?blueShade(openStages.length>1?openStages.indexOf(s)/(openStages.length-1):0):fill(st);
+        return '<div class="pfstg'+(i===0?' first':'')+(sf===s.name?' sel':'')+(c===0?' zero':'')+'" data-s="'+esc(s.name)+'" style="background:'+bg+'">'+
           '<div class="fname">'+esc(s.name)+'</div><div class="fcnt">'+c+'<small> 건</small></div></div>';
       }).join('');
     }
