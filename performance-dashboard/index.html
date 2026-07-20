@@ -660,7 +660,111 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   })();
   </script>
 
-  <div class="secband"><div class="secno">3</div><div class="sectxt"><b>진행 중인 프로젝트 현황</b><span>요청 → 기획 → 개발 → QA·안정화 → 배포 · 단계별 참여 팀</span></div></div>
+  <div class="secband"><div class="secno">3</div><div class="sectxt"><b>병원 제휴 현황 및 실적</b><span>일일보고 기반 · 누가 · 어디 · 몇 건 · 단계별 파이프라인</span></div></div>
+  <!-- ===== HOSPITAL PARTNERSHIP (from daily report) ===== -->
+  <style>
+    .hp-funnel{display:flex;min-width:720px;margin:8px 0 12px}
+    .hp-stg{flex:1;min-width:70px;color:#fff;padding:9px 8px 9px 14px;text-align:center;
+      clip-path:polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%, 9px 50%);margin-left:-9px}
+    .hp-stg.first{clip-path:polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);margin-left:0}
+    .hp-stg .fname{font-size:12.6px;font-weight:700;line-height:1.2}
+    .hp-stg .fcnt{font-size:18.4px;font-weight:800;letter-spacing:-.02em;margin-top:1px}
+    .hp-stg .fcnt small{font-size:11.5px;font-weight:600;opacity:.85}
+    .hp-stg.zero{opacity:.34}
+    table.dt td.hplist{white-space:normal;text-align:left;min-width:260px}
+    .hchip{display:inline-block;font-size:11.5px;background:var(--orange-soft);border:1px solid var(--line);border-radius:6px;padding:1px 7px;margin:2px 4px 0 0;color:var(--ink)}
+    .hchip.won{background:color-mix(in srgb,var(--ops) 15%,var(--card));color:var(--ops);border-color:transparent;font-weight:600}
+    .dept-tag{display:inline-block;font-size:11.5px;color:var(--muted);margin-right:6px}
+  </style>
+
+  <div class="note">병원 담당 <b>일일 업무보고</b>(Notion) 집계입니다. 담당자별로 <b>어느 병원과 몇 건 제휴</b>했는지, 그리고 병원 영업 <b>단계별 파이프라인</b>을 함께 봅니다. <b>수동 동기화</b> — 소스는 아래 스크립트의 <code>HOSPITAL_PARTNERSHIPS</code> 배열이며, 노션 DB 갱신분을 여기에 반영합니다(현재 샘플 데이터).</div>
+
+  <div class="funnel" id="hpChips"></div>
+
+  <div class="ct2">병원 영업 파이프라인 (단계별)</div>
+  <div class="scroll"><div class="hp-funnel" id="hpFunnel"></div></div>
+
+  <div class="ct2">담당자별 병원 제휴 집계</div>
+  <div class="scroll">
+    <table class="dt">
+      <thead><tr><th>담당자</th><th>지역</th><th>제휴 대상 병원</th><th>제휴완료</th><th>진행중</th><th>진료과 분포</th><th>병원 목록 (단계)</th></tr></thead>
+      <tbody id="hpBody"></tbody>
+    </table>
+  </div>
+  <div class="caption" style="text-align:left;margin:6px 0 0">단계: <b>리드 → 컨택 → 미팅 → 제안 → 협의 → 제휴완료</b>. <span style="color:var(--ops);font-weight:600">초록</span> = 제휴완료. 노션 <b>일일 업무보고 DB</b>(병원 담당 템플릿)의 "오늘 제휴·컨택 병원 상세" 표를 이 집계로 옮겨 반영합니다.</div>
+
+  <script>
+  (function(){
+    // ===== 수동 동기화 지점 =====
+    // 노션 [📋 일일 업무보고] DB(담당구분=병원)의 병원별 행을 여기에 반영하세요.
+    // o=담당자, r=지역, h=병원명, dept=진료과, s=진행단계, comp=경쟁플랫폼, d=일자
+    var HOSPITAL_PARTNERSHIPS = [
+      {o:'담당A',r:'서울',h:'밝은안과',dept:'안과',s:'제휴완료',comp:'모두닥',d:'2026-07-18'},
+      {o:'담당A',r:'서울',h:'서울바른치과',dept:'치과',s:'제휴완료',comp:'굿닥',d:'2026-07-18'},
+      {o:'담당A',r:'서울',h:'서울밝은눈안과',dept:'안과',s:'제휴완료',comp:'없음',d:'2026-07-14'},
+      {o:'담당A',r:'서울',h:'참좋은이비인후과',dept:'이비인후과',s:'협의',comp:'굿닥',d:'2026-07-16'},
+      {o:'담당A',r:'서울',h:'서울정형외과',dept:'정형외과',s:'미팅',comp:'모두닥',d:'2026-07-15'},
+      {o:'담당C',r:'서울',h:'늘봄내과',dept:'내과',s:'제휴완료',comp:'없음',d:'2026-07-11'},
+      {o:'담당C',r:'서울',h:'미래피부과',dept:'피부과',s:'협의',comp:'모두닥',d:'2026-07-17'},
+      {o:'담당C',r:'서울',h:'서울산부인과',dept:'산부인과',s:'제안',comp:'없음',d:'2026-07-16'},
+      {o:'담당C',r:'서울',h:'도담삼성병원',dept:'내과',s:'컨택',comp:'없음',d:'2026-07-10'},
+      {o:'담당E',r:'서울',h:'서울제일성형외과',dept:'성형외과',s:'제휴완료',comp:'모두닥',d:'2026-07-19'},
+      {o:'담당E',r:'서울',h:'힘찬정형외과',dept:'정형외과',s:'협의',comp:'모두닥',d:'2026-07-09'},
+      {o:'담당E',r:'서울',h:'나루성심병원',dept:'산부인과',s:'컨택',comp:'모두닥',d:'2026-07-12'},
+      {o:'담당F',r:'서울',h:'예쁜미소성형외과',dept:'성형외과',s:'미팅',comp:'없음',d:'2026-07-13'},
+      {o:'담당F',r:'서울',h:'미소치과',dept:'치과',s:'컨택',comp:'없음',d:'2026-07-08'},
+      {o:'담당B',r:'부산',h:'부산센텀정형외과',dept:'정형외과',s:'제휴완료',comp:'없음',d:'2026-07-10'},
+      {o:'담당B',r:'부산',h:'해운대밝은안과',dept:'안과',s:'제안',comp:'굿닥',d:'2026-07-15'},
+      {o:'담당B',r:'부산',h:'서면베스트내과',dept:'내과',s:'미팅',comp:'없음',d:'2026-07-16'},
+      {o:'담당D',r:'부산',h:'남포동성형외과',dept:'성형외과',s:'리드',comp:'모두닥',d:'2026-07-14'}
+    ];
+    var STAGES=['리드','컨택','미팅','제안','협의','제휴완료'];
+    function esc(x){return (x==null?'':String(x)).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+    function blueShade(t){var a=[45,111,237],b=[8,28,150];return 'rgb('+Math.round(a[0]+(b[0]-a[0])*t)+','+Math.round(a[1]+(b[1]-a[1])*t)+','+Math.round(a[2]+(b[2]-a[2])*t)+')';}
+    var blueStages=STAGES.filter(function(s){return s!=='제휴완료';});
+    function fill(s){return s==='제휴완료'?'var(--ops)':blueShade(blueStages.indexOf(s)/(blueStages.length-1));}
+    var HP=HOSPITAL_PARTNERSHIPS;
+
+    // summary chips
+    var won=HP.filter(function(p){return p.s==='제휴완료';}).length;
+    var reps={},regions={}; HP.forEach(function(p){reps[p.o]=1;regions[p.r]=1;});
+    document.getElementById('hpChips').innerHTML=
+      '<div class="fstage s1"><div class="fn">'+HP.length+'</div><div class="fl">제휴 대상 병원</div></div>'+
+      '<div class="farrow">·</div>'+
+      '<div class="fstage s3"><div class="fn">'+won+'</div><div class="fl">제휴완료</div></div>'+
+      '<div class="farrow">·</div>'+
+      '<div class="fstage s2"><div class="fn">'+(HP.length-won)+'</div><div class="fl">진행중</div></div>'+
+      '<div class="farrow">·</div>'+
+      '<div class="fstage"><div class="fn">'+Object.keys(reps).length+'</div><div class="fl">담당자 · '+Object.keys(regions).length+'개 지역</div></div>';
+
+    // stage funnel
+    var scnt={}; HP.forEach(function(p){scnt[p.s]=(scnt[p.s]||0)+1;});
+    document.getElementById('hpFunnel').innerHTML=STAGES.map(function(s,i){
+      var c=scnt[s]||0;
+      return '<div class="hp-stg'+(i===0?' first':'')+(c===0?' zero':'')+'" style="background:'+fill(s)+'">'+
+        '<div class="fname">'+esc(s)+'</div><div class="fcnt">'+c+'<small> 건</small></div></div>';
+    }).join('');
+
+    // per-owner aggregate
+    var by={}, order=[];
+    HP.forEach(function(p){ if(!by[p.o]){by[p.o]={o:p.o,regions:{},rows:[],depts:{},won:0};order.push(p.o);} var b=by[p.o];
+      b.regions[p.r]=1; b.rows.push(p); b.depts[p.dept]=(b.depts[p.dept]||0)+1; if(p.s==='제휴완료')b.won++; });
+    order.sort(function(a,b){return by[b].won-by[a].won || by[b].rows.length-by[a].rows.length;});
+    var body='';
+    order.forEach(function(o){ var b=by[o];
+      var depts=Object.keys(b.depts).sort(function(x,y){return b.depts[y]-b.depts[x];})
+        .map(function(k){return '<span class="dept-tag">'+esc(k)+' '+b.depts[k]+'</span>';}).join('');
+      var list=b.rows.slice().sort(function(x,y){return STAGES.indexOf(y.s)-STAGES.indexOf(x.s);})
+        .map(function(p){return '<span class="hchip'+(p.s==='제휴완료'?' won':'')+'">'+esc(p.h)+' · '+esc(p.s)+'</span>';}).join('');
+      body+='<tr><td class="d">'+esc(o)+'</td><td>'+Object.keys(b.regions).join(', ')+'</td>'+
+        '<td><b>'+b.rows.length+'</b></td><td style="color:var(--ops);font-weight:700">'+b.won+'</td>'+
+        '<td>'+(b.rows.length-b.won)+'</td><td class="hplist">'+depts+'</td><td class="hplist">'+list+'</td></tr>';
+    });
+    document.getElementById('hpBody').innerHTML=body;
+  })();
+  </script>
+
+  <div class="secband"><div class="secno">4</div><div class="sectxt"><b>진행 중인 프로젝트 현황</b><span>요청 → 기획 → 개발 → QA·안정화 → 배포 · 단계별 참여 팀</span></div></div>
   <!-- ===== SHARED CARD STYLES (팀 로스터 삭제, vlabel/vworks/wcard/secarrow 보존) ===== -->
   <style>
     .vlabel{font-size:12.6px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:36px 0 8px;text-align:center}
