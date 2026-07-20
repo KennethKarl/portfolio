@@ -819,7 +819,123 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   })();
   </script>
 
-  <div class="secband"><div class="secno">4</div><div class="sectxt"><b>진행 중인 프로젝트 현황</b><span>요청 → 기획 → 개발 → QA·안정화 → 배포 · 단계별 참여 팀</span></div></div>
+  <div class="secband"><div class="secno">4</div><div class="sectxt"><b>제휴처 관리 · 실적</b><span>전체 목록 · 담당자별 · 가입·예약·매출 · 연락처 · 보류/중단 (목업)</span></div></div>
+  <!-- ===== PARTNER MANAGEMENT ===== -->
+  <style>
+    .pm-cards{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 4px}
+    .pm-card{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);text-align:center}
+    .pm-card .n{font-size:24px;font-weight:800;letter-spacing:-.02em;color:var(--orange)}
+    .pm-card .n.g{color:var(--ops)}
+    .pm-card .l{font-size:12.6px;color:var(--muted);margin-top:2px}
+    .pm-filter{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 6px}
+    .pm-filter .plabel2{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-right:2px}
+    .pm-note-audience{font-size:12.1px;color:var(--muted);margin:4px 0 8px}
+    .pm-flag{display:inline-block;font-size:11px;font-weight:700;color:var(--settle);background:color-mix(in srgb,var(--settle) 14%,var(--card));border:1px solid color-mix(in srgb,var(--settle) 30%,var(--line));border-radius:6px;padding:1px 7px;margin-left:6px}
+    .st-badge{font-size:11.5px;font-weight:700;border-radius:6px;padding:1px 8px}
+    .st-run{background:color-mix(in srgb,var(--ops) 16%,var(--card));color:var(--ops)}
+    .st-new{background:color-mix(in srgb,var(--sales) 14%,var(--card));color:var(--sales)}
+    .st-hold{background:var(--panel);color:var(--muted)}
+    .st-stop{background:color-mix(in srgb,var(--design) 14%,var(--card));color:var(--design)}
+    table.dt td.num{text-align:right;font-variant-numeric:tabular-nums;padding-right:14px}
+  </style>
+
+  <div class="note">제휴처(기업·대학·검진센터·병원)를 <b>한 곳에서 관리</b>합니다. 담당자 필터로 <b>담당자별</b> 리스트를, 탭으로 <b>실적(가입·예약·매출)·연락처·보류/중단</b>을 전환합니다. <b>데이터는 목업</b>이며, 추후 CRM·CMS 연동 시 실집계됩니다.</div>
+
+  <div class="pm-cards" id="pmCards"></div>
+
+  <div class="pm-filter" id="pmFilter"></div>
+  <div class="pipe-tabs" id="pmTabs"></div>
+  <div class="pm-note-audience" id="pmAudience"></div>
+
+  <div class="scroll"><table class="dt"><thead id="pmThead"></thead><tbody id="pmBody"></tbody></table></div>
+
+  <script>
+  (function(){
+    // ===== 목업 제휴처 데이터 =====
+    // co=제휴처, type=유형, o=담당자, r=지역, s=상태(운영중/제휴완료/보류/중단),
+    // u=가입자, rv=예약, rev=월매출(만원), join=제휴일, c=연락처, why=보류·중단 사유
+    var PARTNERS=[
+      {co:'A전자',type:'기업',o:'담당A',r:'서울',s:'운영중',u:5200,rv:420,rev:7200,join:'2026-03-05',c:{n:'김도윤',t:'복리후생팀 과장',ph:'02-1421-3456',e:'hr267@company.co.kr'}},
+      {co:'B플랫폼',type:'기업',o:'담당C',r:'경기',s:'운영중',u:4100,rv:350,rev:6100,join:'2026-02-06',c:{n:'윤서연',t:'복리후생팀 과장',ph:'02-4570-9326',e:'hr982@company.co.kr'}},
+      {co:'C게임즈',type:'기업',o:'담당D',r:'경기',s:'운영중',u:2800,rv:210,rev:3900,join:'2026-03-12',c:{n:'정서연',t:'인사팀 대리',ph:'02-2976-5821',e:'hr636@company.co.kr'}},
+      {co:'D포털',type:'기업',o:'담당E',r:'경기',s:'제휴완료',u:900,rv:40,rev:600,join:'2026-07-08',c:{n:'조지영',t:'경영지원팀장',ph:'02-4147-3130',e:'hr85@company.co.kr'}},
+      {co:'가온대학교',type:'대학',o:'담당F',r:'서울',s:'운영중',u:3400,rv:180,rev:2100,join:'2026-02-24',c:{n:'김수현',t:'복지위원장',ph:'02-5917-4053',e:'welfare@snu.ac.kr'}},
+      {co:'한빛대학교',type:'대학',o:'담당B',r:'서울',s:'제휴완료',u:1200,rv:60,rev:800,join:'2026-07-02',c:{n:'강서연',t:'학생회장',ph:'02-9369-2229',e:'council@yonsei.ac.kr'}},
+      {co:'도담검진센터',type:'검진센터',o:'담당A',r:'서울',s:'운영중',u:2600,rv:220,rev:4800,join:'2026-02-17',c:{n:'조하은',t:'마케팅팀장',ph:'02-8365-3848',e:'checkup@amc.seoul.kr'}},
+      {co:'새롬검진센터',type:'검진센터',o:'담당B',r:'서울',s:'운영중',u:3100,rv:260,rev:5600,join:'2026-03-03',c:{n:'강도윤',t:'마케팅팀장',ph:'02-1491-8238',e:'checkup@snuh.org'}},
+      {co:'밝은안과',type:'병원',o:'담당A',r:'서울',s:'운영중',u:480,rv:95,rev:1250,join:'2026-07-18',c:{n:'최민수',t:'부원장',ph:'010-1408-4170',e:'admin162@clinic.co.kr'}},
+      {co:'서울제일성형외과',type:'병원',o:'담당E',r:'서울',s:'운영중',u:320,rv:60,rev:2100,join:'2026-07-19',c:{n:'임수현',t:'대표원장',ph:'010-7719-2848',e:'admin449@clinic.co.kr'}},
+      {co:'부산센텀정형외과',type:'병원',o:'담당B',r:'부산',s:'운영중',u:210,rv:40,rev:720,join:'2026-07-10',c:{n:'박준호',t:'실장',ph:'051-2569-1915',e:'admin285@clinic.co.kr'}},
+      {co:'늘봄내과',type:'병원',o:'담당C',r:'서울',s:'제휴완료',u:90,rv:15,rev:180,join:'2026-07-11',c:{n:'최서연',t:'실장',ph:'010-9850-5521',e:'admin334@clinic.co.kr'}},
+      {co:'E엔터',type:'기업',o:'담당E',r:'대전',s:'중단',u:0,rv:0,rev:0,join:'2026-01-11',c:{n:'강준혁',t:'인사팀 대리',ph:'02-8312-7930',e:'hr894@company.co.kr'},why:'내부 예산 축소로 제휴 중단'},
+      {co:'F커머스',type:'기업',o:'담당D',r:'서울',s:'보류',u:0,rv:0,rev:0,join:'2025-12-09',c:{n:'정소희',t:'HR팀 차장',ph:'02-9729-5712',e:'hr622@company.co.kr'},why:'내부 검토 지연 — 재접촉 예정'},
+      {co:'나래검진센터',type:'검진센터',o:'담당C',r:'인천',s:'보류',u:0,rv:0,rev:0,join:'2025-11-12',c:{n:'최유진',t:'원장',ph:'032-5689-3075',e:'contact334@hospital.co.kr'},why:'검진 단가 협의 중'},
+      {co:'온누리대학교',type:'대학',o:'담당F',r:'서울',s:'중단',u:0,rv:0,rev:0,join:'2026-03-12',c:{n:'김준혁',t:'복지위원장',ph:'02-7411-4798',e:'contact488@university.ac.kr'},why:'경쟁사 선계약으로 중단'}
+    ];
+    function esc(x){return (x==null?'':String(x)).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+    function won(n){return n>=10000?(n/10000).toFixed(n%10000?1:0)+'억':n.toLocaleString()+'만';}
+    var ACTIVE={'운영중':1,'제휴완료':1}, STOPPED={'보류':1,'중단':1};
+    function stBadge(s){var cls=s==='운영중'?'st-run':s==='제휴완료'?'st-new':s==='보류'?'st-hold':'st-stop';return '<span class="st-badge '+cls+'">'+esc(s)+'</span>';}
+
+    var view='list', owner=null;
+    var owners=[]; PARTNERS.forEach(function(p){ if(owners.indexOf(p.o)<0)owners.push(p.o); });
+    var cards=document.getElementById('pmCards'), filter=document.getElementById('pmFilter'),
+        tabsEl=document.getElementById('pmTabs'), aud=document.getElementById('pmAudience'),
+        thead=document.getElementById('pmThead'), tbody=document.getElementById('pmBody');
+    var TABS=[{k:'list',t:'전체 목록 · 실적'},{k:'contact',t:'담당자 · 연락처'},{k:'stopped',t:'보류 · 중단'}];
+
+    function filtered(){ return PARTNERS.filter(function(p){
+      if(owner && p.o!==owner) return false;
+      if(view==='stopped') return STOPPED[p.s];
+      return true;
+    }); }
+
+    function renderCards(){
+      var act=PARTNERS.filter(function(p){return ACTIVE[p.s];});
+      var u=act.reduce(function(a,p){return a+p.u;},0), rv=act.reduce(function(a,p){return a+p.rv;},0), rev=act.reduce(function(a,p){return a+p.rev;},0);
+      var stop=PARTNERS.filter(function(p){return STOPPED[p.s];}).length;
+      cards.innerHTML=
+        '<div class="pm-card"><div class="n">'+PARTNERS.length+'</div><div class="l">전체 제휴처</div></div>'+
+        '<div class="pm-card"><div class="n g">'+act.length+'</div><div class="l">운영중·제휴완료</div></div>'+
+        '<div class="pm-card"><div class="n">'+u.toLocaleString()+'</div><div class="l">누적 가입자</div></div>'+
+        '<div class="pm-card"><div class="n">'+rv.toLocaleString()+'</div><div class="l">누적 예약</div></div>'+
+        '<div class="pm-card"><div class="n">'+won(rev)+'</div><div class="l">월 매출(합계)</div></div>'+
+        '<div class="pm-card"><div class="n" style="color:var(--design)">'+stop+'</div><div class="l">보류·중단</div></div>';
+    }
+    function renderFilter(){
+      var h='<span class="plabel2">담당자</span><button class="per-chip'+(owner==null?' active':'')+'" data-o="">전체</button>';
+      owners.forEach(function(o){ h+='<button class="per-chip'+(owner===o?' active':'')+'" data-o="'+esc(o)+'">'+esc(o)+'</button>'; });
+      filter.innerHTML=h;
+    }
+    function renderTabs(){
+      tabsEl.innerHTML=TABS.map(function(t){return '<button class="pipe-tab'+(view===t.k?' active':'')+'" data-k="'+t.k+'">'+esc(t.t)+'</button>';}).join('');
+    }
+    function renderAudience(){
+      if(view==='contact') aud.innerHTML='담당자별 확인용 — 각 담당자가 본인 제휴처 연락처를 확인합니다. <span class="pm-flag">담당자 확인 대기</span>';
+      else if(view==='stopped') aud.innerHTML='경영진 확인용 — 보류·중단 제휴처와 담당자·사유를 정리했습니다. <span class="pm-flag">최고경영자 확인</span>';
+      else aud.innerHTML='제휴처별 가입·예약·매출 실적입니다. 담당자 필터로 담당자별 리스트를 확인하세요.';
+    }
+    function renderTable(){
+      var ds=filtered();
+      if(view==='list'){
+        thead.innerHTML='<tr><th>제휴처</th><th>유형</th><th>담당자</th><th>지역</th><th>상태</th><th>가입자</th><th>예약</th><th>월매출</th><th>제휴일</th></tr>';
+        tbody.innerHTML=ds.length?ds.map(function(p){return '<tr><td class="d">'+esc(p.co)+'</td><td>'+esc(p.type)+'</td><td>'+esc(p.o)+'</td><td>'+esc(p.r)+'</td><td>'+stBadge(p.s)+'</td><td class="num">'+(p.u?p.u.toLocaleString():'-')+'</td><td class="num">'+(p.rv||'-')+'</td><td class="num">'+(p.rev?won(p.rev):'-')+'</td><td>'+esc(p.join)+'</td></tr>';}).join(''):'<tr><td colspan="9" class="ctc" style="text-align:center;padding:14px">해당 담당자 제휴처 없음</td></tr>';
+      } else if(view==='contact'){
+        thead.innerHTML='<tr><th>제휴처</th><th>유형</th><th>담당자</th><th>고객사 담당</th><th>직책</th><th>전화</th><th>이메일</th></tr>';
+        tbody.innerHTML=ds.map(function(p){return '<tr><td class="d">'+esc(p.co)+'</td><td>'+esc(p.type)+'</td><td>'+esc(p.o)+'</td><td>'+esc(p.c.n)+'</td><td>'+esc(p.c.t)+'</td><td>'+esc(p.c.ph)+'</td><td>'+esc(p.c.e)+'</td></tr>';}).join('');
+      } else {
+        thead.innerHTML='<tr><th>제휴처</th><th>유형</th><th>담당자</th><th>상태</th><th>고객사 담당</th><th>연락처</th><th>사유</th></tr>';
+        tbody.innerHTML=ds.length?ds.map(function(p){return '<tr><td class="d">'+esc(p.co)+'</td><td>'+esc(p.type)+'</td><td>'+esc(p.o)+'</td><td>'+stBadge(p.s)+'</td><td>'+esc(p.c.n)+' · '+esc(p.c.t)+'</td><td>'+esc(p.c.ph)+'</td><td style="white-space:normal">'+esc(p.why||'-')+'</td></tr>';}).join(''):'<tr><td colspan="7" class="ctc" style="text-align:center;padding:14px">보류·중단 제휴처 없음</td></tr>';
+      }
+    }
+    function renderAll(){ renderCards(); renderFilter(); renderTabs(); renderAudience(); renderTable(); }
+    filter.addEventListener('click',function(e){ var b=e.target.closest('.per-chip'); if(!b)return; owner=b.dataset.o||null; renderTable(); this.querySelectorAll('.per-chip').forEach(function(x){x.classList.toggle('active',x===b);}); });
+    tabsEl.addEventListener('click',function(e){ var b=e.target.closest('.pipe-tab'); if(!b)return; view=b.dataset.k; renderTabs(); renderAudience(); renderTable(); });
+    renderAll();
+  })();
+  </script>
+
+  <div class="secband"><div class="secno">5</div><div class="sectxt"><b>진행 중인 프로젝트 현황</b><span>요청 → 기획 → 개발 → QA·안정화 → 배포 · 단계별 참여 팀</span></div></div>
   <!-- ===== SHARED CARD STYLES (팀 로스터 삭제, vlabel/vworks/wcard/secarrow 보존) ===== -->
   <style>
     .vlabel{font-size:12.6px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:36px 0 8px;text-align:center}
