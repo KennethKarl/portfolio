@@ -10,18 +10,20 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Mulish:wght@400;500;600;700;800&family=Noto+Serif+KR:wght@500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --ink:#16261f;
+    /* Trust palette — institutional navy + azure (finance/healthcare credibility) */
+    --ink:#0f1c2e;
     --paper:#ffffff;
-    --paper-2:#f2f6f4;
+    --paper-2:#f3f7fc;
     --card:#ffffff;
-    --emerald:#15675b;      /* FIDO teal — headings, links, accents */
-    --emerald-deep:#0d4a42;  /* FIDO deep teal — hero banner, primary buttons */
-    --amber:#a9781c;         /* readable gold-brown for small labels on white */
-    --gold:#f4b63d;          /* FIDO gold — table header fills, primary CTA on teal */
-    --body:#39443f;
-    --muted:#6c7772;
-    --line:#e4e8e6;
-    --line-strong:#ccd4cf;
+    --emerald:#17579c;       /* azure — headings, links, accents */
+    --emerald-deep:#0b2c4e;  /* deep navy — hero banner, primary buttons */
+    --amber:#3f6690;         /* steel blue — small labels on white */
+    --gold:#123a63;          /* navy — table header fills */
+    --sky:#6fadea;           /* light azure — accents on dark */
+    --body:#3b4859;
+    --muted:#6b7a8d;
+    --line:#e3e9f1;
+    --line-strong:#c7d4e3;
     --sans:"Mulish","IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
     --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace;
     --serif:"Mulish","Noto Serif KR",serif;
@@ -57,16 +59,19 @@
   .nav a:hover{color:var(--emerald)}
   @media(max-width:640px){.nav{display:none}}
 
-  /* ---------- hero (FIDO deep-teal banner) ---------- */
-  .hero{background:var(--emerald-deep);color:#fff;padding:92px 0 78px;border-bottom:none}
+  /* ---------- hero (deep navy banner) ---------- */
+  .hero{
+    background:linear-gradient(158deg,#0d3560 0%,#0b2c4e 46%,#081f39 100%);
+    color:#fff;padding:92px 0 78px;border-bottom:none;
+  }
   .hero .role{
     font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--gold);margin-bottom:26px;
+    color:var(--sky);margin-bottom:26px;
   }
   .hero h1{color:#fff;font-size:clamp(32px,5.6vw,54px);font-weight:800;letter-spacing:-.015em;margin-bottom:8px}
   .hero .name-en{font-family:var(--mono);font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:34px}
   .lede{font-size:clamp(19px,2.6vw,23px);line-height:1.62;color:rgba(255,255,255,.94);font-weight:400;max-width:27em}
-  .lede b{font-weight:700;color:#fff;box-shadow:inset 0 -.42em 0 rgba(244,182,61,.34)}
+  .lede b{font-weight:700;color:#fff;box-shadow:inset 0 -.42em 0 rgba(111,173,234,.30)}
   .tags{display:flex;flex-wrap:wrap;align-items:center;gap:4px 0;margin-top:32px}
   .tag{
     font-family:var(--mono);font-size:12px;letter-spacing:.02em;line-height:1.5;
@@ -79,8 +84,8 @@
     background:rgba(255,255,255,.22);
   }
   /* hero buttons + quick-links on dark */
-  .hero .btn-primary{background:var(--gold);color:#0c3a33;border-color:var(--gold)}
-  .hero .btn-primary:hover{background:#ffca5a;border-color:#ffca5a}
+  .hero .btn-primary{background:#fff;color:#0b2c4e;border-color:#fff}
+  .hero .btn-primary:hover{background:#e8f1fb;border-color:#e8f1fb;color:#0b2c4e}
   .hero .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.42)}
   .hero .btn-ghost:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.08)}
   .hero .demo-quick .dq-cap{color:rgba(255,255,255,.6)}
@@ -157,7 +162,7 @@
   th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.55}
   thead th{
     font-family:var(--sans);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
-    color:#3a2c06;font-weight:700;background:var(--gold);
+    color:#eaf2fb;font-weight:700;background:var(--gold);
   }
   tbody tr:last-child td{border-bottom:none}
   td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
@@ -181,14 +186,14 @@
 
   /* AI leverage block */
   .ai-block{
-    margin-top:26px;background:linear-gradient(180deg,rgba(169,119,46,.07),rgba(169,119,46,.03));
-    border:1px solid rgba(169,119,46,.28);border-left:3px solid var(--amber);
+    margin-top:26px;background:linear-gradient(180deg,rgba(23,87,156,.07),rgba(23,87,156,.025));
+    border:1px solid rgba(23,87,156,.22);border-left:3px solid var(--emerald);
     border-radius:4px;padding:20px 22px 22px;
   }
   .ai-head{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-bottom:14px;font-size:14.5px;font-weight:600;color:var(--ink)}
   .ai-badge{
     font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--paper);background:var(--amber);padding:4px 9px;border-radius:2px;
+    color:var(--paper);background:var(--emerald);padding:4px 9px;border-radius:2px;
   }
   .ai-flow{
     font-family:var(--mono);font-size:12.5px;color:var(--emerald-deep);letter-spacing:.01em;
@@ -198,7 +203,7 @@
   .ai-flow .a{color:var(--line-strong);margin:0 6px}
   .ai-list{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px}
   .ai-list li{position:relative;padding-left:20px;font-size:14.5px;line-height:1.6;color:var(--body)}
-  .ai-list li::before{content:"→";position:absolute;left:0;top:0;font-family:var(--mono);color:var(--amber);font-weight:600}
+  .ai-list li::before{content:"→";position:absolute;left:0;top:0;font-family:var(--mono);color:var(--emerald);font-weight:600}
   .ai-list b{color:var(--ink);font-weight:600}
 
   .demo-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
@@ -232,12 +237,12 @@
   }
   .demo-quick a{
     display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;font-weight:600;
-    color:var(--emerald-deep);text-decoration:none;background:rgba(14,122,99,.06);
-    border:1px solid rgba(14,122,99,.22);border-radius:9px;padding:8px 14px;
+    color:var(--emerald-deep);text-decoration:none;background:rgba(23,87,156,.06);
+    border:1px solid rgba(23,87,156,.22);border-radius:9px;padding:8px 14px;
     box-shadow:0 2px 8px rgba(0,0,0,.06);
     transition:transform .16s ease,box-shadow .16s ease,background .18s,border-color .18s,color .18s;
   }
-  .demo-quick a:hover{background:rgba(14,122,99,.12);border-color:var(--emerald);color:var(--emerald-deep);transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
+  .demo-quick a:hover{background:rgba(23,87,156,.12);border-color:var(--emerald);color:var(--emerald-deep);transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
   .demo-quick a .ext{opacity:.55;font-size:11px}
 
   /* reveal */
@@ -249,7 +254,7 @@
   @media print{
     @page{margin:14mm}
     html{font-size:12px}
-    body{background:#fff;color:#1a2521}
+    body{background:#fff;color:#1a2433}
     .topbar{display:none}
     .rv{opacity:1 !important;transform:none !important}
     a{color:inherit;text-decoration:none}
@@ -262,11 +267,11 @@
     /* real live/contact links: print as plain text with URL on paper */
     .btn:not([href^="#"]){
       display:inline !important;padding:0;margin:0 14px 0 0;border:none !important;
-      background:none !important;color:#0a5b49 !important;font-family:var(--mono);font-size:11px;
+      background:none !important;color:#0f4c8a !important;font-family:var(--mono);font-size:11px;
     }
     .btn:not([href^="#"]) svg{display:none}
     .demo-row a[href^="http"]::after,.contact a[href^="http"]::after{
-      content:" (" attr(href) ")";font-family:var(--mono);font-size:10px;color:#6b756f;
+      content:" (" attr(href) ")";font-family:var(--mono);font-size:10px;color:#6b7a8d;
     }
     .demo-row{display:block !important}
     .flow,.ai-flow{white-space:normal}
