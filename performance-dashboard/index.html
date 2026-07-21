@@ -547,6 +547,44 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
 
   <div class="caption" style="text-align:left;margin:6px 0 0">담당자별 <b>전용 URL·QR</b>로 고객 진입 → <b>고객사 코드 인증</b> → <a class="nl" href="https://cms.carebridge.io/cs/hospital-reservation" target="_blank" rel="noopener">cms.carebridge.io DB</a>에서 코드별 <b>발생 매출 자동 집계</b>. URL은 발급 방식 예시이며, 매출은 DB 연결 후 실집계됩니다(현재 '연결 예정' 표기).</div>
 
+  <!-- ===== CONVERSION & EFFICIENCY (from 일일보고 기업파트) ===== -->
+  <style>
+    .conv-flow{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap;min-width:760px;margin:12px 0 6px}
+    .conv-st{flex:1;min-width:100px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px;text-align:center;box-shadow:var(--shadow)}
+    .conv-st .cn{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+    .conv-st .cl{font-size:12.6px;color:var(--muted);margin-top:2px;line-height:1.35}
+    .conv-arr{align-self:center;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);font-size:11px;padding:0 6px;min-width:58px;text-align:center}
+    .conv-arr b{color:var(--orange);font-weight:800;font-size:13px}
+    .conv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0 4px}
+    @media(max-width:640px){.conv-grid{grid-template-columns:repeat(2,1fr)}}
+    .conv-card{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--sales);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
+    .conv-card .ck{font-size:12.6px;color:var(--muted)}
+    .conv-card .cv{font-size:23px;font-weight:800;letter-spacing:-.02em;color:var(--sales);margin-top:2px}
+    .conv-card.eff{border-top-color:var(--ops)} .conv-card.eff .cv{color:var(--ops)}
+  </style>
+  <div class="ct2" style="margin-top:26px">전환율 · 활동 효율 <span style="font-weight:400;color:var(--muted);font-size:13px">(일일보고 4개월 집계 · 기업파트)</span></div>
+  <div class="note">활동(리드·콜·메일·제안)이 <b>미팅·제휴로 이어지는 전환율</b>입니다. 활동량 대비 <b>성사 전환이 얇은 것</b>이 핵심 신호 — 예약 감소와 맞닿습니다. (샘플)</div>
+  <div class="scroll"><div class="conv-flow">
+    <div class="conv-st"><div class="cn">6,400</div><div class="cl">리드</div></div>
+    <div class="conv-arr"><b>·</b><span>활동</span></div>
+    <div class="conv-st"><div class="cn">9,200</div><div class="cl">총 컨택<br><span style="font-size:11px">콜 5,400·메일 3,800</span></div></div>
+    <div class="conv-arr"><b>0.96%</b><span>컨택→미팅</span></div>
+    <div class="conv-st"><div class="cn">1,480</div><div class="cl">제안</div></div>
+    <div class="conv-arr"><b>5.9%</b><span>제안→미팅</span></div>
+    <div class="conv-st"><div class="cn">88</div><div class="cl">미팅확정</div></div>
+    <div class="conv-arr"><b>52.3%</b><span>미팅→제휴</span></div>
+    <div class="conv-st" style="border-color:var(--ops)"><div class="cn" style="color:var(--ops)">46</div><div class="cl">제휴완료</div></div>
+  </div></div>
+  <div class="conv-grid">
+    <div class="conv-card"><div class="ck">리드 → 제휴 전환율</div><div class="cv">0.72%</div></div>
+    <div class="conv-card"><div class="ck">컨택 → 제휴완료 전환율</div><div class="cv">0.50%</div></div>
+    <div class="conv-card"><div class="ck">활동 → 제휴 전환율</div><div class="cv">0.27%</div></div>
+    <div class="conv-card eff"><div class="ck">총 활동 수</div><div class="cv">17,200</div></div>
+    <div class="conv-card eff"><div class="ck">제휴 1건당 활동 수</div><div class="cv">373건</div></div>
+    <div class="conv-card eff"><div class="ck">미팅 → 제휴 전환율</div><div class="cv">52.3%</div></div>
+  </div>
+  <div class="caption" style="text-align:left;margin:4px 0 0">출처: 노션 <b>일일보고(기업파트)</b> DB(2026-04~07 · 225건) 구조·비율 기반 · 수치는 데모용 샘플. 리드→컨택→제안→미팅→제휴 단계별 <b>전환율</b>과 <b>활동 효율</b>(제휴 1건당 활동 수)을 함께 봅니다.</div>
+
   <!-- ===== CRM PIPELINE INTEGRATION ===== -->
   <style>
     .layer3{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;margin:12px 0}
