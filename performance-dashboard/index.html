@@ -284,7 +284,7 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   </style>
 
   <h2>일일 보고 · 추세 <span class="em">#일일업무보고 · 날짜별 지표 & 그래프</span></h2>
-  <div class="note">영업·운영팀이 매일 올리는 일일업무보고(예약·유입·검수·상담)를 날짜별로 집계했습니다. 2026-07-01~07-14 업무일 기준 · 출처: Slack <b>#일일업무보고</b>.</div>
+  <div class="note">영업·운영팀이 매일 올리는 일일업무보고(예약·유입·검수·상담)를 주 단위로 집계했습니다. 2026-07-01~07-14 업무일 기준 · 출처: Slack <b>#일일업무보고</b>.</div>
   <style>
     .gtoggle{display:inline-flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:3px;margin:2px 0 6px}
     .gbtn{border:none;background:transparent;color:var(--muted);font-size:14.4px;font-weight:700;padding:5px 16px;border-radius:7px;cursor:pointer}
@@ -293,15 +293,11 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
   </style>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:2px 0 6px">
     <span id="s1PeriodCtl" style="display:inline-flex;gap:4px;align-items:center"></span>
-    <div class="gtoggle" id="gtoggle"><button class="gbtn" data-g="cal">달력</button><button class="gbtn" data-g="month">월별</button><button class="gbtn active" data-g="day">일별</button></div>
+    <div class="gtoggle" id="gtoggle"><button class="gbtn" data-g="cal">달력</button><button class="gbtn" data-g="month">월별</button><button class="gbtn active" data-g="week">주별</button></div>
   </div>
 
-  <div class="dstat">
-    <div class="dchip"><div class="n down">−18.4%</div><div class="l">7월 예약 누적 vs 전년 (418 vs 512, 07/14)</div></div>
-    <div class="dchip"><div class="n">2,180</div><div class="l">복지몰 DAU 최고 (07/13)</div></div>
-    <div class="dchip"><div class="n">38</div><div class="l">일 복지몰예약 최다 (07/07)</div></div>
-    <div class="dchip"><div class="n up">86</div><div class="l">프로그램검수 최다 (07/13)</div></div>
-  </div>
+  <!-- 칩은 목업 데이터에서 계산한다 (하드코딩하면 아래 표와 어긋난다) -->
+  <div class="dstat" id="s1Chips"></div>
 
   <div class="chartcard" id="cc1">
     <div class="ct" id="cc1title">7월 예약 누적 — 당해(26년) vs 전년(25년)</div>
@@ -312,16 +308,18 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
 
   <div class="month-only" id="monthnote" style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);margin:12px 0;font-size:14.4px;color:var(--muted)"><b style="color:var(--ink)">월별 보기</b> — 위 차트는 <b>2026년 1~7월</b> 월별 예약을 전년 동월과 비교합니다(<b>*7월</b>은 1~14일 진행분). 일별 복지몰예약·DAU·지표 시계열 등 상세는 <b>일별</b> 보기에서 확인하세요. 월별 히스토리는 데이터 누적 시 자동 확장됩니다.</div>
   <div class="chartcard daily-only">
-    <div class="ct">일별 복지몰 예약 & DAU</div>
-    <div class="cs">막대 = 일 복지몰예약(주말 연한색) · 선 = 복지몰 DAU(우측 축, 결측일 제외). 평일 유입↑ 주말↓ 진폭이 예약과 연동.</div>
+    <div class="ct">주별 복지몰 예약 & DAU</div>
+    <div class="cs">막대 = 주간 복지몰예약 합계 · 선 = 그 주 DAU 평균(우측 축). 값이 없는 주는 선을 잇지 않습니다.</div>
     <div id="chart2" class="chartbox"></div>
-    <div class="clegend"><span><i style="background:var(--orange)"></i>일 예약</span><span><i class="dot" style="background:var(--pm)"></i>DAU</span></div>
+    <div class="clegend"><span><i style="background:var(--orange)"></i>주간 예약</span><span><i class="dot" style="background:var(--pm)"></i>DAU(주 평균)</span></div>
   </div>
 
-  <div class="ct2 daily-only">일별 지표 시계열</div>
+  <div class="ct2 daily-only">주별 지표 시계열</div>
+  <div class="cs daily-only" style="margin:-2px 0 8px">지표마다 단위가 달라 한 축에 겹치지 않고 지표별로 나눴습니다. 숫자는 최근 주 값 · 화살표는 직전 주 대비. <b>*</b> 표시는 월~일 전체를 덮지 못한 주이며, 이 경우 증감은 표시하지 않습니다.</div>
+  <div class="daily-only" id="s1Metrics" style="margin-bottom:14px"></div>
   <div class="scroll daily-only">
     <table class="dt">
-      <thead><tr><th>날짜</th><th>복지몰예약</th><th>상담후전환</th><th>콜인</th><th>쿠폰사용</th><th>예약취소</th><th>검진+가다실</th><th>인바운드상담<br>(전화/채팅)</th><th>DAU / MAU</th><th>신규회원</th><th>프로그램검수</th><th>건강검진</th><th>병원상담</th></tr></thead>
+      <thead><tr><th>기간</th><th>복지몰예약</th><th>상담후전환</th><th>콜인</th><th>쿠폰사용</th><th>예약취소</th><th>검진+가다실</th><th>인바운드상담<br>(전화/채팅)</th><th>DAU / MAU</th><th>신규회원</th><th>프로그램검수</th><th>건강검진</th><th>병원상담</th></tr></thead>
       <tbody id="dtbody"></tbody>
     </table>
   </div>
@@ -365,50 +363,220 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
       ['07/14','제휴 반응 체크·5~7월 예약감소 원인 파악·SEO/GEO','라온 수가 정리·리뷰 대댓글 아이데이션']
     ];
 
+
+    // ── 주간 집계 레이어 (목업 배열은 위 그대로 두고 구조만 파생한다) ──
+    // rows/days/dau/a26/a25는 표시용 문자열이 섞여 있어, 주간 합산을 하려면 숫자로 되돌려야 한다.
+    var _num=function(v){ if(v==null||v==='-') return null;
+      var m=String(v).match(/-?[\d,]+/); return m? Number(m[0].replace(/,/g,'')) : null; };
+    var WD=rows.map(function(r){
+      var ib=String(r[8]==null?'':r[8]), ibm=ib.match(/\((\d+)\s*\/\s*(\d+)\)/);
+      var dm=String(r[9]==null?'':r[9]), dmm=dm.match(/([\d,]+)\s*\/\s*([\d,]+)/);
+      return { d:'2026-'+r[0].replace('/','-'), weekend:!!r[1],
+        reservation:_num(r[2]), converted:_num(r[3]), callIn:_num(r[4]),
+        couponUsed:_num(r[5]), cancel:_num(r[6]), checkupPlus:_num(r[7]),
+        inboundPhone: ibm?Number(ibm[1]):(ib==='0'?0:null),
+        inboundChat:  ibm?Number(ibm[2]):(ib==='0'?0:null),
+        dau: dmm?Number(dmm[1].replace(/,/g,'')):null,
+        mau: dmm?Number(dmm[2].replace(/,/g,'')):null,
+        newMembers:_num(r[10]), programReview:_num(r[11]), checkup:_num(r[12]), hospitalConsult:_num(r[13]) };
+    });
+    var TR=days.map(function(d,i){ return { d:'2026-'+d.replace('/','-'), cumCur:a26[i], cumPrev:a25[i] }; });
+    var md=function(iso){ return iso.slice(5).replace('-','/'); };
+    var dash=function(v){ return (v==null)?'-':(typeof v==='number'?v.toLocaleString('ko-KR'):v); };
+    var fmtN=function(v){ return v==null?'-':v.toLocaleString('ko-KR'); };
+
+    // 지표 성격이 달라 합산 규칙을 나눈다. 전부 더하면 DAU·MAU가 터무니없이 커진다.
+    //   건수 = 합계 · DAU = 일평균 · MAU = 그 주 마지막 값(재고성 지표)
+    var SUMK=['reservation','converted','callIn','couponUsed','cancel','checkupPlus',
+              'inboundPhone','inboundChat','newMembers','programReview','checkup','hospitalConsult'];
+    var WK=(function(){
+      var by={},order=[];
+      WD.forEach(function(r){
+        var dt=new Date(r.d+'T00:00:00Z');
+        var mon=new Date(dt); mon.setUTCDate(dt.getUTCDate()-((dt.getUTCDay()+6)%7));
+        var k=mon.toISOString().slice(0,10);
+        if(!by[k]){ by[k]={k:k,days:[],dauSum:0,dauN:0,mau:null}; SUMK.forEach(function(f){by[k][f]=null;}); order.push(k); }
+        var w=by[k]; w.days.push(r.d);
+        SUMK.forEach(function(f){ if(r[f]!=null) w[f]=(w[f]==null?0:w[f])+r[f]; });
+        if(r.dau!=null){ w.dauSum+=r.dau; w.dauN++; }
+        if(r.mau!=null) w.mau=r.mau;
+      });
+      return order.map(function(k){
+        var w=by[k];
+        w.dau=w.dauN? Math.round(w.dauSum/w.dauN):null;
+        w.from=w.days[0]; w.to=w.days[w.days.length-1];
+        // 월~일을 온전히 덮지 못한 주는 완결된 주와 비교하면 착시가 생긴다
+        var du=function(d){ return new Date(d+'T00:00:00Z').getUTCDay(); };
+        w.partial = du(w.from)!==1 || du(w.to)!==0;
+        w.label=md(w.from)+'~'+md(w.to)+(w.partial?'*':'');
+        return w;
+      });
+    })();
+    var wkRows=WK.map(function(w){
+      var cp=(w.couponUsed==null)?'-':(w.couponUsed+(w.reservation?' ('+(w.couponUsed/w.reservation*100).toFixed(1)+'%)':''));
+      var ib=(w.inboundPhone==null&&w.inboundChat==null)?'-'
+            :((w.inboundPhone+w.inboundChat)===0?'0':(w.inboundPhone+w.inboundChat)+' ('+w.inboundPhone+'/'+w.inboundChat+')');
+      var dm=(w.dau==null)?'-':(w.dau.toLocaleString('ko-KR')+' / '+(w.mau==null?'-':w.mau.toLocaleString('ko-KR')));
+      return { label:w.label, from:w.from, to:w.to,
+        cells:[dash(w.reservation),dash(w.converted),dash(w.callIn),cp,dash(w.cancel),dash(w.checkupPlus),
+               ib,dm,dash(w.newMembers),dash(w.programReview),dash(w.checkup),dash(w.hospitalConsult)] };
+    });
+
+    // 눈금은 1·2·2.5·5 배수로 — 단순 올림이면 헐거운 축이 나온다
+    function niceMax(peak,ticks){
+      if(!(peak>0)) return {max:1,step:1};
+      var raw=peak/ticks, mag=Math.pow(10,Math.floor(Math.log10(raw))), step=mag*10;
+      [1,2,2.5,5,10].some(function(m){ if(mag*m>=raw){ step=mag*m; return true; } });
+      return {max:step*ticks, step:step};
+    }
+
+    // 요약 칩 — 목업에서 계산 (하드코딩하면 표와 어긋난다)
+    (function(){
+      var box=document.getElementById('s1Chips'); if(!box) return;
+      var peak=function(key){ var b=null; WD.forEach(function(r){ if(r[key]!=null&&(!b||r[key]>b[key])) b=r; });
+                              return b?{v:b[key],d:md(b.d)}:null; };
+      var last=TR.length?TR[TR.length-1]:null;
+      var pc=(last&&last.cumPrev)? ((last.cumCur-last.cumPrev)/last.cumPrev*100):null;
+      var chip=function(n,cls,label){ return '<div class="dchip"><div class="n'+(cls?' '+cls:'')+'">'+n+'</div><div class="l">'+label+'</div></div>'; };
+      var mk=function(p,label,cls){ return p? chip(p.v.toLocaleString('ko-KR'),cls,label+' ('+p.d+')')
+                                            : chip('-','',label+' · <span style="opacity:.7">데이터 없음</span>'); };
+      box.innerHTML =
+        (last&&pc!=null ? chip((pc<0?'−':'+')+Math.abs(pc).toFixed(1)+'%', pc<0?'down':'up',
+             Number(last.d.slice(5,7))+'월 예약 누적 vs 전년 ('+last.cumCur+' vs '+last.cumPrev+', '+md(last.d)+')')
+           : chip('-','','예약 누적 vs 전년'))
+        + mk(peak('dau'),'복지몰 DAU 최고')
+        + mk(peak('reservation'),'일 복지몰예약 최다')
+        + mk(peak('programReview'),'프로그램검수 최다','up');
+    })();
+
     function cvar(n,f){var v=getComputedStyle(document.documentElement).getPropertyValue(n).trim();return v||f;}
 
+    // 누적은 '있는 날짜'만 잇는다. 없는 날을 0으로 그리면 앞부분이 바닥에 눌러붙는다.
+    function weeklyTrend(){
+      var src=TR.filter(function(r){return r.cumCur!=null;});
+      if(!src.length) return [];
+      var by={},order=[];
+      src.forEach(function(r){
+        var dt=new Date(r.d+'T00:00:00Z');
+        var mon=new Date(dt); mon.setUTCDate(dt.getUTCDate()-((dt.getUTCDay()+6)%7));
+        var k=mon.toISOString().slice(0,10);
+        if(!by[k]) order.push(k);
+        by[k]=r;                                  // 누적값이므로 그 주의 '마지막 값'이 대표
+      });
+      return order.map(function(k){ return {d:by[k].d,cur:by[k].cumCur,prev:by[k].cumPrev}; });
+    }
     function lineChart(){
       var blue=cvar('--orange','#1B59FA'),muted=cvar('--muted','#6A7896'),line=cvar('--line','#E5E7EC'),ink=cvar('--ink','#000F2C'),coral=cvar('--design','#C8321F');
-      var W=720,H=300,mL=44,mR=54,mT=20,mB=32,pw=W-mL-mR,ph=H-mT-mB,max=600,n=days.length;
+      var pts=weeklyTrend();
+      if(pts.length<2) return '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13.5px">누적 데이터가 2주 미만입니다.</div>';
+      var W=720,H=300,mL=44,mR=64,mT=20,mB=42,pw=W-mL-mR,ph=H-mT-mB,n=pts.length;
+      var peak=Math.max.apply(null,pts.map(function(p){return Math.max(p.cur,p.prev==null?0:p.prev);}));
+      var ax=niceMax(peak,4), max=ax.max;
       var X=function(i){return mL+pw*i/(n-1);},Y=function(v){return mT+ph*(1-v/max);};
       var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" font-family="inherit">';
-      [0,150,300,450,600].forEach(function(g){var y=Y(g);s+='<line x1="'+mL+'" y1="'+y+'" x2="'+(W-mR)+'" y2="'+y+'" stroke="'+line+'" stroke-width="1"/>';s+='<text x="'+(mL-8)+'" y="'+(y+3)+'" text-anchor="end" font-size="10" fill="'+muted+'">'+g+'</text>';});
-      // weekend bands
-      for(var i=0;i<n;i++){if(we[i]){var x0=X(i)-pw/(n-1)/2,w=pw/(n-1);s+='<rect x="'+x0+'" y="'+mT+'" width="'+w+'" height="'+ph+'" fill="'+muted+'" opacity="0.06"/>';}}
-      var p26=a26.map(function(v,i){return[X(i),Y(v)];}),p25=a25.map(function(v,i){return[X(i),Y(v)];});
+      for(var g=0;g<=max;g+=ax.step){var y=Y(g);
+        s+='<line x1="'+mL+'" y1="'+y+'" x2="'+(W-mR)+'" y2="'+y+'" stroke="'+line+'" stroke-width="1"/>';
+        s+='<text x="'+(mL-8)+'" y="'+(y+3)+'" text-anchor="end" font-size="10" fill="'+muted+'">'+g.toLocaleString('ko-KR')+'</text>';}
+      var p26=pts.map(function(p,i){return[X(i),Y(p.cur)];});
+      var p25=pts.map(function(p,i){return[X(i),Y(p.prev==null?p.cur:p.prev)];});
       var area='M'+p25.map(function(p){return p[0]+','+p[1];}).join(' L')+' L'+p26.slice().reverse().map(function(p){return p[0]+','+p[1];}).join(' L')+' Z';
       s+='<path d="'+area+'" fill="'+coral+'" opacity="0.13"/>';
       s+='<path d="M'+p25.map(function(p){return p[0]+','+p[1];}).join(' L')+'" fill="none" stroke="'+muted+'" stroke-width="2" stroke-dasharray="4 3"/>';
       s+='<path d="M'+p26.map(function(p){return p[0]+','+p[1];}).join(' L')+'" fill="none" stroke="'+blue+'" stroke-width="2.5"/>';
-      p26.forEach(function(p){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="2.6" fill="'+blue+'"/>';});
-      // end labels
-      s+='<text x="'+(X(n-1)+6)+'" y="'+(Y(a25[n-1])+3)+'" font-size="10.5" fill="'+muted+'">전년 512</text>';
-      s+='<text x="'+(X(n-1)+6)+'" y="'+(Y(a26[n-1])+3)+'" font-size="10.5" font-weight="700" fill="'+blue+'">418</text>';
-      s+='<text x="'+(X(n-1)-4)+'" y="'+((Y(a26[n-1])+Y(a25[n-1]))/2)+'" text-anchor="end" font-size="11" font-weight="800" fill="'+coral+'">−18.4%</text>';
-      for(var j=0;j<n;j++){s+='<text x="'+X(j)+'" y="'+(H-mB+14)+'" text-anchor="middle" font-size="8.5" fill="'+muted+'">'+days[j].slice(3)+'</text>';}
+      p26.forEach(function(p){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="'+blue+'"/>';});
+      var last=pts[n-1],li=n-1;
+      if(last.prev){
+        var gap=(last.cur-last.prev)/last.prev*100;
+        s+='<text x="'+(X(li)+6)+'" y="'+(Y(last.prev)+3)+'" font-size="10.5" fill="'+muted+'">전년 '+last.prev.toLocaleString('ko-KR')+'</text>';
+        s+='<text x="'+(X(li)-4)+'" y="'+((Y(last.cur)+Y(last.prev))/2)+'" text-anchor="end" font-size="11" font-weight="800" fill="'+coral+'">'+(gap<0?'−':'+')+Math.abs(gap).toFixed(1)+'%</text>';
+      }
+      s+='<text x="'+(X(li)+6)+'" y="'+(Y(last.cur)+3)+'" font-size="10.5" font-weight="700" fill="'+blue+'">'+last.cur.toLocaleString('ko-KR')+'</text>';
+      pts.forEach(function(p,i){
+        s+='<text x="'+X(i)+'" y="'+(H-mB+16)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="'+ink+'">'+(i+1)+'주</text>';
+        s+='<text x="'+X(i)+'" y="'+(H-mB+31)+'" text-anchor="middle" font-size="9.5" fill="'+muted+'">~'+md(p.d)+'</text>';
+      });
       s+='</svg>';return s;
     }
 
     function barChart(){
       var blue=cvar('--orange','#1B59FA'),muted=cvar('--muted','#6A7896'),line=cvar('--line','#E5E7EC'),navy=cvar('--pm','#000F2C');
-      var W=720,H=270,mL=30,mR=44,mT=18,mB=30,pw=W-mL-mR,ph=H-mT-mB,n=days.length,maxB=40,maxD=2400;
-      var band=pw/n,bw=band*0.56;
-      var Yb=function(v){return mT+ph*(1-v/maxB);},Yd=function(v){return mT+ph*(1-v/maxD);},Xc=function(i){return mL+band*(i+0.5);};
-      var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">';
-      [0,10,20,30,40].forEach(function(g){var y=Yb(g);s+='<line x1="'+mL+'" y1="'+y+'" x2="'+(W-mR)+'" y2="'+y+'" stroke="'+line+'" stroke-width="1"/>';s+='<text x="'+(mL-6)+'" y="'+(y+3)+'" text-anchor="end" font-size="9" fill="'+muted+'">'+g+'</text>';});
-      // right axis DAU labels
-      [0,800,1600,2400].forEach(function(g){s+='<text x="'+(W-mR+6)+'" y="'+(Yd(g)+3)+'" font-size="9" fill="'+navy+'">'+g+'</text>';});
-      for(var i=0;i<n;i++){var x=Xc(i)-bw/2;s+='<rect x="'+x+'" y="'+Yb(daily[i])+'" width="'+bw+'" height="'+(mT+ph-Yb(daily[i]))+'" rx="2" fill="'+blue+'" opacity="'+(we[i]?0.32:0.9)+'"/>';s+='<text x="'+Xc(i)+'" y="'+(Yb(daily[i])-3)+'" text-anchor="middle" font-size="8" fill="'+muted+'">'+daily[i]+'</text>';}
-      // DAU line over non-null
-      var seg=[],pts=[];for(var k=0;k<n;k++){if(dau[k]!=null){pts.push([Xc(k),Yd(dau[k])]);}else{if(pts.length)seg.push(pts);pts=[];}}if(pts.length)seg.push(pts);
-      seg.forEach(function(p){if(p.length>1)s+='<path d="M'+p.map(function(q){return q[0]+','+q[1];}).join(' L')+'" fill="none" stroke="'+navy+'" stroke-width="2"/>';});
-      for(var m=0;m<n;m++){if(dau[m]!=null)s+='<circle cx="'+Xc(m)+'" cy="'+Yd(dau[m])+'" r="3" fill="'+navy+'"/>';}
-      for(var j=0;j<n;j++){s+='<text x="'+Xc(j)+'" y="'+(H-mB+13)+'" text-anchor="middle" font-size="8.5" fill="'+muted+'">'+days[j].slice(3)+'</text>';}
+      var n=WK.length; if(!n) return '<div style="padding:24px;text-align:center;color:var(--muted)">데이터 없음</div>';
+      var W=720,H=280,mL=42,mR=52,mT=18,mB=42,pw=W-mL-mR,ph=H-mT-mB;
+      var bAx=niceMax(Math.max.apply(null,WK.map(function(w){return w.reservation||0;})),4);
+      var dPeak=Math.max.apply(null,WK.map(function(w){return w.dau||0;})), dAx=niceMax(dPeak,4);
+      var band=pw/n,bw=Math.min(band*0.55,46);
+      var Yb=function(v){return mT+ph*(1-v/bAx.max);},Yd=function(v){return mT+ph*(1-v/dAx.max);},Xc=function(i){return mL+band*(i+0.5);};
+      var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" font-family="inherit">';
+      for(var g=0;g<=bAx.max;g+=bAx.step){var y=Yb(g);
+        s+='<line x1="'+mL+'" y1="'+y+'" x2="'+(W-mR)+'" y2="'+y+'" stroke="'+line+'" stroke-width="1"/>';
+        s+='<text x="'+(mL-6)+'" y="'+(y+3)+'" text-anchor="end" font-size="9.5" fill="'+muted+'">'+g.toLocaleString('ko-KR')+'</text>';}
+      if(dPeak>0) for(var g2=0;g2<=dAx.max;g2+=dAx.step){
+        s+='<text x="'+(W-mR+6)+'" y="'+(Yd(g2)+3)+'" font-size="9.5" fill="'+navy+'">'+g2.toLocaleString('ko-KR')+'</text>';}
+      WK.forEach(function(w,i){
+        var v=w.reservation||0,x=Xc(i)-bw/2;
+        s+='<rect x="'+x+'" y="'+Yb(v)+'" width="'+bw+'" height="'+(mT+ph-Yb(v))+'" rx="3" fill="'+blue+'" opacity="0.9"/>';
+        s+='<text x="'+Xc(i)+'" y="'+(Yb(v)-4)+'" text-anchor="middle" font-size="10" font-weight="700" fill="'+muted+'">'+v+'</text>';
+      });
+      var seg=[],cur=[];
+      WK.forEach(function(w,i){ if(w.dau!=null) cur.push([Xc(i),Yd(w.dau)]); else { if(cur.length) seg.push(cur); cur=[]; } });
+      if(cur.length) seg.push(cur);
+      seg.forEach(function(p){ if(p.length>1) s+='<path d="M'+p.map(function(q){return q[0]+','+q[1];}).join(' L')+'" fill="none" stroke="'+navy+'" stroke-width="2"/>'; });
+      WK.forEach(function(w,i){ if(w.dau!=null) s+='<circle cx="'+Xc(i)+'" cy="'+Yd(w.dau)+'" r="3.2" fill="'+navy+'"/>'; });
+      WK.forEach(function(w,i){
+        s+='<text x="'+Xc(i)+'" y="'+(H-mB+16)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="'+cvar('--ink','#000F2C')+'">'+(i+1)+'주</text>';
+        s+='<text x="'+Xc(i)+'" y="'+(H-mB+31)+'" text-anchor="middle" font-size="9" fill="'+muted+'">'+w.label+'</text>';
+      });
       s+='</svg>';return s;
     }
 
+    // 지표 시계열 그래프 — 스케일이 제각각이라 한 축에 겹치면 못 읽는다. 지표별로 나눈다.
+    var METRICS=[
+      {k:'reservation',t:'복지몰예약'},{k:'converted',t:'상담후전환'},
+      {k:'callIn',t:'콜인'},{k:'couponUsed',t:'쿠폰사용'},
+      {k:'cancel',t:'예약취소'},{k:'checkupPlus',t:'검진+가다실'},
+      {k:'inbound',t:'인바운드상담'},{k:'dau',t:'DAU (주 평균)'},
+      {k:'newMembers',t:'신규회원'},{k:'programReview',t:'프로그램검수'},
+      {k:'checkup',t:'건강검진'},{k:'hospitalConsult',t:'병원상담'}
+    ];
+    function metricsChart(){
+      var blue=cvar('--orange','#1B59FA'),muted=cvar('--muted','#6A7896'),line=cvar('--line','#E5E7EC'),ink=cvar('--ink','#000F2C');
+      var n=WK.length; if(!n) return '';
+      return '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px">'+
+        METRICS.map(function(m){
+          var vals=WK.map(function(w){ return m.k==='inbound'
+            ? ((w.inboundPhone==null&&w.inboundChat==null)?null:(w.inboundPhone||0)+(w.inboundChat||0))
+            : (w[m.k]==null?null:w[m.k]); });
+          var got=vals.filter(function(v){return v!=null;});
+          if(!got.length) return '<div style="border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card)">'+
+            '<div style="font-size:12.5px;font-weight:700;color:var(--ink)">'+m.t+'</div>'+
+            '<div style="font-size:11.5px;color:var(--muted);padding:14px 0;text-align:center">데이터 없음</div></div>';
+          var W=240,H=76,mT=6,mB=16,ph=H-mT-mB,band=W/n,bw=Math.min(band*0.6,26);
+          var ax=niceMax(Math.max.apply(null,got),2), Y=function(v){return mT+ph*(1-v/ax.max);};
+          var g='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" font-family="inherit" style="width:100%;height:76px">';
+          g+='<line x1="0" y1="'+(mT+ph)+'" x2="'+W+'" y2="'+(mT+ph)+'" stroke="'+line+'" stroke-width="1"/>';
+          vals.forEach(function(v,i){
+            var cx=band*(i+0.5);
+            if(v==null){ g+='<text x="'+cx+'" y="'+(mT+ph-3)+'" text-anchor="middle" font-size="8.5" fill="'+muted+'">·</text>'; return; }
+            g+='<rect x="'+(cx-bw/2)+'" y="'+Y(v)+'" width="'+bw+'" height="'+(mT+ph-Y(v))+'" rx="2" fill="'+blue+'" opacity="0.85"/>';
+            g+='<text x="'+cx+'" y="'+(H-4)+'" text-anchor="middle" font-size="8.5" fill="'+muted+'">'+(i+1)+'주</text>';
+          });
+          g+='</svg>';
+          var last=vals[vals.length-1],prev=vals[vals.length-2];
+          // 진행 중인 주(부분 주)를 완결된 주와 비교하면 무조건 감소로 보인다 — 증감을 숨긴다
+          var cmpOK=!(WK[n-1]&&WK[n-1].partial)&&!(WK[n-2]&&WK[n-2].partial);
+          var delta=(cmpOK&&last!=null&&prev!=null&&prev!==0)?((last-prev)/prev*100):null;
+          var dTxt=delta==null?'':'<span style="font-size:11px;font-weight:700;margin-left:6px;color:'+(delta<0?'#C8321F':'#1a9d54')+'">'+(delta<0?'▼':'▲')+Math.abs(delta).toFixed(0)+'%</span>';
+          return '<div style="border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card)">'+
+            '<div style="display:flex;align-items:baseline;justify-content:space-between">'+
+            '<span style="font-size:12.5px;font-weight:700;color:'+ink+'">'+m.t+'</span>'+
+            '<span style="font-size:13.5px;font-weight:800;color:'+ink+'">'+fmtN(last)+dTxt+'</span></div>'+g+'</div>';
+        }).join('')+'</div>';
+    }
+
+    // from/to는 ISO 날짜. 주는 기간이라 '겹치면 표시'로 판정한다(주 중간을 자르지 않는다).
     function table(from,to){
-      var b='';rows.forEach(function(r){ if(from&&(r[0]<from||r[0]>to))return; b+='<tr class="'+(r[1]?'we':'')+'"><td class="d">'+r[0]+'</td>';for(var i=2;i<r.length;i++){b+='<td>'+r[i]+'</td>';}b+='</tr>';});
+      var b='';wkRows.forEach(function(r){ if(from&&(r.to<from||r.from>to))return;
+        b+='<tr><td class="d">'+r.label+'</td>'+r.cells.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';});
       document.getElementById('dtbody').innerHTML=b||'<tr><td colspan="13" class="ctc" style="text-align:center;padding:14px">해당 기간 데이터 없음</td></tr>';
     }
     function timeline(){
@@ -435,26 +603,31 @@ body{ font-family:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSyste
       }
       s+='</svg>';return s;
     }
-    var mode='day';
-    var s1from=rows[0][0], s1to=rows[rows.length-1][0];
-    var s1min='2026-'+rows[0][0].replace('/','-'), s1max='2026-'+rows[rows.length-1][0].replace('/','-');
+    var mode='week';
+    var s1min=wkRows.length?wkRows[0].from:'', s1max=wkRows.length?wkRows[wkRows.length-1].to:'';
+    var s1from=s1min, s1to=s1max;
     function render(){
-      var day=(mode==='day'||mode==='cal'), cal=(mode==='cal');
+      var day=(mode==='week'||mode==='cal'), cal=(mode==='cal');
       document.querySelectorAll('.daily-only').forEach(function(e){e.style.display=day?'':'none';});
       document.querySelectorAll('.month-only').forEach(function(e){e.style.display=day?'none':'block';});
-      document.getElementById('cc1title').textContent = day ? '7월 예약 누적 — 당해(26년) vs 전년(25년)' : '월별 예약 — 당해(26년) vs 전년(25년) · 1~7월';
-      document.getElementById('cc1sub').textContent = day ? '두 선의 격차 = 전년 대비 감소분. 월중 −8.9% → −18.4%로 격차가 벌어지는 추세.' : '막대 = 월 예약 총건(파랑=26년 · 회색=25년). *7월은 1~14일 진행분. 1~3월 전년比 +5%대 → 4월 마이너스 전환 → 7월 −18.4%로 감소폭 확대.';
+      var lastTR=TR.length?TR[TR.length-1]:null;
+      var trMo=lastTR?Number(lastTR.d.slice(5,7))+'월':'예약';
+      var trPct=(lastTR&&lastTR.cumPrev)?(lastTR.cumCur-lastTR.cumPrev)/lastTR.cumPrev*100:null;
+      var pctTxt=trPct==null?'-':(trPct<0?'−':'+')+Math.abs(trPct).toFixed(1)+'%';
+      document.getElementById('cc1title').textContent = day ? trMo+' 예약 누적 — 주별 · 당해(26년) vs 전년(25년)' : '월별 예약 — 당해(26년) vs 전년(25년) · 1~7월';
+      document.getElementById('cc1sub').textContent = day ? ('각 점 = 그 주 마지막 누적값. 두 선의 격차 = 전년 대비 감소분. '+(lastTR?md(lastTR.d)+' 기준 '+pctTxt:'데이터 없음')+'.') : '막대 = 월 예약 총건(파랑=26년 · 회색=25년). *7월은 1~14일 진행분. 1~3월 전년比 +5%대 → 4월 마이너스 전환 → 7월 −18.4%로 감소폭 확대.';
       document.getElementById('cc1legend').innerHTML = day ? '<span><i style="background:var(--orange)"></i>26년 누적</span><span><i style="background:var(--muted)"></i>25년 누적</span><span><i style="background:var(--design);opacity:.5"></i>감소 격차</span>' : '<span><i style="background:var(--orange)"></i>26년</span><span><i style="background:var(--muted)"></i>25년</span>';
       document.getElementById('chart1').innerHTML = day ? lineChart() : monthlyChart();
       if(day) document.getElementById('chart2').innerHTML = barChart();
+      if(day&&document.getElementById('s1Metrics')) document.getElementById('s1Metrics').innerHTML = metricsChart();
       if(day) table(cal?s1from:null, cal?s1to:null);
     }
     var s1ctl=document.getElementById('s1PeriodCtl');
     var S1INP='style="font:inherit;font-size:13px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)"';
     function s1RenderCtl(){
-      if(mode==='cal'){ s1ctl.innerHTML='<input type="date" id="s1From" '+S1INP+' value="'+('2026-'+s1from.replace('/','-'))+'" min="'+s1min+'" max="'+s1max+'"><span style="color:var(--muted);font-size:12.5px">~</span><input type="date" id="s1To" '+S1INP+' value="'+('2026-'+s1to.replace('/','-'))+'" min="'+s1min+'" max="'+s1max+'">';
-        document.getElementById('s1From').addEventListener('change',function(){ s1from=this.value.slice(5).replace('-','/'); render(); });
-        document.getElementById('s1To').addEventListener('change',function(){ s1to=this.value.slice(5).replace('-','/'); render(); });
+      if(mode==='cal'){ s1ctl.innerHTML='<input type="date" id="s1From" '+S1INP+' value="'+s1from+'" min="'+s1min+'" max="'+s1max+'"><span style="color:var(--muted);font-size:12.5px">~</span><input type="date" id="s1To" '+S1INP+' value="'+s1to+'" min="'+s1min+'" max="'+s1max+'">';
+        document.getElementById('s1From').addEventListener('change',function(){ s1from=this.value; render(); });
+        document.getElementById('s1To').addEventListener('change',function(){ s1to=this.value; render(); });
       } else s1ctl.innerHTML='';
     }
     document.getElementById('gtoggle').addEventListener('click',function(e){var b=e.target.closest('.gbtn');if(!b)return;mode=b.getAttribute('data-g');this.querySelectorAll('.gbtn').forEach(function(x){x.classList.toggle('active',x===b);});s1RenderCtl();render();});
