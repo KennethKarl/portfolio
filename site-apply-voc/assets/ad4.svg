@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 832 378" width="832" height="378" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif">
+<defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#123AA8"/><stop offset="1" stop-color="#2E6BFF"/></linearGradient></defs>
+<rect width="832" height="378" fill="url(#g4)"/>
+<text x="60" y="150" font-size="30" fill="#A8C0F5">베스트 리뷰어 EVENT</text>
+<text x="58" y="222" font-size="56" font-weight="800" fill="#ffffff">매월 3명 선정</text>
+<text x="58" y="292" font-size="56" font-weight="800" fill="#FFE27A">5,000P 더 드려요</text>
+<g transform="translate(650,120)"><path d="M-60 0h120l-8 40a52 52 0 0 1-104 0z" fill="#CFE0FF"/><path d="M-60 0h120v10a60 60 0 0 1-120 0z" fill="#EAF1FF"/><path d="M-60 6c-26 2-30 40 0 44" fill="none" stroke="#CFE0FF" stroke-width="8"/><path d="M60 6c26 2 30 40 0 44" fill="none" stroke="#CFE0FF" stroke-width="8"/><rect x="-16" y="92" width="32" height="26" fill="#CFE0FF"/><rect x="-40" y="118" width="80" height="18" rx="6" fill="#EAF1FF"/><path d="M0 34l7 14 15 2-11 11 3 15-14-8-14 8 3-15-11-11 15-2z" fill="#FFE27A"/></g>
+</svg>

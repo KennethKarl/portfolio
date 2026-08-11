@@ -98,7 +98,7 @@
   .qm-item:hover i.ph{background:#f1f3f7;transform:translateY(-2px);}
   .qm-item span{font-size:11px;font-weight:700;color:var(--ink);letter-spacing:-.02em;white-space:nowrap;}
 
-  /* main promo AD banner (클리어서울안과 × CARE BRIDGE) */
+  /* main promo AD banner (루센서울안과 × CARE BRIDGE) */
   .mn-ad{position:relative;margin:2px 0 6px;border-radius:16px;overflow:hidden;cursor:pointer;
     aspect-ratio:358/163;background:#eef1f6;}
   .mn-ad-track{display:flex;width:600%;height:100%;animation:adroll 24s infinite;}
@@ -727,7 +727,7 @@
   .rp .rp-nm{font-size:14.5px;font-weight:800;color:var(--ink);}
   .rp .rp-cnt{margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:600;}
   .rp.on .rp-cnt{margin-left:auto;} .rp .rp-chk{color:var(--blue);margin-left:8px;} .rp .rp-chk svg{width:18px;height:18px;}
-  /* ── 실제 safedoc.io 시술 카드(90%+ 재현) — 토큰: Pretendard, #1B59FA, 병원명 #808B96, 정가 #A7B0B9, 경계 #EBEBEB, 뱃지 #06A42D/#E7F7EC ── */
+  /* ── 실제 carebridge.io 시술 카드(90%+ 재현) — 토큰: Pretendard, #1B59FA, 병원명 #808B96, 정가 #A7B0B9, 경계 #EBEBEB, 뱃지 #06A42D/#E7F7EC ── */
   .sd-card{display:flex;gap:12px;padding:16px 0 18px;border-bottom:1px solid #EBEBEB;letter-spacing:-.02em;}
   .sd-thumb{width:100px;height:100px;border-radius:8px;flex:none;position:relative;overflow:hidden;
     background:linear-gradient(135deg,#DDE6F5,#EEF2FA);}
@@ -1156,7 +1156,7 @@
         <div class="spec">
           <div class="sc"><div class="sc-n g">·</div><div class="sc-b"><b>개선 사항 없음 <span class="sc-tag keep">AS-IS 동일</span></b><p>이 화면은 <b>개선 항목이 없어</b> 실제 시술 상세 페이지(welfaremall.stage)를 <b>그대로</b> 사용합니다. 별도 마커/개선 포인트를 표기하지 않습니다.</p></div></div>
         </div>
-        <p class="spec-src">기준: welfaremall.stage.safedoc.kr 시술 상세(AS-IS) · 개선 없음</p>
+        <p class="spec-src">기준: welfaremall.stage.carebridge.kr 시술 상세(AS-IS) · 개선 없음</p>
       </div>
       </div>
     </div>
@@ -1186,7 +1186,7 @@
             <li>하단에서 <b>전달사항</b> · 추가 상담 입력 → <b>‘입력 완료·저장하기’</b> (DB 업데이트)</li>
           </ol>
         </div>
-        <p class="spec-src">기준: welfaremall.stage.safedoc.kr/reservation · 프로토타입</p>
+        <p class="spec-src">기준: welfaremall.stage.carebridge.kr/reservation · 프로토타입</p>
       </div></div>
     </div>
   </section>
@@ -1211,7 +1211,7 @@
             <li>AS-IS <b>‘예약 취소하기’</b> → 취소 사유(일정 변경)뿐 — 취소만 가능</li>
             <li>TO-BE <b>‘예약 취소하기’</b> → <b>‘예약 변경으로 처리’</b> 제안 확인</li>
           </ol></div>
-        <p class="spec-src">기준: welfaremall.stage.safedoc.kr/profile/reservation · 취소사유 분석 · 프로토타입</p>
+        <p class="spec-src">기준: welfaremall.stage.carebridge.kr/profile/reservation · 취소사유 분석 · 프로토타입</p>
       </div></div>
     </div>
   </section>
@@ -1239,7 +1239,7 @@
     <div class="sg">
       <div class="sg-main">
         <button class="sg-frame" id="sgFrame" onclick="sgNext()" aria-label="다음 단계로">
-          <img id="sgImg" src="signup/01.jpg" alt="회원가입 단계" decoding="async">
+          <img id="sgImg" src="signup/01.svg" alt="회원가입 단계" decoding="async">
           <span class="sg-tap" id="sgTap">다음 →</span>
         </button>
         <p class="sg-act" id="sgAct"></p>
@@ -1274,12 +1274,12 @@
         </div>
         <div class="spec-h" style="margin-top:22px">카테고리 노출 &amp; 정렬 로직</div>
         <div class="spec">
-          <div class="sc"><div class="sc-n">01</div><div class="sc-b"><b>전체 카테고리 노출</b><p><a href="https://safedoc.io/menu" target="_blank" rel="noopener">safedoc.io/menu</a>의 진료과 <b>17종 전부</b>를 STEP 1에 노출합니다.</p></div></div>
+          <div class="sc"><div class="sc-n">01</div><div class="sc-b"><b>전체 카테고리 노출</b><p><a href="https://carebridge.io/menu" target="_blank" rel="noopener">carebridge.io/menu</a>의 진료과 <b>17종 전부</b>를 STEP 1에 노출합니다.</p></div></div>
           <div class="sc"><div class="sc-n">02</div><div class="sc-b"><b>1차 정렬 · 가나다순</b><p>신규 유저는 탐색 기준이 없으므로, 카테고리를 <b>이름 가나다순</b>으로 예측 가능하게 정렬해 노출합니다. <span class="now-badge">현재 기본</span></p></div></div>
           <div class="sc"><div class="sc-n">03</div><div class="sc-b"><b>추후 · 많이 찾는 순 재정렬</b><p>검색·선택 로그가 쌓이면 <b>사용자 검색량 기반 '많이 찾는 순'</b>으로 카테고리를 자동 재정렬합니다. STEP 1의 <em>[많이 찾는 순]</em> 토글로 적용 모습을 미리 볼 수 있어요. <span class="soon-badge">추후 적용</span></p></div></div>
-          <div class="sc"><div class="sc-n">04</div><div class="sc-b"><b>세부 시술 = /menu 동일</b><p>카테고리를 선택하면 해당 진료과의 <b>세부 시술</b>이 STEP 2에 나오며, 그 목록은 <a href="https://safedoc.io/menu" target="_blank" rel="noopener">safedoc.io/menu</a>와 동일하게 구성됩니다.</p></div></div>
+          <div class="sc"><div class="sc-n">04</div><div class="sc-b"><b>세부 시술 = /menu 동일</b><p>카테고리를 선택하면 해당 진료과의 <b>세부 시술</b>이 STEP 2에 나오며, 그 목록은 <a href="https://carebridge.io/menu" target="_blank" rel="noopener">carebridge.io/menu</a>와 동일하게 구성됩니다.</p></div></div>
         </div>
-        <p class="spec-src">출처 · api.safedoc.io/department/list (safedoc.io/menu) · 2026-07-16 기준</p>
+        <p class="spec-src">출처 · api.carebridge.io/department/list (carebridge.io/menu) · 2026-07-16 기준</p>
 
         <div class="spec-h" style="margin-top:22px">관심 지역 선택 (STEP 3)</div>
         <div class="spec">
@@ -1340,41 +1340,41 @@ const depts = [
   {n:'모발이식',ic:'hair',img:'assets/dept-hair.png'},{n:'비만/체형',ic:'body',img:'assets/dept-body.png'},{n:'한방',ic:'herb'},{n:'내과',ic:'heart'},{n:'전체',ic:'grid'}
 ];
 const perso = [
-  {nm:'보톡스 이마 100U',price:'9,900원',was:'39,000원',disc:'74%',rv:'★4.9 (1,284)',img:'https://assets.safedoc.io/hospital/images/366df582-6e8a-4faa-b1df-eaca91792950.jpg'},
-  {nm:'물광주사 3cc',price:'59,000원',was:'120,000원',disc:'50%',rv:'★4.8 (860)',img:'https://assets.safedoc.io/ad-banner/3f5d96a1-a1dc-4535-b37a-be7a32c394aa.jpg'},
-  {nm:'리쥬란 힐러 2cc',price:'149,000원',was:'220,000원',disc:'32%',rv:'★4.9 (512)',img:'https://assets.safedoc.io/hospital/images/87a8d656-8827-48f7-8d69-ddb7738d4a85.jpg'},
-  {nm:'스마일라식',price:'1,490,000원',was:'',disc:'',rv:'★4.9 (2,010)',img:'assets/ad1.jpg'}
+  {nm:'보톡스 이마 100U',price:'9,900원',was:'39,000원',disc:'74%',rv:'★4.9 (1,284)',img:'assets/hosp-sera.svg'},
+  {nm:'물광주사 3cc',price:'59,000원',was:'120,000원',disc:'50%',rv:'★4.8 (860)',img:'assets/proc-aqua.svg'},
+  {nm:'리쥬란 힐러 2cc',price:'149,000원',was:'220,000원',disc:'32%',rv:'★4.9 (512)',img:'assets/hosp-daon.svg'},
+  {nm:'스마일라식',price:'1,490,000원',was:'',disc:'',rv:'★4.9 (2,010)',img:'assets/ad1.svg'}
 ];
 /* 맞춤 추천 '더보기' 전체 목록 (관심 진료과·최근 본 시술 기반 개인화) */
 const persoAll = [
-  {nm:'보톡스 이마 100U',hos:'강남 SW피부과 · 강남역',price:'9,900원',was:'39,000원',disc:'74%',star:'★4.9',cnt:'(1,284)',q:'보톡스'},
-  {nm:'물광주사 3cc',hos:'압구정 라비앙 · 압구정로데오',price:'59,000원',was:'120,000원',disc:'50%',star:'★4.8',cnt:'(860)',q:'물광주사'},
-  {nm:'리쥬란 힐러 2cc',hos:'청담 온의원 · 압구정',price:'149,000원',was:'220,000원',disc:'32%',star:'★4.9',cnt:'(512)',q:'리쥬란'},
-  {nm:'스킨부스터 3회',hos:'신사 더스킨 · 신사역',price:'99,000원',was:'180,000원',disc:'45%',star:'★4.8',cnt:'(430)',q:'스킨부스터'},
-  {nm:'슈링크 유니버스 300샷',hos:'강남 라인클리닉 · 강남역',price:'129,000원',was:'250,000원',disc:'48%',star:'★4.9',cnt:'(1,020)',q:'슈링크'},
-  {nm:'제모 레이저 5회',hos:'강남 클리어 · 강남역',price:'79,000원',was:'150,000원',disc:'47%',star:'★4.7',cnt:'(690)',q:'제모'},
-  {nm:'스마일라식',hos:'강남밝은눈안과 · 강남역',price:'1,490,000원',was:'',disc:'',star:'★4.9',cnt:'(2,010)',q:'스마일라식'}
+  {nm:'보톡스 이마 100U',hos:'강남 BN피부과 · 강남역',price:'9,900원',was:'39,000원',disc:'74%',star:'★4.9',cnt:'(1,284)',q:'보톡스'},
+  {nm:'물광주사 3cc',hos:'압구정 라온뷰 · 압구정로데오',price:'59,000원',was:'120,000원',disc:'50%',star:'★4.8',cnt:'(860)',q:'물광주사'},
+  {nm:'리쥬란 힐러 2cc',hos:'청담 온담의원 · 압구정',price:'149,000원',was:'220,000원',disc:'32%',star:'★4.9',cnt:'(512)',q:'리쥬란'},
+  {nm:'스킨부스터 3회',hos:'신사 스킨노트 · 신사역',price:'99,000원',was:'180,000원',disc:'45%',star:'★4.8',cnt:'(430)',q:'스킨부스터'},
+  {nm:'슈링크 유니버스 300샷',hos:'강남 라움클리닉 · 강남역',price:'129,000원',was:'250,000원',disc:'48%',star:'★4.9',cnt:'(1,020)',q:'슈링크'},
+  {nm:'제모 레이저 5회',hos:'강남 루센 · 강남역',price:'79,000원',was:'150,000원',disc:'47%',star:'★4.7',cnt:'(690)',q:'제모'},
+  {nm:'스마일라식',hos:'강남새빛안과 · 강남역',price:'1,490,000원',was:'',disc:'',star:'★4.9',cnt:'(2,010)',q:'스마일라식'}
 ];
 /* 시술페이지(병원) 링크 — 리뷰/신규 병원 클릭 시 이동. 실제 구현은 병원별 고유 URL 매핑 */
-const HOSP_URL='https://welfaremall.stage.safedoc.kr/hospital/490280038222830/514019066647784';
+const HOSP_URL='https://welfaremall.stage.carebridge.kr/hospital/490280038222830/514019066647784';
 const reviews = [
-  {tx:'처음 왔는데 친절하고 설명도 잘해주셔서 좋았어요. 통증 원인도 잘 찾아주시고, 예전에 치료한 부분도 꼼꼼히 봐주셨어요.',hos:'연세청량한치과',loc:'청량리역',proc:'레진 (어그니)',av:'linear-gradient(135deg,#6E86E6,#8AA0F0)',url:HOSP_URL},
-  {tx:'리프팅 효과가 확실히 느껴져요. 상담도 꼼꼼하게 해주시고 시술 후 관리까지 신경 써주셔서 만족스러웠습니다.',hos:'압구정 SW피부과',loc:'압구정',proc:'리프팅 슈링크 300샷',av:'linear-gradient(135deg,#D98BA0,#E6A6B6)',url:HOSP_URL},
-  {tx:'눈매교정 결과가 자연스러워서 너무 마음에 들어요. 붓기도 빨리 빠지고 상담 때 설명해주신 그대로 나왔어요.',hos:'강남 라인성형외과',loc:'강남역',proc:'자연유착 눈매교정',av:'linear-gradient(135deg,#7F9BEA,#9DB4F2)',url:HOSP_URL},
-  {tx:'임플란트 정찰가라 믿음이 갔어요. 과잉진료 없이 필요한 것만 딱 해주셔서 신뢰가 갑니다. 사후관리도 좋았어요.',hos:'선릉 굿타임치과',loc:'선릉역',proc:'국산 임플란트',av:'linear-gradient(135deg,#7EB4C6,#9BC8D6)',url:HOSP_URL}
+  {tx:'처음 왔는데 친절하고 설명도 잘해주셔서 좋았어요. 통증 원인도 잘 찾아주시고, 예전에 치료한 부분도 꼼꼼히 봐주셨어요.',hos:'온청량치과',loc:'청량리역',proc:'레진 (어그니)',av:'linear-gradient(135deg,#6E86E6,#8AA0F0)',url:HOSP_URL},
+  {tx:'리프팅 효과가 확실히 느껴져요. 상담도 꼼꼼하게 해주시고 시술 후 관리까지 신경 써주셔서 만족스러웠습니다.',hos:'압구정 BN피부과',loc:'압구정',proc:'리프팅 슈링크 300샷',av:'linear-gradient(135deg,#D98BA0,#E6A6B6)',url:HOSP_URL},
+  {tx:'눈매교정 결과가 자연스러워서 너무 마음에 들어요. 붓기도 빨리 빠지고 상담 때 설명해주신 그대로 나왔어요.',hos:'강남 라움성형외과',loc:'강남역',proc:'자연유착 눈매교정',av:'linear-gradient(135deg,#7F9BEA,#9DB4F2)',url:HOSP_URL},
+  {tx:'임플란트 정찰가라 믿음이 갔어요. 과잉진료 없이 필요한 것만 딱 해주셔서 신뢰가 갑니다. 사후관리도 좋았어요.',hos:'선릉 타임온치과',loc:'선릉역',proc:'국산 임플란트',av:'linear-gradient(135deg,#7EB4C6,#9BC8D6)',url:HOSP_URL}
 ];
 /* 신규 입점 병원 (AS-IS 동일 섹션 재현) */
 const newHos=[
-  {nm:'강남서연성형외과',img:'https://assets.safedoc.io/hospital/images/366df582-6e8a-4faa-b1df-eaca91792950.jpg'},
-  {nm:'강남다움의원',img:'https://assets.safedoc.io/hospital/images/87a8d656-8827-48f7-8d69-ddb7738d4a85.jpg'},
-  {nm:'온리원치과',img:'https://assets.safedoc.io/hospital/images/6d95f33c-0c41-4c28-8c80-ef62c165f345.jpg'},
-  {nm:'수영하임치과',img:'https://assets.safedoc.io/hospital/images/7eb3cb23-049c-4dd2-9aa6-d43bbfa039d7.jpg',rate:'10.0',rv:'1'}
+  {nm:'강남세라성형외과',img:'assets/hosp-sera.svg'},
+  {nm:'강남다온담의원',img:'assets/hosp-daon.svg'},
+  {nm:'원더온치과',img:'assets/hosp-wonder.svg'},
+  {nm:'수영블룸치과',img:'assets/hosp-bloom.svg',rate:'10.0',rv:'1'}
 ];
 const recent = [
-  {nm:'레진 구치부',hos:'원치과 | 강남역',price:'상담문의',img:'https://assets.safedoc.io/hospital/images/91c8f3dd-edb6-4cc9-b395-a0241788a310.jpg'},
-  {nm:'골드 크라운',hos:'서울다시봄치과 | 아산역',price:'500,000원',rate:'9.6',rv:'11',img:'https://assets.safedoc.io/hospital/images/348b14f2-7add-4397-afca-90cc22856336.jpg'},
-  {nm:'레진(구치부)',hos:'서울다시봄치과 | 아산역',price:'80,000원',rate:'9.6',rv:'11',img:'https://assets.safedoc.io/hospital/images/348b14f2-7add-4397-afca-90cc22856336.jpg'},
-  {nm:'인레이(골드)',hos:'서울다시봄치과 | 아산역',price:'300,000원',rate:'9.6',rv:'11',img:'https://assets.safedoc.io/hospital/images/348b14f2-7add-4397-afca-90cc22856336.jpg'}
+  {nm:'레진 구치부',hos:'하루온치과 | 강남역',price:'상담문의',img:'assets/proc-resin.svg'},
+  {nm:'골드 크라운',hos:'서울새봄치과 | 아산역',price:'500,000원',rate:'9.6',rv:'11',img:'assets/proc-crown.svg'},
+  {nm:'레진(구치부)',hos:'서울새봄치과 | 아산역',price:'80,000원',rate:'9.6',rv:'11',img:'assets/proc-crown.svg'},
+  {nm:'인레이(골드)',hos:'서울새봄치과 | 아산역',price:'300,000원',rate:'9.6',rv:'11',img:'assets/proc-crown.svg'}
 ];
 function recentCards(){
   return recent.map(r=>`<div class="rcard">
@@ -1400,14 +1400,14 @@ let pTab=0;
 function persoBody(i){return persoSearch[i].items.map(x=>`<button class="pchip" onclick="runSearch('${x}')">${x}</button>`).join('');}
 function setPTab(i){pTab=i; const b=document.getElementById('pbody'); if(b) b.innerHTML=persoBody(i); document.querySelectorAll('.ptabs .pt').forEach((el,idx)=>el.classList.toggle('on',idx===i));}
 const deptDeals = {
-  '피부과':[{nm:'보톡스 이마 100U',hos:'강남 SW피부과',price:'9,900원',was:'39,000원'},{nm:'물광주사 3cc',hos:'압구정 라비앙',price:'59,000원',was:'120,000원'},{nm:'리쥬란 힐러 2cc',hos:'청담 온의원',price:'149,000원',was:'220,000원'}],
-  '성형외과':[{nm:'자연유착 눈매교정',hos:'강남 라인성형외과',price:'990,000원',was:'1,400,000원'},{nm:'실리프팅 20line',hos:'신사 더페이스',price:'390,000원',was:'700,000원'}],
-  '안과':[{nm:'스마일라식',hos:'강남밝은눈안과',price:'1,490,000원',was:'1,900,000원'},{nm:'라섹',hos:'서초 리앤안과',price:'890,000원',was:'1,200,000원'}],
-  '치과':[{nm:'국산 임플란트 1개',hos:'선릉 굿타임치과',price:'590,000원',was:'900,000원'},{nm:'전악 치아미백',hos:'역삼 화이트치과',price:'149,000원',was:'250,000원'}],
-  '건강검진':[{nm:'직장인 종합검진',hos:'강남 세이프메디컬',price:'199,000원',was:'350,000원'},{nm:'프리미엄 검진(MRI 포함)',hos:'분당 그린검진센터',price:'490,000원',was:'800,000원'}],
+  '피부과':[{nm:'보톡스 이마 100U',hos:'강남 BN피부과',price:'9,900원',was:'39,000원'},{nm:'물광주사 3cc',hos:'압구정 라온뷰',price:'59,000원',was:'120,000원'},{nm:'리쥬란 힐러 2cc',hos:'청담 온담의원',price:'149,000원',was:'220,000원'}],
+  '성형외과':[{nm:'자연유착 눈매교정',hos:'강남 라움성형외과',price:'990,000원',was:'1,400,000원'},{nm:'실리프팅 20line',hos:'신사 페이스랩',price:'390,000원',was:'700,000원'}],
+  '안과':[{nm:'스마일라식',hos:'강남새빛안과',price:'1,490,000원',was:'1,900,000원'},{nm:'라섹',hos:'서초 리브안과',price:'890,000원',was:'1,200,000원'}],
+  '치과':[{nm:'국산 임플란트 1개',hos:'선릉 타임온치과',price:'590,000원',was:'900,000원'},{nm:'전악 치아미백',hos:'역삼 화인치과',price:'149,000원',was:'250,000원'}],
+  '건강검진':[{nm:'직장인 종합검진',hos:'강남 케어라인메디컬',price:'199,000원',was:'350,000원'},{nm:'프리미엄 검진(MRI 포함)',hos:'분당 웰니스검진센터',price:'490,000원',was:'800,000원'}],
   '치아':[],
-  '모발이식':[{nm:'비절개 모발이식 2,000모',hos:'강남 모아름',price:'2,900,000원',was:'3,900,000원'}],
-  '비만/체형':[{nm:'지방분해주사 4cc',hos:'강남 라인클리닉',price:'99,000원',was:'180,000원'}]
+  '모발이식':[{nm:'비절개 모발이식 2,000모',hos:'강남 모담',price:'2,900,000원',was:'3,900,000원'}],
+  '비만/체형':[{nm:'지방분해주사 4cc',hos:'강남 라움클리닉',price:'99,000원',was:'180,000원'}]
 };
 function ovl(){ const a=document.querySelector('.view.active'); return (a&&a.querySelector('.ovl'))||document.getElementById('mainOvl'); }
 function closeOvl(){if(typeof clearFair==='function')clearFair(); const o=ovl(); o.hidden=true; o.innerHTML='';
@@ -1691,16 +1691,16 @@ function openPersoMore(){
 function renderTOBE(){
   return topbar()+`<div class="pad">
     <div class="qm">
-      <button class="qm-item" onclick="openDealFair('전체')"><i class="ph"><img src="assets/q1.png" alt="특가전"></i><span>특가전</span></button>
-      <button class="qm-item" onclick="openDealFair('전체')"><i class="ph"><img src="assets/q2.png" alt="당일할인"></i><span>당일할인</span></button>
-      <button class="qm-item"><i class="ph"><img src="assets/q3.jpg" alt="포인트"></i><span>포인트</span></button>
-      <button class="qm-item"><i class="ph"><img src="assets/q4.png" alt="최저가보상"></i><span>최저가보상</span></button>
+      <button class="qm-item" onclick="openDealFair('전체')"><i class="ph"><img src="assets/q1.svg" alt="특가전"></i><span>특가전</span></button>
+      <button class="qm-item" onclick="openDealFair('전체')"><i class="ph"><img src="assets/q2.svg" alt="당일할인"></i><span>당일할인</span></button>
+      <button class="qm-item"><i class="ph"><img src="assets/q3.svg" alt="포인트"></i><span>포인트</span></button>
+      <button class="qm-item"><i class="ph"><img src="assets/q4.svg" alt="최저가보상"></i><span>최저가보상</span></button>
       <button class="qm-item" onclick="runSearch('보톡스')"><i class="ph"><img src="assets/q5.jpg" alt="인기시술"></i><span>인기시술</span></button>
     </div>
     <div class="mn-ad" onclick="openDealFair('전체')">
       <span class="mn-ad-badge">AD</span>
       <div class="mn-ad-track">
-        <img src="assets/ad1.jpg" alt="광고 배너"><img src="assets/ad2.jpg" alt="광고 배너"><img src="assets/ad3.jpg" alt="광고 배너"><img src="assets/ad4.jpg" alt="광고 배너"><img src="assets/ad5.jpg" alt="광고 배너"><img src="assets/ad6.jpg" alt="광고 배너">
+        <img src="assets/ad1.svg" alt="광고 배너"><img src="assets/ad2.svg" alt="광고 배너"><img src="assets/ad3.svg" alt="광고 배너"><img src="assets/ad4.svg" alt="광고 배너"><img src="assets/ad5.svg" alt="광고 배너"><img src="assets/ad6.svg" alt="광고 배너">
       </div>
     </div>
     <div class="search" role="button" tabindex="0" onclick="openSearch()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSearch();}">${I.search}<span>어떤 시술을 찾으세요?</span></div>
@@ -1759,19 +1759,19 @@ function applyMainMarkers(){
 /* 재원님이 관심 등록한 시술(여러 개) — 시술마다 추천 병원 비교 rows 보유 */
 const cmpProcGroups = [
   {proc:'스마일라식', dept:'안과', rows:[
-    {hos:'강남 스마트안과', loc:'강남', prog:'스마일라식', price:'169만', ben:[['당일수술 -20만원','g'],['쿠폰 할인 가능','b'],['자가혈청 무료','p']], eq:'자이스', rate:'4.8'},
-    {hos:'서초 밝은눈안과', loc:'서초', prog:'스마일라식', price:'189만', ben:[['당일수술 -20만원','g'],['쿠폰 할인 가능','b'],['자가혈청 무료','p']], eq:'자이스', rate:'4.9'},
-    {hos:'송파 프리미엄안과', loc:'송파', prog:'스마일라식', price:'145만', ben:[['당일수술 -20만원','g'],['쿠폰 할인 가능','b']], eq:'아마리스', rate:'4.7'}
+    {hos:'강남 브라이트안과', loc:'강남', prog:'스마일라식', price:'169만', ben:[['당일수술 -20만원','g'],['쿠폰 할인 가능','b'],['자가혈청 무료','p']], eq:'자이스', rate:'4.8'},
+    {hos:'서초 새빛안과', loc:'서초', prog:'스마일라식', price:'189만', ben:[['당일수술 -20만원','g'],['쿠폰 할인 가능','b'],['자가혈청 무료','p']], eq:'자이스', rate:'4.9'},
+    {hos:'송파 퍼스트안과', loc:'송파', prog:'스마일라식', price:'145만', ben:[['당일수술 -20만원','g'],['쿠폰 할인 가능','b']], eq:'아마리스', rate:'4.7'}
   ]},
   {proc:'보톡스 100U', dept:'피부과', rows:[
-    {hos:'강남 SW피부과', loc:'강남', prog:'보톡스 100U', price:'9.9만', ben:[['당일시술','g'],['쿠폰 할인 가능','b'],['리터치 1회 무료','p']], eq:'앨러간', rate:'4.9'},
-    {hos:'압구정 라비앙', loc:'압구정', prog:'보톡스 100U', price:'12만', ben:[['쿠폰 할인 가능','b'],['리터치 1회 무료','p']], eq:'휴젤', rate:'4.8'},
-    {hos:'신사 더스킨의원', loc:'신사', prog:'보톡스 100U', price:'8.5만', ben:[['당일시술','g'],['쿠폰 할인 가능','b']], eq:'메디톡스', rate:'4.7'}
+    {hos:'강남 BN피부과', loc:'강남', prog:'보톡스 100U', price:'9.9만', ben:[['당일시술','g'],['쿠폰 할인 가능','b'],['리터치 1회 무료','p']], eq:'앨러간', rate:'4.9'},
+    {hos:'압구정 라온뷰', loc:'압구정', prog:'보톡스 100U', price:'12만', ben:[['쿠폰 할인 가능','b'],['리터치 1회 무료','p']], eq:'휴젤', rate:'4.8'},
+    {hos:'신사 스킨노트의원', loc:'신사', prog:'보톡스 100U', price:'8.5만', ben:[['당일시술','g'],['쿠폰 할인 가능','b']], eq:'메디톡스', rate:'4.7'}
   ]},
   {proc:'임플란트', dept:'치과', rows:[
-    {hos:'원데이치과', loc:'신논현', prog:'국산 임플란트', price:'39만', ben:[['당일진단','g'],['쿠폰 할인 가능','b']], eq:'오스템', rate:'4.8'},
-    {hos:'선릉 굿타임치과', loc:'선릉', prog:'수입 임플란트', price:'55만', ben:[['정찰가 공개','p'],['뼈이식 무료','p']], eq:'스트라우만', rate:'4.9'},
-    {hos:'강남 미소치과', loc:'강남', prog:'국산 임플란트', price:'45만', ben:[['당일진단','g'],['쿠폰 할인 가능','b'],['뼈이식 무료','p']], eq:'덴티움', rate:'4.7'}
+    {hos:'하루온치과', loc:'신논현', prog:'국산 임플란트', price:'39만', ben:[['당일진단','g'],['쿠폰 할인 가능','b']], eq:'오스템', rate:'4.8'},
+    {hos:'선릉 타임온치과', loc:'선릉', prog:'수입 임플란트', price:'55만', ben:[['정찰가 공개','p'],['뼈이식 무료','p']], eq:'스트라우만', rate:'4.9'},
+    {hos:'강남 해밀치과', loc:'강남', prog:'국산 임플란트', price:'45만', ben:[['당일진단','g'],['쿠폰 할인 가능','b'],['뼈이식 무료','p']], eq:'덴티움', rate:'4.7'}
   ]}
 ];
 /* 비교표 마크업(재사용) — 인라인 메인2·관심시술 비교 페이지 공용 */
@@ -1856,41 +1856,41 @@ function syncMainBarSearch(){
 
 /* ---------- 시술 리스트 ---------- */
 const procList=[
-  {ad:true, nm:'보톡스 이마 100U', hos:'강남 SW피부과', dept:'피부과', region:'강남', station:'강남역', price:'9,900원', was:'39,000원', rate:'9.8', rv:'1,284', coupon:true},
-  {ad:true, nm:'스마일라식', hos:'강남밝은눈안과', dept:'안과', region:'강남', station:'강남역', price:'1,490,000원', was:'1,900,000원', rate:'9.7', rv:'2,010', coupon:true},
-  {nm:'물광주사 3cc', hos:'압구정 라비앙', dept:'피부과', region:'압구정', station:'압구정로데오역', price:'59,000원', was:'120,000원', rate:'9.6', rv:'860', coupon:true},
-  {nm:'리쥬란 힐러 2cc', hos:'청담 온의원', dept:'피부과', region:'압구정', station:'', price:'149,000원', was:'220,000원', rate:'9.5', rv:'512', coupon:true},
-  {nm:'자연유착 눈매교정', hos:'강남 라인성형외과', dept:'성형외과', region:'강남', station:'강남역', price:'990,000원', was:'1,400,000원', rate:'9.6', rv:'742', coupon:false},
-  {nm:'국산 임플란트 1개', hos:'선릉 굿타임치과', dept:'치과', region:'선릉·삼성', station:'선릉역', price:'590,000원', was:'900,000원', rate:'9.4', rv:'331', coupon:true},
-  {nm:'리프팅 슈링크 300샷', hos:'신사 더페이스의원', dept:'피부과', region:'압구정', station:'신사역', price:'190,000원', was:'350,000원', rate:'9.5', rv:'604', coupon:true},
-  {nm:'치아미백 3회', hos:'역삼 화이트치과', dept:'치과', region:'강남', station:'역삼역', price:'149,000원', was:'250,000원', rate:'9.2', rv:'188', coupon:true},
-  {nm:'종합검진 (종합 건강검진)', hos:'강남 세이프메디컬', dept:'건강검진', region:'강남', station:'', price:'199,000원', was:'350,000원', rate:'9.3', rv:'97', coupon:false},
-  {nm:'비절개 모발이식 2,000모', hos:'강남 모아름의원', dept:'두피/탈모', region:'강남', station:'강남역', price:'2,900,000원', was:'3,900,000원', rate:'9.4', rv:'145', coupon:false}
+  {ad:true, nm:'보톡스 이마 100U', hos:'강남 BN피부과', dept:'피부과', region:'강남', station:'강남역', price:'9,900원', was:'39,000원', rate:'9.8', rv:'1,284', coupon:true},
+  {ad:true, nm:'스마일라식', hos:'강남새빛안과', dept:'안과', region:'강남', station:'강남역', price:'1,490,000원', was:'1,900,000원', rate:'9.7', rv:'2,010', coupon:true},
+  {nm:'물광주사 3cc', hos:'압구정 라온뷰', dept:'피부과', region:'압구정', station:'압구정로데오역', price:'59,000원', was:'120,000원', rate:'9.6', rv:'860', coupon:true},
+  {nm:'리쥬란 힐러 2cc', hos:'청담 온담의원', dept:'피부과', region:'압구정', station:'', price:'149,000원', was:'220,000원', rate:'9.5', rv:'512', coupon:true},
+  {nm:'자연유착 눈매교정', hos:'강남 라움성형외과', dept:'성형외과', region:'강남', station:'강남역', price:'990,000원', was:'1,400,000원', rate:'9.6', rv:'742', coupon:false},
+  {nm:'국산 임플란트 1개', hos:'선릉 타임온치과', dept:'치과', region:'선릉·삼성', station:'선릉역', price:'590,000원', was:'900,000원', rate:'9.4', rv:'331', coupon:true},
+  {nm:'리프팅 슈링크 300샷', hos:'신사 페이스랩의원', dept:'피부과', region:'압구정', station:'신사역', price:'190,000원', was:'350,000원', rate:'9.5', rv:'604', coupon:true},
+  {nm:'치아미백 3회', hos:'역삼 화인치과', dept:'치과', region:'강남', station:'역삼역', price:'149,000원', was:'250,000원', rate:'9.2', rv:'188', coupon:true},
+  {nm:'종합검진 (종합 건강검진)', hos:'강남 케어라인메디컬', dept:'건강검진', region:'강남', station:'', price:'199,000원', was:'350,000원', rate:'9.3', rv:'97', coupon:false},
+  {nm:'비절개 모발이식 2,000모', hos:'강남 모담의원', dept:'두피/탈모', region:'강남', station:'강남역', price:'2,900,000원', was:'3,900,000원', rate:'9.4', rv:'145', coupon:false}
 ];
 // 이갈이/코골이 + 잠실·송파(지역 전환 데모용) 시술 추가
 procList.push(
-  {nm:'나이트가드 (이갈이 장치)', hos:'성누가병원', dept:'치과', region:'강남', station:'강남역', price:'200,000원', was:'250,000원', rate:'9.2', rv:'5', coupon:false},
-  {nm:'코골이 장치', hos:'스카이치과', dept:'치과', region:'강남', station:'역삼역', price:'350,000원', was:'450,000원', rate:'9.5', rv:'14', coupon:false},
-  {nm:'이갈이 장치 하드', hos:'스카이치과', dept:'치과', region:'강남', station:'역삼역', price:'500,000원', was:'700,000원', rate:'9.5', rv:'14', coupon:false},
-  {nm:'라식', hos:'잠실 밝은눈안과', dept:'안과', region:'잠실·송파', station:'잠실역', price:'990,000원', was:'1,300,000원', rate:'9.3', rv:'120', coupon:true},
-  {nm:'임플란트(단일)', hos:'송파 굿플란트치과', dept:'치과', region:'잠실·송파', station:'', price:'650,000원', was:'950,000원', rate:'9.2', rv:'88', coupon:true},
-  {nm:'물광주사 3cc', hos:'잠실 라비앙의원', dept:'피부과', region:'잠실·송파', station:'잠실역', price:'69,000원', was:'130,000원', rate:'9.1', rv:'54', coupon:true}
+  {nm:'나이트가드 (이갈이 장치)', hos:'새힘병원', dept:'치과', region:'강남', station:'강남역', price:'200,000원', was:'250,000원', rate:'9.2', rv:'5', coupon:false},
+  {nm:'코골이 장치', hos:'하늘치과', dept:'치과', region:'강남', station:'역삼역', price:'350,000원', was:'450,000원', rate:'9.5', rv:'14', coupon:false},
+  {nm:'이갈이 장치 하드', hos:'하늘치과', dept:'치과', region:'강남', station:'역삼역', price:'500,000원', was:'700,000원', rate:'9.5', rv:'14', coupon:false},
+  {nm:'라식', hos:'잠실 새빛안과', dept:'안과', region:'잠실·송파', station:'잠실역', price:'990,000원', was:'1,300,000원', rate:'9.3', rv:'120', coupon:true},
+  {nm:'임플란트(단일)', hos:'송파 플란온치과', dept:'치과', region:'잠실·송파', station:'', price:'650,000원', was:'950,000원', rate:'9.2', rv:'88', coupon:true},
+  {nm:'물광주사 3cc', hos:'잠실 라온뷰의원', dept:'피부과', region:'잠실·송파', station:'잠실역', price:'69,000원', was:'130,000원', rate:'9.1', rv:'54', coupon:true}
 );
 // 병원 리스트 (강남권 + 잠실·송파 + 부산 서면 + 대구 동성로) — 지역 기반 노출 & 시술 0건 시 병원 폴백 데모용
 const hosList=[
-  {nm:'성누가병원', dept:'치과·내과·한방과', region:'강남·강남역', line:'강남역', rate:'9.2', rv:'5', tag:'제휴'},
-  {nm:'스카이치과', dept:'치과', region:'강남·역삼역', line:'역삼역', rate:'9.5', rv:'14', tag:'제휴'},
+  {nm:'새힘병원', dept:'치과·내과·한방과', region:'강남·강남역', line:'강남역', rate:'9.2', rv:'5', tag:'제휴'},
+  {nm:'하늘치과', dept:'치과', region:'강남·역삼역', line:'역삼역', rate:'9.5', rv:'14', tag:'제휴'},
   {nm:'강남서울밝은안과', dept:'안과', region:'강남·강남역', line:'강남역', rate:'9.3', rv:'35', tag:'제휴'},
-  {nm:'선릉 굿타임치과', dept:'치과', region:'선릉·삼성', line:'선릉역', rate:'9.4', rv:'331'},
-  {nm:'압구정 라비앙의원', dept:'피부과', region:'압구정', line:'압구정로데오역', rate:'9.6', rv:'860', tag:'제휴'},
-  {nm:'역삼 화이트치과', dept:'치과', region:'강남·역삼역', line:'역삼역', rate:'9.2', rv:'188'},
-  {nm:'강남 세이프메디컬', dept:'건강검진', region:'강남·강남역', line:'강남역', rate:'9.3', rv:'97'},
-  {nm:'잠실 밝은눈안과', dept:'안과', region:'잠실·송파', line:'잠실역', rate:'9.3', rv:'120', tag:'제휴'},
-  {nm:'송파 굿플란트치과', dept:'치과', region:'잠실·송파', line:'송파역', rate:'9.2', rv:'88'},
-  {nm:'서면 SW피부과', dept:'피부과', region:'부산 서면', line:'서면역', rate:'9.1', rv:'42', tag:'제휴'},
-  {nm:'서면 굿모닝치과', dept:'치과', region:'부산 서면', line:'서면역', rate:'9.0', rv:'27'},
-  {nm:'서면 밝은미소안과', dept:'안과', region:'부산 서면', line:'서면역', rate:'9.2', rv:'53'},
-  {nm:'동성로 SW피부과', dept:'피부과', region:'대구 동성로', line:'중앙로역', rate:'9.1', rv:'33', tag:'제휴'},
+  {nm:'선릉 타임온치과', dept:'치과', region:'선릉·삼성', line:'선릉역', rate:'9.4', rv:'331'},
+  {nm:'압구정 라온뷰의원', dept:'피부과', region:'압구정', line:'압구정로데오역', rate:'9.6', rv:'860', tag:'제휴'},
+  {nm:'역삼 화인치과', dept:'치과', region:'강남·역삼역', line:'역삼역', rate:'9.2', rv:'188'},
+  {nm:'강남 케어라인메디컬', dept:'건강검진', region:'강남·강남역', line:'강남역', rate:'9.3', rv:'97'},
+  {nm:'잠실 새빛안과', dept:'안과', region:'잠실·송파', line:'잠실역', rate:'9.3', rv:'120', tag:'제휴'},
+  {nm:'송파 플란온치과', dept:'치과', region:'잠실·송파', line:'송파역', rate:'9.2', rv:'88'},
+  {nm:'서면 BN피부과', dept:'피부과', region:'부산 서면', line:'서면역', rate:'9.1', rv:'42', tag:'제휴'},
+  {nm:'서면 모닝온치과', dept:'치과', region:'부산 서면', line:'서면역', rate:'9.0', rv:'27'},
+  {nm:'서면 환한미소안과', dept:'안과', region:'부산 서면', line:'서면역', rate:'9.2', rv:'53'},
+  {nm:'동성로 BN피부과', dept:'피부과', region:'대구 동성로', line:'중앙로역', rate:'9.1', rv:'33', tag:'제휴'},
   {nm:'동성로 밝은치과', dept:'치과', region:'대구 동성로', line:'반월당역', rate:'9.0', rv:'21'}
 ];
 const plDeptAll='전체 진료과';
@@ -1917,7 +1917,7 @@ let plDeptSel=new Set(['피부과']), plTab='시술', plQuery='';
 let plChips=new Set();   // 필터 칩(쿠폰 추가할인·당일할인·특가전·오늘 예약가능) 토글 상태
 let plSort='인기순';      // 정렬 상태
 const plSortOpts=['인기순','후기 많은 순','평점 높은 순','최신 등록 순','가격 낮은 순'];
-const plThumbMap={'피부과':'assets/thumb-skin.png','안과':'assets/thumb-eye.png','성형외과':'assets/thumb-face.jpg','치과':'assets/thumb-tooth.jpg','건강검진':'assets/thumb-diet.jpg','두피/탈모':'assets/thumb-hair.png'};
+const plThumbMap={'피부과':'assets/thumb-skin.png','안과':'assets/thumb-eye.png','성형외과':'assets/thumb-face.svg','치과':'assets/thumb-tooth.svg','건강검진':'assets/thumb-diet.svg','두피/탈모':'assets/thumb-hair.svg'};
 function procCard(d){
   const p=won(d.price), w=won(d.was);
   const pct = w>0?Math.round((1-p/w)*100)+'%':'';
@@ -1952,11 +1952,11 @@ const dtTagIcon={
 };
 function openDetailNm(nm){ dtItem = procList.find(p=>p.nm===nm) || procList[0]; switchView('detail'); }
 function dtToReserve(){ switchView('reserve'); }
-function dtProcCard(x){ const th=plThumbMap[x.dept]||'assets/thumb-tooth.jpg'; return `<div class="dt-hc" onclick="openDetailNm('${(x.nm||'').replace(/'/g,'')}')"><div class="dt-hc-th"><img src="${th}" alt="${x.nm}" loading="lazy"></div><div class="dt-hc-nm">${x.nm}</div></div>`; }
+function dtProcCard(x){ const th=plThumbMap[x.dept]||'assets/thumb-tooth.svg'; return `<div class="dt-hc" onclick="openDetailNm('${(x.nm||'').replace(/'/g,'')}')"><div class="dt-hc-th"><img src="${th}" alt="${x.nm}" loading="lazy"></div><div class="dt-hc-nm">${x.nm}</div></div>`; }
 function dtHosCard(h){ return `<div class="dt-hoc" onclick="switchView('proclist')"><div class="dt-hoc-bn"><span class="dt-hoc-bnm">${h.nm}</span><span class="dt-hoc-loc">서울 · ${h.line||h.region}</span></div><div class="dt-hoc-tag">[${(h.dept||'').split('·')[0]}]</div><div class="dt-hoc-nm">${h.nm}</div><div class="dt-hoc-desc">${h.tag?h.tag+' · ':''}${h.region}</div><div class="dt-hoc-rt">${I.star}<b>${h.rate}</b> <span>(${h.rv})</span></div></div>`; }
 function renderDetail(){
   const d = dtItem || procList[0];
-  const th = plThumbMap[d.dept] || 'assets/thumb-tooth.jpg';
+  const th = plThumbMap[d.dept] || 'assets/thumb-tooth.svg';
   const p=won(d.price), w=won(d.was);
   const pct = w>0?Math.round((1-p/w)*100)+'%':'';
   const cp = d.coupon ? comma(p - Math.min(20000, Math.round(p*0.1)))+'원' : '';
@@ -2226,8 +2226,8 @@ function plRegFocus(){ const i=document.getElementById('plRegInput'); if(i){i.fo
 function openPlRegion(){ mainSearchOn=false; mainRegQuery=''; renderPlRegion(); }
 function plRegionApply(){ mainSearchOn=false; mainRegQuery=''; const o=plRegOvl(); if(o){o.hidden=true; o.innerHTML='';} syncRegionToOb(); plAutoTab(); renderProcList(); }
 
-/* ---------- ONBOARDING (safedoc.io/menu 전체 카테고리) ---------- */
-// 진료과 17종 + 세부 시술 — 출처: api.safedoc.io/department/list (safedoc.io/menu 동일)
+/* ---------- ONBOARDING (carebridge.io/menu 전체 카테고리) ---------- */
+// 진료과 17종 + 세부 시술 — 출처: api.carebridge.io/department/list (carebridge.io/menu 동일)
 // 배열 순서 = 앱 노출 순서(=검색·이용 기반 '많이 찾는 순' 프록시)
 const obDeptData=[
   {n:'치과',t:['충치치료','임플란트','틀니','전체교정','부분교정','심미치료','치아복구','소아치료','보톡스/턱관절/양악','이갈이/코골이','기타진료']},
@@ -2506,18 +2506,18 @@ document.querySelectorAll('.rat-mount').forEach(m=>{
 
 /* ---------- SIGNUP FLOW (screenshot walkthrough) ---------- */
 const sgSteps=[
-  {img:'signup/01.jpg', act:'<em>「구글로 계속하기」</em> 눌러 시작', cap:'직장인·대학생 전용가로 시작 — 카카오·네이버·구글 간편 로그인'},
-  {img:'signup/02.jpg', act:'로그인할 <em>구글 계정</em> 선택', cap:'Google 계정으로 로그인 — 계정 선택'},
-  {img:'signup/03.jpg', act:'<em>「계속」</em>', cap:'CARE BRIDGE에 다시 로그인'},
-  {img:'signup/04.jpg', act:'<em>「허용」</em>', cap:'CARE BRIDGE의 Google 계정 정보 접근 동의'},
-  {img:'signup/05.jpg', act:'<em>전체 동의</em> 후 <em>「다음」</em>', cap:'서비스 약관 동의 — 만 14세·개인정보·이용약관'},
-  {img:'signup/06.jpg', act:'<em>「본인 인증 진행하기」</em>', cap:'안전한 진료 예약·정보 확인을 위한 본인 인증'},
-  {img:'signup/07.jpg', act:'이용 중인 <em>통신사</em> 선택', cap:'PASS 본인확인 — 통신사 선택'},
-  {img:'signup/08.jpg', act:'<em>「문자(SMS) 인증」</em> 선택', cap:'PASS 인증 방법 선택'},
-  {img:'signup/09.jpg', act:'<em>「이메일 인증하기」</em>', cap:'CARE BRIDGE 혜택을 위한 소속 이메일 인증 안내'},
-  {img:'signup/10.jpg', act:'회사 이메일 입력 후 <em>「인증하기」</em>', cap:'소속(직장인) 이메일 인증 — choijw@safedoc.io'},
-  {img:'signup/11.jpg', act:'메일 확인 후 <em>「인증 완료하기」</em>', cap:'받은 이메일에서 소속 인증 확인'},
-  {img:'signup/12.jpg', act:'<em>「CARE BRIDGE 이용하러 가기」</em> → 관심정보 설정', cap:'가입 완료! 이어서 관심정보를 설정하면 맞춤 홈이 완성돼요', last:true}
+  {img:'signup/01.svg', act:'<em>「구글로 계속하기」</em> 눌러 시작', cap:'직장인·대학생 전용가로 시작 — 카카오·네이버·구글 간편 로그인'},
+  {img:'signup/02.svg', act:'로그인할 <em>구글 계정</em> 선택', cap:'Google 계정으로 로그인 — 계정 선택'},
+  {img:'signup/03.svg', act:'<em>「계속」</em>', cap:'CARE BRIDGE에 다시 로그인'},
+  {img:'signup/04.svg', act:'<em>「허용」</em>', cap:'CARE BRIDGE의 Google 계정 정보 접근 동의'},
+  {img:'signup/05.svg', act:'<em>전체 동의</em> 후 <em>「다음」</em>', cap:'서비스 약관 동의 — 만 14세·개인정보·이용약관'},
+  {img:'signup/06.svg', act:'<em>「본인 인증 진행하기」</em>', cap:'안전한 진료 예약·정보 확인을 위한 본인 인증'},
+  {img:'signup/07.svg', act:'이용 중인 <em>통신사</em> 선택', cap:'PASS 본인확인 — 통신사 선택'},
+  {img:'signup/08.svg', act:'<em>「문자(SMS) 인증」</em> 선택', cap:'PASS 인증 방법 선택'},
+  {img:'signup/09.svg', act:'<em>「이메일 인증하기」</em>', cap:'CARE BRIDGE 혜택을 위한 소속 이메일 인증 안내'},
+  {img:'signup/10.svg', act:'회사 이메일 입력 후 <em>「인증하기」</em>', cap:'소속(직장인) 이메일 인증 — jaewon@carebridge.io'},
+  {img:'signup/11.svg', act:'메일 확인 후 <em>「인증 완료하기」</em>', cap:'받은 이메일에서 소속 인증 확인'},
+  {img:'signup/12.svg', act:'<em>「CARE BRIDGE 이용하러 가기」</em> → 관심정보 설정', cap:'가입 완료! 이어서 관심정보를 설정하면 맞춤 홈이 완성돼요', last:true}
 ];
 let sg=0;
 function sgRender(){
@@ -2555,8 +2555,8 @@ function rvTimeGrid(){
   return `<div class="rv-times">${rvTimesDis.map(t=>`<button class="rv-time" disabled>${t}</button>`).join('')}${rvTimesOpen.map(t=>`<button class="rv-time${rvTime===t?' sel':''}" onclick="rvSetTime('${t}')">${t}</button>`).join('')}</div>`;
 }
 function rvProgram(){
-  return `<div class="rv-head"><button class="rv-back">${I.back}</button><span>원데이치과</span></div>
-    <div class="rv-prog"><div class="rv-prog-th" style="background:url('assets/thumb-tooth.jpg') 50% 50%/cover"></div><div><div class="rv-prog-nm">오스템 BA 임플란트</div><div class="rv-prog-pr">450,000원</div></div></div>`;
+  return `<div class="rv-head"><button class="rv-back">${I.back}</button><span>하루온치과</span></div>
+    <div class="rv-prog"><div class="rv-prog-th" style="background:url('assets/thumb-tooth.svg') 50% 50%/cover"></div><div><div class="rv-prog-nm">오스템 BA 임플란트</div><div class="rv-prog-pr">450,000원</div></div></div>`;
 }
 function renderReserve(){
   const el=document.getElementById('rvScroll');
@@ -2588,7 +2588,7 @@ function renderReserve(){
   } else {
     el.innerHTML=`<div class="rv-head"><button class="rv-back">${I.back}</button><span>예약 신청 접수</span></div>
       <div class="rv-done"><div class="rv-done-ic">${I.check}</div><div class="rv-done-tx"><b>예약 신청이 접수되었어요</b><p>예약 확정 안내를 위해 병원에서 연락 드릴 예정이에요</p></div></div>
-      <div class="rv-summary">원데이치과 · 오스템 BA 임플란트<br><b>2026.07.${String(rvDate).padStart(2,'0')} (희망) · 오후 ${rvTime}</b></div>
+      <div class="rv-summary">하루온치과 · 오스템 BA 임플란트<br><b>2026.07.${String(rvDate).padStart(2,'0')} (희망) · 오후 ${rvTime}</b></div>
       <div class="rv-extra-h">예약을 더 빠르게 — <b>추가 정보 입력</b><span>지금 입력하면 병원 연락·상담이 빨라져요</span></div>
       <div class="rv-sec"><div class="rv-sec-t">병원 전달사항 (선택)</div>
         <textarea class="rv-ta" maxlength="200" placeholder="병원에 전달하실 내용을 적어주세요. (0/200)" oninput="rvNote=this.value">${rvNote}</textarea></div>
@@ -2671,8 +2671,8 @@ const reDowNames=['일','월','화','수','목','금','토'];
 function reDow(d){ return reDowNames[(3+d-1)%7]; }
 let reList=[
   {status:'wait', hos:'(T) CARE BRIDGE치과 동대문점 · 부산2', nm:'포함테스트1', thumb:"url('asis/detail.jpg') 50% 7%/cover", d:28, t:'오후 3:30', normal:'10,000,000원', disc:'- 2,050,000원', total:'7,950,000원', changed:true},
-  {status:'done', hos:'원데이치과 · 신논현역·강남역', nm:'오스템 BA 임플란트', thumb:'linear-gradient(135deg,#12275F,#2E5BD0)', d:21, t:'오후 3:30', total:'285,000원'},
-  {status:'confirmed', hos:'원데이치과 · 신논현역·강남역', nm:'오스템 BA 임플란트', thumb:'linear-gradient(135deg,#1550E0,#4E86FF)', d:16, t:'오후 5:30', normal:'600,000원', disc:'- 200,000원', total:'400,000원'},
+  {status:'done', hos:'하루온치과 · 신논현역·강남역', nm:'오스템 BA 임플란트', thumb:'linear-gradient(135deg,#12275F,#2E5BD0)', d:21, t:'오후 3:30', total:'285,000원'},
+  {status:'confirmed', hos:'하루온치과 · 신논현역·강남역', nm:'오스템 BA 임플란트', thumb:'linear-gradient(135deg,#1550E0,#4E86FF)', d:16, t:'오후 5:30', normal:'600,000원', disc:'- 200,000원', total:'400,000원'},
   {status:'done', hos:'CARE BRIDGE치과 동대문점 · 부산2', nm:'동대문 레이저', thumb:'linear-gradient(135deg,#3E7C4E,#7CB889)', d:9, t:'오후 9:00', total:'361,000원'}
 ];
 const reOrig = reList.map(r=>({d:r.d, t:r.t, changed:!!r.changed}));
@@ -2783,9 +2783,9 @@ const adHotRank=[
   {n:'제모',d:'up'},{n:'지방이식',d:'same'},{n:'라식/라섹',d:'down'},{n:'필러',d:'up'},{n:'모발이식',d:'same'}
 ];
 const adSponsored=[
-  {ad:true, nm:'보톡스 이마 100U', hos:'강남 SW피부과', dept:'피부과', region:'강남', station:'강남역', price:'9,900원', was:'39,000원', rate:'9.8', rv:'1,284', coupon:true},
-  {ad:true, nm:'물광주사 3cc', hos:'압구정 라비앙', dept:'피부과', region:'압구정', station:'압구정로데오역', price:'59,000원', was:'120,000원', rate:'9.6', rv:'860', coupon:true},
-  {nm:'스마일라식', hos:'강남밝은눈안과', dept:'안과', region:'강남', station:'강남역', price:'1,490,000원', was:'1,900,000원', rate:'9.7', rv:'2,010', coupon:true}
+  {ad:true, nm:'보톡스 이마 100U', hos:'강남 BN피부과', dept:'피부과', region:'강남', station:'강남역', price:'9,900원', was:'39,000원', rate:'9.8', rv:'1,284', coupon:true},
+  {ad:true, nm:'물광주사 3cc', hos:'압구정 라온뷰', dept:'피부과', region:'압구정', station:'압구정로데오역', price:'59,000원', was:'120,000원', rate:'9.6', rv:'860', coupon:true},
+  {nm:'스마일라식', hos:'강남새빛안과', dept:'안과', region:'강남', station:'강남역', price:'1,490,000원', was:'1,900,000원', rate:'9.7', rv:'2,010', coupon:true}
 ];
 function adRankItem(r,i){
   const tr=r.d==='up'?'<span class="ad-tr up">▲</span>':r.d==='down'?'<span class="ad-tr down">▼</span>':r.d==='new'?'':'<span class="ad-tr same">－</span>';
@@ -2845,10 +2845,10 @@ function renderAdApp(){
   if(adMode==='asis'){
     const promo=['특가전','당일할인','포인트','최저가보상','인기시술'];
     const wd=[['치과','tooth'],['안과','eye'],['피부과','skin'],['성형외과','face'],['건강검진','steth'],['다이어트','body'],['비뇨기과','man'],['정형외과','bone']];
-    const recent=[{nm:'나노 신경차단 수술',hos:'블루비뇨기과 강남점',price:'470,000원',g:'linear-gradient(150deg,#12275F,#2E5BD0)'},{nm:'오스템 BA 임플란트',hos:'원데이치과 신논현역',price:'450,000원',g:'linear-gradient(150deg,#1550E0,#4E86FF)'},{nm:'동대문 레이저',hos:'CARE BRIDGE치과 동대문',price:'380,000원',g:'linear-gradient(150deg,#3E7C4E,#7CB889)'}];
+    const recent=[{nm:'나노 신경차단 수술',hos:'블리스비뇨기과 강남점',price:'470,000원',g:'linear-gradient(150deg,#12275F,#2E5BD0)'},{nm:'오스템 BA 임플란트',hos:'하루온치과 신논현역',price:'450,000원',g:'linear-gradient(150deg,#1550E0,#4E86FF)'},{nm:'동대문 레이저',hos:'CARE BRIDGE치과 동대문',price:'380,000원',g:'linear-gradient(150deg,#3E7C4E,#7CB889)'}];
     inner=`<div class="wa-head"><span class="wa-logo">CARE BRIDGE</span><span class="wa-hic">${I.search}</span></div>
       <div class="wa-promo">${promo.map(x=>`<div class="wa-p"><span class="wa-pic"></span>${x}</div>`).join('')}</div>
-      <div class="wa-banner"><small>서울매스티지치과 × CARE BRIDGE</small><b>치과 트리플 할인 혜택</b><span>#임플란트 #치아교정 · UP TO 49%</span></div>
+      <div class="wa-banner"><small>서울그랜드치과 × CARE BRIDGE</small><b>치과 트리플 할인 혜택</b><span>#임플란트 #치아교정 · UP TO 49%</span></div>
       <div class="wa-depts">${wd.map(([n,ic])=>`<div class="wa-d"><i>${I[ic]||I.cross}</i>${n}</div>`).join('')}</div>
       <div class="wa-sec">최재원님이 최근 본 시술</div>
       <div class="wa-cards">${recent.map(r=>`<div class="wa-c"><div class="wa-c-th" style="background:${r.g}"></div><div class="wa-c-nm">${r.nm}</div><div class="wa-c-hos">${r.hos}</div><div class="wa-c-pr">${r.price}</div></div>`).join('')}</div>`;

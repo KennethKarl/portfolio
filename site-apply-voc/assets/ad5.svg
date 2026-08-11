@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 832 378" width="832" height="378" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif">
+<defs><linearGradient id="g5s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A5B"/><stop offset="1" stop-color="#E23B2E"/></linearGradient></defs>
+<rect width="832" height="378" fill="#EAF0FB"/>
+<text x="416" y="96" font-size="27" font-weight="600" fill="#2b3550" text-anchor="middle">CARE BRIDGE보다 싼 곳이 있다면 <tspan font-weight="800" fill="#14213f">지금 바로 알려주세요!</tspan></text>
+<text x="300" y="205" font-size="92" font-weight="800" fill="#2B4BF2" text-anchor="middle">최저가</text>
+<text x="560" y="205" font-size="92" font-weight="800" fill="#14213f" text-anchor="middle">보상제</text>
+<path d="M300 220l0 44m-14 -14l14 16 14-16" fill="none" stroke="#2B4BF2" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<g transform="translate(416,300)"><ellipse cx="0" cy="60" rx="70" ry="16" fill="#20242c"/><rect x="-46" y="6" width="92" height="54" rx="10" fill="#2b2f38"/><path d="M-40 6a40 30 0 0 1 80 0z" fill="url(#g5s)"/><ellipse cx="0" cy="6" rx="40" ry="10" fill="#ffd0b0" opacity="0.6"/></g>
+<g opacity="0.92"><rect x="-40" y="330" width="912" height="30" transform="rotate(-9 416 345)" fill="#E23B2E"/><text x="416" y="351" font-size="20" font-weight="800" fill="#fff" text-anchor="middle" transform="rotate(-9 416 345)" letter-spacing="6">/// WARNING /// WARNING /// WARNING ///</text></g>
+</svg>

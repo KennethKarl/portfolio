@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 832 378" width="832" height="378" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif">
+<defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#141A47"/><stop offset="0.6" stop-color="#3A2A86"/><stop offset="1" stop-color="#7B3AD6"/></linearGradient>
+<linearGradient id="g2h" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FF7BD5"/><stop offset="1" stop-color="#B98BFF"/></linearGradient></defs>
+<rect width="832" height="378" fill="url(#g2)"/>
+<g><path d="M60 58c0-9 7-16 16-16s16 7 16 16-7 16-16 16h-6v10l-10-10c-5-1-16-6-16-16z" fill="#7FE0FF" opacity="0.9"/><text x="100" y="70" font-size="24" font-weight="800" fill="#fff">서울그랜드치과</text><text x="290" y="70" font-size="24" fill="#cfd6ff">×</text><text x="318" y="72" font-family="Arial,Helvetica,sans-serif" font-size="20.0" font-weight="800" letter-spacing="0.3" fill="#ffffff">CARE BRIDGE</text></g>
+<text x="60" y="132" font-size="26" fill="#c9d0ff">고민할 필요 없는 짜릿한 할인 이벤트</text>
+<text x="58" y="198" font-size="56" font-weight="800" fill="#ffffff">치과 <tspan fill="url(#g2h)">트리플 할인</tspan> 혜택.</text>
+<text x="60" y="252" font-size="25" fill="#aab3ee">#임플란트  #치아교정  #크라운  #라미네이트 등</text>
+<text x="60" y="326" font-size="27" font-weight="700" fill="#ffffff">예약하고 최대 할인 받기  ›</text>
+<text x="600" y="70" font-size="26" font-weight="700" fill="#dfe4ff">1.1 — 12.31</text>
+<g transform="translate(700,215)"><circle cx="0" cy="0" r="82" fill="#C22AC9"/><text x="0" y="-8" font-size="26" font-weight="800" fill="#fff" text-anchor="middle">UP TO</text><text x="0" y="40" font-size="52" font-weight="800" fill="#fff" text-anchor="middle">~49%</text></g>
+</svg>

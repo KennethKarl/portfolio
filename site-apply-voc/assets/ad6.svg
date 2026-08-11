@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 832 378" width="832" height="378" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif">
+<defs><linearGradient id="g6" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DCEAFF"/><stop offset="1" stop-color="#F2F7FF"/></linearGradient></defs>
+<rect width="832" height="378" fill="url(#g6)"/>
+<g transform="translate(60,58)"><circle cx="12" cy="6" r="14" fill="#1B59FA"/><path d="M6 6l4 5 8-9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text x="36" y="14" font-size="27" font-weight="700" fill="#14213f">잠깐! 소속 인증 하셨나요?</text></g>
+<rect x="56" y="132" width="330" height="44" rx="10" fill="#A9F0DC"/>
+<text x="66" y="164" font-size="34" font-weight="800" fill="#0f2e6e">단 한 번의 소속 인증</text>
+<text x="410" y="164" font-size="34" font-weight="700" fill="#14213f">으로 누리는</text>
+<text x="60" y="222" font-size="40" font-weight="800" fill="#14213f">무제한 <tspan fill="#1B59FA">병원 우대가</tspan> 혜택</text>
+<text x="60" y="310" font-size="26" font-weight="700" fill="#1B59FA">소속 인증 방법 자세히 보기  ›</text>
+<g transform="translate(640,120)"><rect x="0" y="30" width="150" height="150" rx="8" fill="#BcD3FF"/><rect x="18" y="52" width="30" height="30" fill="#EAF1FF"/><rect x="60" y="52" width="30" height="30" fill="#EAF1FF"/><rect x="102" y="52" width="30" height="30" fill="#EAF1FF"/><rect x="18" y="94" width="30" height="30" fill="#EAF1FF"/><rect x="60" y="94" width="30" height="30" fill="#EAF1FF"/><rect x="102" y="94" width="30" height="30" fill="#EAF1FF"/><rect x="55" y="0" width="40" height="40" rx="6" fill="#1B59FA"/><path d="M75 8v24M63 20h24" stroke="#fff" stroke-width="5" stroke-linecap="round"/></g>
+</svg>

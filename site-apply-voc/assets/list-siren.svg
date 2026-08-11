@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1470 280" width="1470" height="280" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif">
+<defs><linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A5B"/><stop offset="1" stop-color="#E23B2E"/></linearGradient></defs>
+<rect width="1470" height="280" fill="#EEF2FB"/>
+<text x="70" y="120" font-size="42" font-weight="800" fill="#14213f">같은 병원, 다른 가격을 보셨다고요?</text>
+<text x="70" y="182" font-size="30" fill="#5a647a">가격 조율 <tspan font-weight="800" fill="#E23B2E">+5,000P</tspan> 보상해드려요</text>
+<g transform="translate(1270,140)"><ellipse cx="0" cy="70" rx="80" ry="18" fill="#20242c"/><rect x="-52" y="0" width="104" height="64" rx="12" fill="#2b2f38"/><path d="M-46 0a46 34 0 0 1 92 0z" fill="url(#gs)"/><ellipse cx="0" cy="0" rx="46" ry="12" fill="#ffd0b0" opacity="0.6"/><path d="M-70 -10l-24 -8M70 -10l24 -8M0 -60v-22" stroke="#E23B2E" stroke-width="6" stroke-linecap="round" opacity="0.7"/></g>
+</svg>
