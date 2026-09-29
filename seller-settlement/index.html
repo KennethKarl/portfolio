@@ -192,6 +192,39 @@ svg{display:block;width:100%;height:auto}
 .memos .blk+.blk{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
 .dagger{color:var(--warn);font-weight:600}
 footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-family:var(--mono)}
+/* ---------- 정산 문서 ---------- */
+.docbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.docbar .seg{flex:0 0 auto;min-width:260px}
+.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:9px 16px;border-radius:4px;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--accent)}
+.btn:hover{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.docmeta{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
+.docmeta label{display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:var(--ink-3);
+  font-family:var(--mono);letter-spacing:.04em}
+.docmeta input{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--surface-3);
+  border:1px solid var(--line-2);border-radius:3px;padding:7px 9px;min-width:0}
+.docmeta input:focus{outline:none;border-color:var(--accent)}
+.doc{border:1px solid var(--line-2);border-radius:5px;overflow:hidden;background:var(--surface-3)}
+.doc-head{padding:16px 18px;border-bottom:1px solid var(--line-2);background:var(--surface)}
+.doc-head h3{margin:0 0 4px;font-family:var(--serif);font-size:19px;font-weight:700}
+.doc-head p{margin:0;font-size:12px;color:var(--ink-3);font-family:var(--mono)}
+.doc-body{padding:0;overflow-x:auto}
+.doc table{width:100%;border-collapse:collapse;font-size:13px;background:var(--surface)}
+.doc th,.doc td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;word-break:keep-all}
+.doc thead th{background:var(--surface-3);font-size:11px;font-family:var(--mono);letter-spacing:.04em;
+  color:var(--ink-3);font-weight:500;white-space:nowrap}
+.doc td.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.doc tr.sum td{border-top:1.5px solid var(--ink-3);border-bottom:none;font-weight:600;background:var(--accent-soft)}
+.doc tr.gap td{padding:4px;background:var(--surface-3);border-bottom:none}
+.doc .lbl{color:var(--ink-2)}
+.doc .zero{color:var(--ink-3)}
+.doc-foot{padding:12px 18px;font-size:11.5px;color:var(--ink-3);line-height:1.6;border-top:1px solid var(--line-2)}
+.doc-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tsv{width:100%;height:120px;margin-top:12px;font-family:var(--mono);font-size:11px;
+  border:1px solid var(--line-2);border-radius:4px;padding:9px;background:var(--surface-3);color:var(--ink-2);
+  white-space:pre;overflow:auto}
 @media (prefers-reduced-motion:no-preference){
   rect,circle,path,line{transition:none}
 }
@@ -278,6 +311,32 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
           <div style="margin-top:26px">
             <div class="chartwrap"><svg id="bepSvg" viewBox="0 0 860 280" role="img" aria-labelledby="bepTitle"><title id="bepTitle">주문 건수에 따른 영업이익 영향</title></svg></div>
           </div>
+        </div>
+      </section>
+
+      <section id="docs">
+        <div class="sec-head">
+          <h2>정산 문서 작성</h2>
+          <span class="note">위 조건으로 채웁니다</span>
+        </div>
+        <div class="sec-body">
+          <div class="docmeta">
+            <label>기준월<input type="month" id="d_month"></label>
+            <label>입점사명<input type="text" id="d_seller" placeholder="입점사"></label>
+            <label>입점사 등록번호<input type="text" id="d_sellerNo" placeholder="000-00-00000"></label>
+            <label>입점 브랜드<input type="text" id="d_brand" placeholder="브랜드"></label>
+            <label>발행사명<input type="text" id="d_issuer" placeholder="발행사"></label>
+            <label>발행사 등록번호<input type="text" id="d_issuerNo" placeholder="000-00-00000"></label>
+          </div>
+          <div class="docbar">
+            <div class="seg" role="group" aria-label="업체 양식" data-vendor>
+              <button type="button" data-v="A">업체A<br>(월 요약형)</button>
+              <button type="button" data-v="B">업체B<br>(일별 정산형)</button>
+            </div>
+            <button class="btn" type="button" id="btnSettle">정산서</button>
+            <button class="btn ghost" type="button" id="btnTax">세금계산서</button>
+          </div>
+          <div id="docOut"></div>
         </div>
       </section>
 
@@ -793,6 +852,213 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
     g.push('<text x="'+(cx+cdx).toFixed(1)+'" y="'+(cy-10).toFixed(1)+'" text-anchor="'+ca+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="var(--ink)">현재 '+cnt(m.N)+'건 · '+won(m.opGeneral)+'원</text>');
     $("#bepSvg").innerHTML=g.join("");
   }
+
+  /* ---------- 정산 문서 ---------- */
+  var VEN="A", DOCKIND=null;
+  var mnum=function(x){return Math.round(x)};
+  function pad(n){return (n<10?"0":"")+n}
+  (function initMonth(){
+    var d=new Date(); d.setMonth(d.getMonth()-1);
+    $("#d_month").value=d.getFullYear()+"-"+pad(d.getMonth()+1);
+  })();
+  function period(){
+    var v=$("#d_month").value||"";
+    var y=+v.slice(0,4), mo=+v.slice(5,7);
+    if(!y||!mo){ var d=new Date(); y=d.getFullYear(); mo=d.getMonth()+1; }
+    var last=new Date(y,mo,0).getDate();
+    return {y:y,m:mo,days:last,
+      from:y+"-"+pad(mo)+"-01", to:y+"-"+pad(mo)+"-"+pad(last),
+      issue:(mo===12?(y+1)+"-01":y+"-"+pad(mo+1))+"-01"};
+  }
+  function meta(){
+    return {seller:$("#d_seller").value||"입점사", sellerNo:$("#d_sellerNo").value||"—",
+            brand:$("#d_brand").value||"—", issuer:$("#d_issuer").value||"발행사",
+            issuerNo:$("#d_issuerNo").value||"—"};
+  }
+
+  // 업체A 월 정산서 — 템플릿의 입금예정총액 수식을 그대로 따른다
+  function docSettleA(m){
+    var P=period(), M=meta();
+    var sales=m.P*m.Ne;                 // 할인 전 판매액
+    var fee=m.mFee+m.mFeeVat;           // 입점 수수료 (VAT 포함)
+    var disc=m.Ds*m.Ne;                 // 셀러 부담 할인액
+    var ship=m.mShipRecv;               // 일반배송비 (PG 차감 후)
+    var pointDeduct=-(m.RB+m.RBv);      // 셀러 부담 적립금 차감
+    var total=sales-fee-disc+ship+pointDeduct;
+    var rows=[
+      ["정산 대상 (상품) 판매액",sales,"셀러할인 차감 전 · 유효 "+cnt(m.Ne)+"건"],
+      ["입점 수수료 (VAT 포함)",-fee,"공급가 "+won(m.mFee)+" + 세액 "+won(m.mFeeVat)],
+      ["세금계산서 조정금액",m.RB,"리뷰비 공급가 · 발행 대상"],
+      ["세금계산서 발행금액",m.mFee+m.RB,"수수료 + 리뷰비 공급가"],
+      ["총 셀러부담할인액",-disc,won(m.Ds)+"원 × "+cnt(m.Ne)+"건"],
+      ["GAP"],
+      ["일반배송비",ship,"배송비 "+won(m.Sh*m.Ne)+" − 배송비분 PG "+won(m.pgShip*m.N)],
+      ["반품배송비",0,"모델 밖 — 협의 필요"],
+      ["교환배송비",0,"모델 밖 — 협의 필요"],
+      ["무료 반품 행사 보상",0,"해당 없음"],
+      ["무료 교환 행사 보상",0,"해당 없음"],
+      ["선환불 대손 처리 보상",0,"해당 없음"],
+      ["페널티 정산금 차감",0,"해당 없음"],
+      ["셀러 부담 적립금 차감",pointDeduct,"리뷰비 "+won(m.RB)+" + VAT "+won(m.RBv)],
+      ["조정액 (기타 예외 등)",0,""]
+    ];
+    return {title:"입점 수수료 월 정산서", sub:M.issuer+" → "+M.seller+" · "+P.from+" ~ "+P.to,
+      head:[["정산서 발행일",P.issue],["정산 대상 기간",P.from+" ~ "+P.to],
+            ["정산서 발행사 (등록번호)",M.issuer+" ("+M.issuerNo+")"],
+            ["입점사 (등록번호)",M.seller+" ("+M.sellerNo+")"],["입점브랜드",M.brand]],
+      rows:rows, totalLabel:"입금예정 총액", total:total,
+      check:["모델의 셀러 최종 정산금액",m.mSellerPayout],
+      notes:["※ 정산 대상 기준: 정산 대상 기간 내 구매확정이 된 주문의 판매액",
+             "※ 구매확정: 상품 배송완료 후 "+(V.payDays||0)+"일 경과",
+             "※ 반품·교환배송비, 보상·페널티 항목은 시뮬레이터 모델에 없어 0으로 둡니다."]};
+  }
+
+  // 업체B 일별 정산 — 월 수치를 일수로 균등 배분
+  function docSettleB(m){
+    var P=period(), D=P.days;
+    var head=["정산예정일","정산완료일","정산금액","일반정산금액","빠른정산금액","정산기준금액",
+              "수수료합계","혜택정산","일별 공제/환급","지급보류","마이너스비즈월렛상계",
+              "반품안심케어비용","우대수수료환급","정산방식"];
+    var per=function(v,i){ // 마지막 날에 잔차를 몰아 합계를 정확히 맞춘다
+      var each=Math.floor(v/D);
+      return i===D-1 ? v-each*(D-1) : each;
+    };
+    var rows=[];
+    for(var i=0;i<D;i++){
+      var day=P.y+"-"+pad(P.m)+"-"+pad(i+1);
+      var done=new Date(P.y,P.m-1,i+1+(+V.payDays||0));
+      var amt=per(mnum(m.mSellerPayout),i);
+      rows.push([day, done.getFullYear()+"-"+pad(done.getMonth()+1)+"-"+pad(done.getDate()),
+        amt, amt, 0, per(mnum(m.mSalesBase),i), per(mnum(m.mFee+m.mFeeVat),i),
+        0, per(mnum(-(m.RB+m.RBv)),i), 0, 0, 0, 0, "일반정산"]);
+    }
+    return {grid:true, title:"가맹점별 일별 정산내역 - 일별",
+      sub:meta().seller+" · "+P.from+" ~ "+P.to+" · "+D+"일 균등 배분",
+      head:head, rows:rows,
+      totalLabel:"정산금액 합계", total:mnum(m.mSellerPayout),
+      check:["모델의 셀러 최종 정산금액",m.mSellerPayout],
+      notes:["※ 시뮬레이터는 월 단위 모델이라 일자별 실적이 없습니다. 월 합계를 "+D+"일로 균등 배분하고 잔차는 말일에 반영했습니다.",
+             "※ 정산완료일 = 각 일자 + 정산 주기 "+(V.payDays||0)+"일",
+             "※ 빠른정산·지급보류·반품안심케어·우대수수료환급은 모델에 없어 0입니다."]};
+  }
+
+  // 세금계산서 (발행사 → 입점사)
+  function docTax(m){
+    var P=period(), M=meta();
+    var rows=[
+      ["판매수수료",m.mFee,m.mFeeVat,won(m.F)+"원 × "+cnt(m.Nfee)+"건"],
+      ["리뷰비",m.RB,m.RBv,cnt(m.reviewCnt)+"건 × "+won(V.reviewPt)+"원 × 셀러부담 "+pct(V.sellerShare/100,0)]
+    ];
+    return {tax:true, title:"세금계산서 (공급자 → 공급받는자)",
+      sub:M.issuer+" → "+M.seller+" · 작성일자 "+P.issue,
+      head:[["작성일자",P.issue],["공급 기간",P.from+" ~ "+P.to],
+            ["공급자 (등록번호)",M.issuer+" ("+M.issuerNo+")"],
+            ["공급받는자 (등록번호)",M.seller+" ("+M.sellerNo+")"]],
+      rows:rows, supply:m.mFee+m.RB, taxAmt:m.mFeeVat+m.RBv,
+      notes:["※ 플랫폼 부담 포인트는 무상지급이라 세금계산서·부가세 대상이 아닙니다.",
+             "※ 리뷰비는 셀러 부담분만 발행 대상입니다.",
+             VEN==="B"?"※ 업체B(일별 정산형)는 별도 세금계산서 양식이 없어 표준 양식으로 작성합니다.":""].filter(Boolean)};
+  }
+
+  function tsvOf(d){
+    var L=[];
+    if(d.grid){ L.push(d.head.join("\t")); d.rows.forEach(function(r){ L.push(r.join("\t")); }); }
+    else if(d.tax){
+      d.head.forEach(function(h){ L.push(h[0]+"\t"+h[1]); });
+      L.push(""); L.push(["품목","공급가액","세액","비고"].join("\t"));
+      d.rows.forEach(function(r){ L.push([r[0],r[1],r[2],r[3]].join("\t")); });
+      L.push(["합계",d.supply,d.taxAmt,""].join("\t"));
+      L.push(["합계금액",d.supply+d.taxAmt,"",""].join("\t"));
+    } else {
+      d.head.forEach(function(h){ L.push(h[0]+"\t"+h[1]); });
+      L.push("");
+      d.rows.forEach(function(r){ if(r[0]!=="GAP") L.push(r[0]+"\t"+mnum(r[1])); });
+      L.push(d.totalLabel+"\t"+mnum(d.total));
+    }
+    return L.join("\n");
+  }
+
+  function renderDoc(d){
+    var h='<div class="doc"><div class="doc-head"><h3>'+d.title+'</h3><p>'+d.sub+'</p></div><div class="doc-body">';
+    if(d.grid){
+      h+='<table><thead><tr>'+d.head.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr></thead><tbody>';
+      d.rows.forEach(function(r){
+        h+='<tr>'+r.map(function(c,i){
+          return (typeof c==="number")?'<td class="n'+(c===0?' zero':'')+'">'+won(c)+'</td>':'<td>'+c+'</td>';
+        }).join('')+'</tr>';
+      });
+      h+='<tr class="sum"><td colspan="2">'+d.totalLabel+'</td><td class="n">'+won(d.total)+'</td>'+
+         '<td colspan="11"></td></tr></tbody></table>';
+    } else if(d.tax){
+      h+='<table><tbody>';
+      d.head.forEach(function(x){ h+='<tr><td class="lbl">'+x[0]+'</td><td colspan="3">'+x[1]+'</td></tr>'; });
+      h+='<tr class="gap"><td colspan="4"></td></tr>';
+      h+='</tbody><thead><tr><th>품목</th><th>공급가액</th><th>세액</th><th>비고</th></tr></thead><tbody>';
+      d.rows.forEach(function(r){
+        h+='<tr><td>'+r[0]+'</td><td class="n">'+won(r[1])+'</td><td class="n">'+won(r[2])+'</td>'+
+           '<td class="lbl" style="font-size:11.5px">'+r[3]+'</td></tr>';
+      });
+      h+='<tr><td>합계</td><td class="n">'+won(d.supply)+'</td><td class="n">'+won(d.taxAmt)+'</td><td></td></tr>';
+      h+='<tr class="sum"><td>합계금액</td><td class="n" colspan="2">'+won(d.supply+d.taxAmt)+'</td><td></td></tr>';
+      h+='</tbody></table>';
+    } else {
+      h+='<table><tbody>';
+      d.head.forEach(function(x){ h+='<tr><td class="lbl">'+x[0]+'</td><td colspan="2">'+x[1]+'</td></tr>'; });
+      h+='<tr class="gap"><td colspan="3"></td></tr>';
+      d.rows.forEach(function(r){
+        if(r[0]==="GAP"){ h+='<tr class="gap"><td colspan="3"></td></tr>'; return; }
+        h+='<tr><td>'+r[0]+'</td><td class="n'+(r[1]===0?' zero':'')+'">'+won(r[1])+'</td>'+
+           '<td class="lbl" style="font-size:11.5px">'+(r[2]||"")+'</td></tr>';
+      });
+      h+='<tr class="sum"><td>'+d.totalLabel+'</td><td class="n">'+won(d.total)+'</td><td></td></tr>';
+      h+='</tbody></table>';
+    }
+    h+='</div>';
+    if(d.check){
+      var ok=Math.abs(d.check[1]-d.total)<1;
+      h+='<div class="doc-foot"><b style="color:var(--'+(ok?"pos":"neg")+')">'+(ok?"검산 일치":"검산 불일치")+'</b> — '+
+         d.check[0]+' '+won(d.check[1])+'원'+(ok?'':' · 차이 '+won(d.total-d.check[1])+'원')+'</div>';
+    }
+    if(d.notes&&d.notes.length) h+='<div class="doc-foot">'+d.notes.join('<br>')+'</div>';
+    h+='</div>';
+    h+='<div class="doc-acts"><button class="btn ghost" type="button" id="btnCopy">표 복사 (TSV)</button>'+
+       '<button class="btn ghost" type="button" id="btnPrint">인쇄 · PDF</button></div>'+
+       '<textarea class="tsv" id="tsvBox" readonly aria-label="붙여넣기용 TSV">'+tsvOf(d)+'</textarea>';
+    $("#docOut").innerHTML=h;
+    $("#btnCopy").addEventListener("click",function(){
+      var t=$("#tsvBox"); t.focus(); t.select();
+      var done=false;
+      try{ done=document.execCommand("copy"); }catch(e){}
+      this.textContent=done?"복사했습니다":"아래 상자를 직접 복사하세요";
+      var b=this; setTimeout(function(){ b.textContent="표 복사 (TSV)"; },2200);
+    });
+    $("#btnPrint").addEventListener("click",function(){ window.print(); });
+  }
+
+  function buildDoc(){
+    if(!DOCKIND) return;
+    var m=compute();
+    var d = (DOCKIND==="tax") ? docTax(m) : (VEN==="A"?docSettleA(m):docSettleB(m));
+    renderDoc(d);
+  }
+  document.querySelector(".seg[data-vendor]").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    VEN=b.dataset.v; syncVendor(); buildDoc();
+  });
+  function syncVendor(){
+    document.querySelectorAll(".seg[data-vendor] button").forEach(function(b){
+      b.setAttribute("aria-pressed",String(b.dataset.v===VEN));
+    });
+  }
+  $("#btnSettle").addEventListener("click",function(){ DOCKIND="settle"; buildDoc(); });
+  $("#btnTax").addEventListener("click",function(){ DOCKIND="tax"; buildDoc(); });
+  ["d_month","d_seller","d_sellerNo","d_brand","d_issuer","d_issuerNo"].forEach(function(id){
+    $("#"+id).addEventListener("input",buildDoc);
+  });
+  syncVendor();
+
+  var _render=render;
+  render=function(){ _render(); buildDoc(); };
 
   syncAll();
   render();
