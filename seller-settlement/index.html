@@ -51,8 +51,8 @@ img{max-width:100%}
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:400;
-  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
-.page{max-width:1280px;margin:0 auto;padding-inline:20px;padding-block:28px 64px}
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.page{max-width:1920px;margin:0 auto;padding-inline:24px;padding-block:28px 64px}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
 /* ---------- header ---------- */
@@ -61,43 +61,43 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:4
   color:var(--accent);font-weight:500;margin:0 0 8px}
 h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4.4vw,38px);line-height:1.2;
   margin:0 0 10px;letter-spacing:-.01em;text-wrap:balance}
-.dek{margin:0;color:var(--ink-2);max-width:62ch;font-weight:300;font-size:16px}
-.srcline{margin:14px 0 0;font-size:12.5px;color:var(--ink-3);font-family:var(--mono)}
+.dek{margin:0;color:var(--ink-2);max-width:72ch;font-weight:300;font-size:17px}
+.srcline{margin:14px 0 0;font-size:13px;color:var(--ink-3);font-family:var(--mono)}
 
 /* ---------- layout ---------- */
-.layout{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:24px;align-items:start}
-@media (max-width:940px){.layout{grid-template-columns:minmax(0,1fr)}}
+.layout{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:1000px){.layout{grid-template-columns:minmax(0,1fr)}}
 
 /* ---------- control panel ---------- */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;
   box-shadow:var(--shadow);overflow:hidden}
-@media (min-width:941px){.panel{position:sticky;top:env(safe-area-inset-top,0px);max-height:calc(100vh - 24px);overflow-y:auto}}
+@media (min-width:1001px){.panel{position:sticky;top:env(safe-area-inset-top,0px);max-height:calc(100vh - 24px);overflow-y:auto}}
 .panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
   padding:14px 16px;border-bottom:1px solid var(--line);background:var(--surface-3)}
 .panel-head h2{margin:0;font-size:13px;font-weight:600;letter-spacing:.02em}
 .presets{display:flex;gap:6px}
-.preset{font-family:var(--mono);font-size:11px;letter-spacing:.02em;padding:4px 8px;
+.preset{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;padding:4px 8px;
   border:1px solid var(--line-2);border-radius:3px;background:var(--surface);color:var(--ink-2);
   cursor:pointer}
 .preset:hover{border-color:var(--accent);color:var(--accent)}
 .preset:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 .grp{padding:4px 16px 0}
-.grp-label{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+.grp-label{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--ink-3);padding:16px 0 6px;font-weight:500}
 .ctl{padding:12px 0;border-top:1px solid var(--line)}
 .grp .ctl:first-of-type{border-top:none}
 .ctl-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
-.ctl-top label{font-size:13.5px;font-weight:500;color:var(--ink)}
+.ctl-top label{font-size:14.5px;font-weight:500;color:var(--ink)}
 .ctl-val{display:flex;align-items:baseline;gap:2px}
-.ctl-val input{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;
+.ctl-val input{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:16.5px;
   font-weight:600;color:var(--ink);background:transparent;border:none;border-bottom:1px solid transparent;
   text-align:right;width:8ch;padding:0;-moz-appearance:textfield}
 .ctl-val input::-webkit-outer-spin-button,.ctl-val input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .ctl-val input:hover{border-bottom-color:var(--line-2)}
 .ctl-val input:focus{outline:none;border-bottom-color:var(--accent)}
 .ctl-val .u{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
-.ctl-help{margin:8px 0 0;font-size:12.5px;color:var(--ink-3);line-height:1.55}
+.ctl-help{margin:8px 0 0;font-size:13px;color:var(--ink-3);line-height:1.55}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;
   background:linear-gradient(to right,var(--accent) 0 var(--pct,50%),var(--surface-2) var(--pct,50%) 100%);
   cursor:pointer;display:block}
@@ -108,13 +108,13 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 
 .seg{display:flex;gap:0;border:1px solid var(--line-2);border-radius:4px;overflow:hidden}
-.seg button{flex:1;padding:9px 6px;font-family:var(--sans);font-size:12.5px;font-weight:500;
+.seg button{flex:1;padding:10px 6px;font-family:var(--sans);font-size:13px;font-weight:500;
   background:var(--surface);color:var(--ink-2);border:none;cursor:pointer;line-height:1.35}
 .seg button+button{border-left:1px solid var(--line-2)}
 .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
 
 .flag{margin:10px 0 0;padding:9px 11px;border-left:3px solid var(--warn);background:var(--warn-soft);
-  border-radius:0 3px 3px 0;font-size:12.5px;line-height:1.6;color:var(--ink-2)}
+  border-radius:0 3px 3px 0;font-size:13px;line-height:1.6;color:var(--ink-2)}
 .flag b{color:var(--warn);font-weight:600}
 
 /* ---------- results ---------- */
@@ -122,108 +122,108 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
 section{background:var(--surface);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow)}
 .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;
   padding:15px 18px;border-bottom:1px solid var(--line)}
-.sec-head h2{margin:0;font-size:15px;font-weight:600;letter-spacing:-.005em}
-.sec-head .note{font-size:12px;color:var(--ink-3);font-family:var(--mono)}
+.sec-head h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.005em}
+.sec-head .note{font-size:12.5px;color:var(--ink-3);font-family:var(--mono)}
 .sec-body{padding:20px}
 
 /* stat row */
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line)}
 @media (max-width:700px){.stats{grid-template-columns:minmax(0,1fr)}}
 .stat{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:3px}
-.stat .who{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
-.stat .big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;
+.stat .who{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.stat .big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:30px;font-weight:600;
   line-height:1.15;letter-spacing:-.02em}
-.stat .sub{font-size:13px;color:var(--ink-2);line-height:1.5}
+.stat .sub{font-size:14px;color:var(--ink-2);line-height:1.5}
 .stat .sub b{font-family:var(--mono);font-weight:600;color:var(--ink)}
 .pos{color:var(--pos)} .neg{color:var(--neg)}
 
 /* chart */
 .chartwrap{width:100%;overflow-x:auto}
 svg{display:block;width:100%;height:auto}
-#barSvg{min-width:660px}
-#bepSvg{min-width:660px}
-.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:1px;
+#barSvg{min-width:760px}
+#bepSvg{min-width:760px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1px;
   background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-top:16px}
 .lg{background:var(--surface);padding:11px 13px;display:flex;gap:9px;align-items:flex-start}
 .sw{width:10px;height:10px;border-radius:2px;flex:none;margin-top:5px}
 .lg-t{min-width:0;flex:1}
-.lg-n{font-size:13px;font-weight:500;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.lg-n{font-size:14px;font-weight:500;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .lg-n .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600}
-.lg-d{font-size:12px;color:var(--ink-3);margin-top:3px;line-height:1.5;word-break:keep-all}
+.lg-d{font-size:13px;color:var(--ink-3);margin-top:3px;line-height:1.5;word-break:keep-all}
 
 /* ledger tables */
-.ledger{width:100%;border-collapse:collapse;font-size:13.5px}
-.ledger caption{text-align:left;font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+.ledger{width:100%;border-collapse:collapse;font-size:14.5px}
+.ledger caption{text-align:left;font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;
   color:var(--accent);padding:9px 12px;font-weight:600;background:var(--accent-soft);
   border-bottom:2px solid var(--accent);border-radius:4px 4px 0 0}
 .ledger td:first-child,.ledger th:first-child{padding-left:12px}
 .ledger .amt{padding-right:12px}
 .ledger td,.ledger th{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:baseline;text-align:left;word-break:keep-all}
-.ledger th{font-weight:500;color:var(--ink-3);font-size:11.5px;letter-spacing:.04em}
+.ledger th{font-weight:500;color:var(--ink-3);font-size:12px;letter-spacing:.04em}
 .ledger .op{width:1.6em;text-align:center;font-family:var(--mono);color:var(--ink-3);font-weight:500}
 .ledger .amt{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;
   white-space:nowrap;width:1%;font-weight:500}
-.ledger .desc{color:var(--ink-3);font-size:12px;line-height:1.5}
+.ledger .desc{color:var(--ink-3);font-size:13px;line-height:1.5}
 .ledger tr.total td{border-top:1.5px solid var(--ink-3);border-bottom:none;font-weight:600;padding-top:9px}
 .ledger tr.total .amt{font-size:14.5px}
 .ledger tr.total .nm{font-weight:600}
-.ledgers{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:30px}
+.ledgers{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:32px}
 
 /* pnl table */
-.pnl{width:100%;min-width:620px;border-collapse:collapse;font-size:13.5px}
+.pnl{width:100%;min-width:680px;border-collapse:collapse;font-size:14.5px}
 .pnl th,.pnl td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;
   font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 .pnl th:first-child,.pnl td:first-child{text-align:left;font-family:var(--sans);white-space:normal;word-break:keep-all}
-.pnl thead th{font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);font-weight:500;font-family:var(--mono)}
+.pnl thead th{font-size:12px;letter-spacing:.06em;color:var(--ink-3);font-weight:500;font-family:var(--mono)}
 .pnl tr.total td{border-top:1.5px solid var(--ink-3);border-bottom:none;font-weight:600;padding-top:10px}
-.pnl td.memo{font-family:var(--sans);font-size:12px;color:var(--ink-3);text-align:left;white-space:normal;line-height:1.45}
+.pnl td.memo{font-family:var(--sans);font-size:13px;color:var(--ink-3);text-align:left;white-space:normal;line-height:1.45}
 .scrollx{overflow-x:auto}
 
 .alerts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.alert{padding:11px 14px;border-radius:4px;font-size:13px;line-height:1.6;
+.alert{padding:12px 15px;border-radius:4px;font-size:14px;line-height:1.6;
   border-left:3px solid var(--neg);background:color-mix(in srgb,var(--neg) 9%,var(--surface))}
 .alert.warn{border-left-color:var(--warn);background:var(--warn-soft)}
 .alert b{font-weight:600}
 .alert .num{font-weight:600}
 
-.memos{font-size:13.5px;color:var(--ink-2);line-height:1.75}
+.memos{font-size:14.5px;color:var(--ink-2);line-height:1.75}
 .memos ul{margin:0;padding-left:1.1em}
 .memos li{margin:0 0 6px}
 .memos li::marker{color:var(--accent)}
-.memos h3{font-size:12.5px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;
+.memos h3{font-size:13px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;
   color:var(--accent);margin:0 0 8px;font-weight:500}
 .memos .blk+.blk{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
 .dagger{color:var(--warn);font-weight:600}
-.memos .prac{display:block;margin-top:6px;color:var(--neg);font-size:12.5px;line-height:1.6;
+.memos .prac{display:block;margin-top:6px;color:var(--neg);font-size:13.5px;line-height:1.6;
   word-break:keep-all}
 .memos .prac::before{content:"관행";font-family:var(--mono);font-size:10px;letter-spacing:.1em;
   border:1px solid currentColor;border-radius:3px;padding:1px 5px;margin-right:7px;
   white-space:nowrap;vertical-align:1px}
 .memos .prac b{font-weight:600}
-.pracnote{margin:0 0 16px;padding:10px 13px;border-left:3px solid var(--neg);
+.pracnote{margin:0 0 18px;padding:12px 15px;border-left:3px solid var(--neg);
   background:color-mix(in srgb,var(--neg) 8%,var(--surface));border-radius:0 3px 3px 0;
-  font-size:12.5px;line-height:1.6;color:var(--ink-2)}
-footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-family:var(--mono)}
+  font-size:13.5px;line-height:1.65;color:var(--ink-2)}
+footer{margin-top:28px;font-size:13px;color:var(--ink-3);line-height:1.6;font-family:var(--mono)}
 /* ---------- 정산 문서 ---------- */
 .docbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
 .docbar .seg{flex:0 0 auto;min-width:260px}
-.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:9px 16px;border-radius:4px;
+.btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:9px 16px;border-radius:4px;
   border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
 .btn.ghost{background:var(--surface);color:var(--accent)}
 .btn:hover{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
 .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .docmeta{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
-.docmeta label{display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:var(--ink-3);
+.docmeta label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--ink-3);
   font-family:var(--mono);letter-spacing:.04em}
-.docmeta input{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--surface-3);
+.docmeta input{font-family:var(--sans);font-size:14px;color:var(--ink);background:var(--surface-3);
   border:1px solid var(--line-2);border-radius:3px;padding:7px 9px;min-width:0}
 .docmeta input:focus{outline:none;border-color:var(--accent)}
 .doc{border:1px solid var(--line-2);border-radius:5px;overflow:hidden;background:var(--surface-3)}
 .doc-head{padding:16px 18px;border-bottom:1px solid var(--line-2);background:var(--surface)}
-.doc-head h3{margin:0 0 4px;font-family:var(--serif);font-size:19px;font-weight:700}
-.doc-head p{margin:0;font-size:12px;color:var(--ink-3);font-family:var(--mono)}
+.doc-head h3{margin:0 0 4px;font-family:var(--serif);font-size:21px;font-weight:700}
+.doc-head p{margin:0;font-size:13px;color:var(--ink-3);font-family:var(--mono)}
 .doc-body{padding:0;overflow-x:auto}
-.doc table{width:100%;border-collapse:collapse;font-size:13px;background:var(--surface)}
+.doc table{width:100%;border-collapse:collapse;font-size:14px;background:var(--surface)}
 .doc th,.doc td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;word-break:keep-all}
 .doc thead th{background:var(--surface-3);font-size:11px;font-family:var(--mono);letter-spacing:.04em;
   color:var(--ink-3);font-weight:500;white-space:nowrap}
@@ -232,7 +232,7 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
 .doc tr.gap td{padding:4px;background:var(--surface-3);border-bottom:none}
 .doc .lbl{color:var(--ink-2)}
 .doc .zero{color:var(--ink-3)}
-.doc-foot{padding:12px 18px;font-size:11.5px;color:var(--ink-3);line-height:1.6;border-top:1px solid var(--line-2)}
+.doc-foot{padding:13px 18px;font-size:12.5px;color:var(--ink-3);line-height:1.6;border-top:1px solid var(--line-2)}
 .doc-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .tsv{width:100%;height:120px;margin-top:12px;font-family:var(--mono);font-size:11px;
   border:1px solid var(--line-2);border-radius:4px;padding:9px;background:var(--surface-3);color:var(--ink-2);
@@ -247,8 +247,8 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
   <header class="masthead">
     <p class="eyebrow">커머스 정산 · 유닛 이코노믹스</p>
     <h1>셀러 정산 마진 시뮬레이터</h1>
-    <p class="dek">셀러할인 · 플랫폼 포인트 · 리뷰포인트 · 배송비 · 환불이 섞인 주문이 고객 · 셀러 · PG · 국세청 · 플랫폼로 어떻게 갈라지는지, 그리고 월 단위로 포인트 부채가 손익을 어디까지 끌어내리는지 계산합니다.</p>
-    <p class="srcline">판매가 · 배송비 · PG 수수료를 모두 VAT 포함으로 봅니다. 조건을 바꾸면 즉시 갱신되며 값은 저장되지 않습니다.</p>
+    <p class="dek">셀러할인 · 리뷰포인트(1:1) · 플랫폼 포인트(1.5:1) · 배송비 · 환불이 섞인 주문이 고객 · 셀러 · PG · 국세청 · 플랫폼로 어떻게 갈라지는지, 그리고 월 단위로 포인트 부채가 손익을 어디까지 끌어내리는지 계산합니다.</p>
+    <p class="srcline">판매가 · 배송비 · PG 수수료는 VAT 포함, 포인트는 지갑별 교환비율 적용. 조건을 바꾸면 즉시 갱신되며 값은 저장되지 않습니다.</p>
   </header>
 
   <div class="layout">
@@ -275,7 +275,7 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
         </div>
         <div class="sec-body">
           <div id="alerts" class="alerts"></div>
-          <div class="chartwrap"><svg id="barSvg" viewBox="0 0 860 148" role="img" aria-labelledby="barTitle"><title id="barTitle">판매가 분배 막대</title></svg></div>
+          <div class="chartwrap"><svg id="barSvg" viewBox="0 0 1200 148" role="img" aria-labelledby="barTitle"><title id="barTitle">판매가 분배 막대</title></svg></div>
           <div class="legend" id="legend"></div>
         </div>
       </section>
@@ -321,7 +321,7 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
           <div class="ledgers" id="monthly"></div>
           <div style="margin-top:26px"><div class="scrollx"><table class="pnl" id="pnl"></table></div></div>
           <div style="margin-top:26px">
-            <div class="chartwrap"><svg id="bepSvg" viewBox="0 0 860 280" role="img" aria-labelledby="bepTitle"><title id="bepTitle">주문 건수에 따른 영업이익 영향</title></svg></div>
+            <div class="chartwrap"><svg id="bepSvg" viewBox="0 0 1200 300" role="img" aria-labelledby="bepTitle"><title id="bepTitle">주문 건수에 따른 영업이익 영향</title></svg></div>
           </div>
         </div>
       </section>
@@ -382,8 +382,11 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
           <div class="blk">
             <h3>포인트 · 정산 운영</h3>
             <ul>
+              <li><b>리뷰포인트를 예수금으로 볼 것인가, 매출로 볼 것인가.</b> 지금은 <b>예수금</b>입니다 — 셀러 부담분을 받아 부채로 적립하고 세금계산서를 발행하지 않습니다. 매출(리뷰 대행 용역)로 보면 세금계산서를 발행하고 부가세를 내야 합니다.<span class="prac">갈리는 지점은 <b>포인트를 누구 이름으로 주느냐</b>입니다. 셀러 명의로 주고 플랫폼이 단순 대행하면 예수금, 플랫폼 명의로 주고 셀러에게 비용을 청구하면 용역 매출로 보는 것이 일반적입니다. 네이버·쿠팡의 셀러 부담 쿠폰·적립금은 대체로 <b>정산 차감만 하고 세금계산서를 발행하지 않는</b> 구조입니다. 지금 전제가 관행과 같습니다. 다만 국세청 해석이 사안별로 갈리므로 <b>세무 검토가 필요한 항목</b>입니다.</span></li>
+              <li><b>포인트 부채를 무엇으로 측정하는가.</b> 지금은 <b>현금 환산가</b>(발행 포인트 ÷ 환산비율)로 잡습니다. 1,500P를 발행하면 실제로 내줄 돈이 1,000원이므로 부채도 1,000원이라는 논리입니다. 액면가 1,500원으로 잡으면 과대계상이고, 사용 시점마다 500원씩 환입이 발생합니다.<span class="prac">회계 기준(일반기준 충당부채·K-IFRS 1115 모두)은 <b>지급할 것으로 예상되는 금액</b>을 부채로 봅니다. 환산비율이 1.5:1이면 현금 환산가가 정답이고, 액면가 인식은 감사에서 지적될 소지가 큽니다. 네이버페이 포인트·카카오 포인트는 1P=1원이라 이 문제가 없지만, 배수 적립형(OK캐쉬백 등)은 현금 환산가로 잡습니다.</span></li>
+              <li><b>환산비율을 바꿀 수 있는가.</b> 1.5:1을 나중에 1.2:1로 바꾸면 이미 쌓인 포인트의 부채가 한 번에 늘어납니다. 비율 변경 권한과 소급 적용 여부를 약관에 미리 적어야 합니다.<span class="prac">불리한 변경(포인트 가치 하락)은 <b>사전 고지 후 기존 적립분은 종전 비율 유지</b>가 안전합니다. 약관규제법상 고객에게 부당하게 불리한 소급 변경은 무효가 될 수 있습니다.</span></li>
               <li><b>포인트 예상 사용률의 근거.</b> 활성 유저 기준과 커머스 전환 가정을 결산 조서로 남겨야 합니다. 실적이 쌓이기 전에는 100%가 보수적입니다.<span class="prac">과거 사용 이력에 근거한 <b>기대 소멸률(breakage)</b> 추정이 표준이고, 이력이 없으면 100% 부채 인식 후 데이터가 쌓이는 대로 재추정합니다. 네이버·카카오 모두 포인트·캐시 잔액을 유동부채로 잡고 유효기간 경과분을 수익으로 환입합니다.</span></li>
-              <li><b>포인트 사용 순서.</b> 리뷰포인트와 이벤트포인트가 한 지갑에 섞이면 유효기간 임박 순 등 사용 순서를 약관에 정해야 소멸액 추정이 가능합니다.<span class="prac"><b>유효기간 임박 순 자동 차감</b>이 사실상 표준입니다(네이버페이 포인트, 카카오 포인트 동일). 만료일이 같으면 먼저 적립된 것부터 씁니다. 고객에게도 유리하고 소멸 추정도 단순해지므로 다르게 갈 이유가 거의 없습니다.</span></li>
+              <li><b>사용 순서는 ① 리뷰포인트 → ② 플랫폼 포인트로 정했고, 시뮬레이터가 그대로 배분합니다.</b> 포인트 결제액을 보유 리뷰포인트(1:1)에서 먼저 빼고 모자란 만큼을 플랫폼 포인트(1.5:1)로 채웁니다. 플랫폼 포인트 잔액은 충분한 것으로 봅니다. 같은 지갑 안에서는 유효기간 임박 순으로 빼는 2단 규칙이 됩니다. 플랫폼의 현금 지출은 순서와 무관하게 같지만, <b>남는 부채의 구성이 달라집니다</b> — 리뷰포인트는 셀러에게서 이미 절반을 받아둔 몫이고 플랫폼 포인트는 100% 플랫폼 부담이라, 리뷰포인트를 먼저 태우면 <b>잔여 부채가 플랫폼 부담분 위주로 남습니다</b>. 고객에게도 1:1 지갑이 먼저 나가는 편이 유리합니다.<span class="prac">지갑을 나눠 운영하는 곳은 대체로 <b>교환비율이 좋은 지갑을 먼저 소진</b>시킵니다. 고객 불만이 적고, 비율이 나쁜 포인트가 남아 소멸될 확률이 높아 회사에도 유리합니다. 다만 <b>어느 지갑이 먼저 빠지는지 결제 화면에 명시</b>해야 분쟁이 없습니다.</span><span class="prac"><b>유효기간 임박 순 자동 차감</b>이 사실상 표준입니다(네이버페이 포인트, 카카오 포인트 동일). 만료일이 같으면 먼저 적립된 것부터 씁니다. 고객에게도 유리하고 소멸 추정도 단순해지므로 다르게 갈 이유가 거의 없습니다.</span></li>
               <li><b>셀러 정산금이 마이너스일 때</b> 예치금 · 다음 정산 이월 · 청구 중 무엇으로 갈지 약관에 미리 정해야 합니다.<span class="prac"><b>차기 정산 이월이 1순위</b>, 누적되면 <b>별도 입금 청구</b>, 장기 미납 시 판매 중지·보증보험 상계로 가는 3단 구조가 일반적입니다. 처음부터 예치금을 받는 방식은 셀러 모집 장벽이 되어 신규 플랫폼에는 불리합니다.</span></li>
               <li><b>정산 주기.</b> 구매확정 기준 며칠 뒤 지급인지에 따라 미지급금(운전자본)이 달라집니다.<span class="prac"><b>구매확정은 배송완료 +7일 자동확정</b>이 공통입니다. 지급 주기는 갈립니다 — 네이버 스마트스토어는 <b>구매확정 +1영업일</b>로 가장 빠르고(빠른정산은 집화 기준), 쿠팡은 <b>주 단위 정산</b>, 컬리·카카오 계열은 <b>월 1~2회</b> 수준입니다. 빠를수록 셀러 모집에 유리하지만 플랫폼 운전자본 부담이 커집니다.</span></li>
             </ul>
@@ -393,6 +396,7 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
             <ul>
               <li>포인트충당부채 설정액은 법인세상 손금불산입(유보). 고객이 실제 사용해 셀러에게 보전할 때 손금 인정(추인).</li>
               <li>플랫폼 부담 포인트는 무상지급이라 세금계산서·부가세가 없습니다. 다만 셀러 과세표준에는 플랫폼 보전분이 포함될 가능성이 큽니다(제3자 적립 마일리지).</li>
+              <li><b>리뷰포인트 셀러 부담분은 예수금으로 처리합니다.</b> 셀러가 자기 고객에게 주는 대가를 플랫폼가 대신 보관·지급하는 것이므로 플랫폼 매출이 아니고, 세금계산서도 발행하지 않습니다. 정산금에서 차감만 하고 포인트부채로 적립합니다.</li>
               <li>계정명은 일반기준 <b>포인트충당부채</b>, K-IFRS <b>포인트부채(환불부채 성격)</b>.</li>
               <li>위 정리는 실무 관행 기준입니다. 도입 전 세무사·회계사 확인이 필요합니다.</li>
             </ul>
@@ -416,18 +420,19 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
   var won=function(x){return (x<0?"−":"")+Math.abs(Math.round(x)).toLocaleString("ko-KR")};
   var pct=function(x,d){return (x*100).toFixed(d===undefined?1:d)+"%"};
   var cnt=function(x){return Math.round(x).toLocaleString("ko-KR")};
+  var pts=function(x){return Math.round(x).toLocaleString("ko-KR")+"P"};
 
   // 화면 기본값은 중립 예시다. 실제 운영 조건은 코드에 두지 않고 임베드 주소에만 싣는다.
-  var BASE={price:20000,sellerDisc:2000,intoPoint:1000,ship:3000,shipCost:3000,
+  var BASE={price:20000,sellerDisc:2000,rvBal:500,ptPay:1000,ptRate:1.5,ship:3000,shipCost:3000,
             feeRate:10,pgRate:2.5,vat:10,
             orders:1000,refundRate:5,reviewRate:20,reviewPt:500,sellerShare:50,
-            eventPt:1000000,useRate:80,payDays:15,
+            eventPt:1500000,useRate:80,payDays:15,
             feeBase:"sales",discMode:"enuri",feeRefund:"yes"};
   // 최소 조건: 배송비·환불·PG 없음, 주문 1건, 리뷰 0건
-  var SHEET={price:20000,sellerDisc:2000,intoPoint:1000,ship:0,shipCost:0,
+  var SHEET={price:20000,sellerDisc:2000,rvBal:0,ptPay:1000,ptRate:1.5,ship:0,shipCost:0,
             feeRate:10,pgRate:0,vat:10,
             orders:1,refundRate:0,reviewRate:0,reviewPt:500,sellerShare:50,
-            eventPt:1000000,useRate:80,payDays:0,
+            eventPt:1500000,useRate:80,payDays:0,
             feeBase:"sales",discMode:"enuri",feeRefund:"yes"};
 
   var TOGGLES={
@@ -444,7 +449,9 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
     {id:"price",label:"판매가",min:0,max:200000,step:500,unit:"원",help:"VAT 포함 소비자가"},
     {id:"sellerDisc",label:"셀러할인",min:0,max:100000,step:100,unit:"원",help:"셀러가 부담하는 즉시할인 — 셀러 발행 포인트가 상품에 부여된 것"},
     {tog:"discMode"},
-    {id:"intoPoint",label:"플랫폼 포인트 사용",min:0,max:100000,step:100,unit:"원",help:"고객이 플랫폼 발행 포인트로 결제한 금액. 셀러에게는 플랫폼이 현금으로 보전한다"},
+    {id:"ptPay",label:"포인트 결제액",min:0,max:100000,step:100,unit:"원",help:"고객이 포인트로 결제한 <b>현금 금액</b>. 아래 규칙으로 두 지갑에 자동 배분된다"},
+    {id:"rvBal",label:"보유 리뷰포인트",min:0,max:100000,step:100,unit:"P",help:"<b>차감 1순위.</b> 결제액을 이 잔액에서 먼저 빼고(1:1), 모자란 만큼만 플랫폼 포인트로 채운다"},
+    {id:"ptRate",label:"플랫폼 포인트 환산비율",min:1,max:5,step:0.1,unit:"P = 1원",help:"1원을 깎으려면 몇 포인트가 필요한가. 1.5면 1,500P를 써야 1,000원이 할인된다. 리뷰포인트에는 적용되지 않는다"},
     {id:"ship",label:"배송비 (평균)",min:0,max:50000,step:500,unit:"원",help:"셀러·상품별로 다르므로 평균 한 건. 판매수수료는 붙지 않고 PG 수수료만 차감해 셀러에게 전달한다"},
     {id:"shipCost",label:"배송 원가 (셀러 실지출)",min:0,max:50000,step:500,unit:"원",help:"셀러가 택배사에 실제로 내는 돈. 배송비보다 크면 셀러는 배송에서 손해를 본다"},
     {id:"feeRate",label:"판매수수료율",min:0,max:30,step:0.5,unit:"%",help:"아래 부과 기준에 곱한다. 배송비에는 붙지 않는다"},
@@ -456,16 +463,16 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
     {id:"refundRate",label:"환불률",min:0,max:50,step:1,unit:"%",help:"환불 건은 셀러 정산·수수료 수익에서 빠지지만 PG 수수료는 그대로 나간다"},
     {tog:"feeRefund"},
     {id:"reviewRate",label:"리뷰 작성률",min:0,max:100,step:5,unit:"%",help:"유효 주문 대비. 주문이 늘면 리뷰도 늘어야 손익분기가 정확해진다"},
-    {id:"reviewPt",label:"리뷰 건당 포인트",min:0,max:2000,step:50,unit:"원",help:"고객에게 지급"},
+    {id:"reviewPt",label:"리뷰 건당 포인트",min:0,max:3000,step:50,unit:"P",help:"고객에게 지급하는 리뷰포인트. 현금 교환비율 1:1이라 액면 그대로가 원가다"},
     {id:"sellerShare",label:"리뷰포인트 셀러 부담비율",min:0,max:100,step:5,unit:"%",help:"나머지는 플랫폼 부담. 셀러 부담분만 세금계산서 발행 대상"},
-    {id:"eventPt",label:"당월 이벤트포인트 지급",min:0,max:5000000,step:50000,unit:"원",help:"가입·산책 등 플랫폼 100% 부담 (서비스 전체)"},
+    {id:"eventPt",label:"당월 플랫폼 포인트 지급",min:0,max:7500000,step:50000,unit:"P",help:"가입·산책 등 플랫폼 100% 부담 (서비스 전체). 환산비율 적용 대상"},
     {id:"useRate",label:"포인트 예상 사용률",min:0,max:100,step:5,unit:"%",help:"부채 설정용. 실적이 쌓이기 전에는 100%가 보수적이다"},
     {id:"payDays",label:"정산 주기",min:0,max:90,step:1,unit:"일",help:"구매확정 뒤 며칠에 지급하는가. 미지급금(운전자본) 계산에 쓴다"}
   ];
 
-  // ?p=&d=&pt=&sh=&sc=&fee=&pg=&vat=&n=&rf=&rv=&rp=&rs=&ev=&ur=&pd=&base=&disc=&frf= 로 덮어쓴다.
+  // ?p=&d=&pp=&rvb=&pr=&sh=&sc=&fee=&pg=&vat=&n=&rf=&rv=&rp=&rs=&ev=&ur=&pd=&base=&disc=&frf= 로 덮어쓴다.
   // 슬라이더 범위 안으로 잘라 넣어 값과 손잡이 위치가 어긋나지 않게 한다.
-  var QMAP={price:"p",sellerDisc:"d",intoPoint:"pt",ship:"sh",shipCost:"sc",feeRate:"fee",
+  var QMAP={price:"p",sellerDisc:"d",rvBal:"rvb",ptPay:"pp",ptRate:"pr",ship:"sh",shipCost:"sc",feeRate:"fee",
             pgRate:"pg",vat:"vat",orders:"n",refundRate:"rf",reviewRate:"rv",reviewPt:"rp",
             sellerShare:"rs",eventPt:"ev",useRate:"ur",payDays:"pd"};
   var TMAP={feeBase:["base",["price","sales"]],discMode:["disc",["enuri","mileage"]],
@@ -542,9 +549,17 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
   function compute(){
     var vat=V.vat/100, fr=V.feeRate/100, pgr=V.pgRate/100, rr=V.refundRate/100;
     var P=V.price;
+    var pr=V.ptRate>0?V.ptRate:1;        // 1원당 필요 포인트
     var Ds=Math.min(V.sellerDisc,P);
-    var Pi=Math.min(V.intoPoint,Math.max(0,P-Ds));
-    var clamped=(Ds!==V.sellerDisc)||(Pi!==V.intoPoint);
+    var PiWant=V.ptPay;                  // 고객이 포인트로 결제한 금액 (현금)
+    var Pi=Math.min(PiWant,Math.max(0,P-Ds));
+    var clamped=(Ds!==V.sellerDisc)||(Pi!==PiWant);
+    // ① 리뷰포인트(1:1)에서 먼저 빼고 ② 모자란 만큼 플랫폼 포인트(환산)로 채운다
+    var RvCash=Math.min(V.rvBal,Pi);
+    var InCash=Pi-RvCash;
+    var RvP=RvCash;                      // 1:1
+    var InP=r0(InCash*pr);               // 필요한 플랫폼 포인트 수
+    var rvLeft=Math.max(0,V.rvBal-RvCash);
     var Sh=V.ship, ShC=V.shipCost;
 
     var Ag=P-Ds-Pi;               // 상품 실결제 (VAT 포함)
@@ -585,37 +600,43 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
     var N=V.orders, Ne=N*(1-rr), Nr=N-Ne;
     var Nfee=(V.feeRefund==="yes")?Ne:N;
     var reviewCnt=Math.round(Ne*V.reviewRate/100);
-    var reviewIssued=reviewCnt*V.reviewPt;
-    var RB=r0(reviewIssued*(V.sellerShare/100)), RBv=r0(RB*vat);
+    var reviewIssuedP=reviewCnt*V.reviewPt;          // 리뷰포인트 (P)
+    var reviewIssued=reviewIssuedP;                  // 1:1 — 액면이 곧 원가
+    var RB=r0(reviewIssued*(V.sellerShare/100));   // 셀러 부담분 — 예수금, 매출 아님
+    var RBin=reviewIssued-RB;                      // 플랫폼 부담분
 
     var mFee=F*Nfee, mFeeVat=Fv*Nfee;
     var mSalesBase=S*Ne;
     var mShipRecv=Sh*Ne-pgShip*N;          // 환불 건도 배송비분 PG는 나간다
-    var mSellerPayout=mSalesBase-mFee-mFeeVat-RB-RBv+mShipRecv;
+    var mSellerPayout=mSalesBase-mFee-mFeeVat-RB+mShipRecv;   // 리뷰비는 부가세 없음
     var mPgGoods=pgGoods*N;                // 환불해도 반환되지 않는다
     var mPgGoodsSupply=mPgGoods-r0(mPgGoods*vat/(1+vat));
     var mReimb=Pi*Ne;
-    var mIntoRevenue=mFee+RB;              // 공급가 기준 매출
-    var mVatPay=(mFeeVat+RBv)-r0(mPgGoods*vat/(1+vat));
-    var mIntoCash=(mFee+mFeeVat+RB+RBv)-mReimb-mPgGoods-mVatPay;
+    var mIntoRevenue=mFee;                 // 수수료만 매출 — 리뷰비는 예수금
+    var mVatPay=mFeeVat-r0(mPgGoods*vat/(1+vat));
+    var mIntoCash=(mFee+mFeeVat+RB)-mReimb-mPgGoods-mVatPay;
     var mCustomerPaid=A*Ne;
     var mRefunded=A*Nr;
 
-    var issued=reviewIssued+V.eventPt;
-    var liability=r0(issued*(V.useRate/100));
-    var opGeneral=mIntoRevenue-liability-mPgGoodsSupply;
+    var eventCash=r0(V.eventPt/pr);                  // 플랫폼 포인트 환산
+    var issuedP=reviewIssuedP+V.eventPt;             // 포인트 합계 (지갑 단위가 달라 참고용)
+    var issued=reviewIssued+eventCash;               // 현금 환산 — 실제 지출할 금액
+    var liability=r0(issued*(V.useRate/100));            // 재무상태표 전체 부채
+    var liabPl=r0((RBin+eventCash)*(V.useRate/100));     // 손익에 반영되는 플랫폼 부담분
+    var liabSeller=liability-liabPl;                     // 셀러에게 받아둔 예수금 성격
+    var opGeneral=mIntoRevenue-liabPl-mPgGoodsSupply;
     var payable=mSellerPayout*(V.payDays/30);   // 미지급금 근사
 
     // --- 손익분기 (리뷰가 주문에 연동된다) ---
     var k=(V.reviewRate/100)*(1-rr);
+    var rpCash=V.reviewPt;   // 리뷰포인트 1:1
     var slope=F*(V.feeRefund==="yes"?(1-rr):1)
-             + k*V.reviewPt*(V.sellerShare/100)
-             - k*V.reviewPt*(V.useRate/100)
+             - k*rpCash*(1-V.sellerShare/100)*(V.useRate/100)
              - (pgGoods-r0(pgGoods*vat/(1+vat)));
-    var fixed=-V.eventPt*(V.useRate/100);
+    var fixed=-(V.eventPt/pr)*(V.useRate/100);
     var bep=(fixed>=0)?0:(slope>0?Math.ceil(-fixed/slope):null);
 
-    return {P:P,Ds:Ds,Pi:Pi,Sh:Sh,ShC:ShC,Ag:Ag,A:A,S:S,clamped:clamped,total:P+Sh,vat:vat,
+    return {P:P,Ds:Ds,Pi:Pi,PiWant:PiWant,RvP:RvP,InP:InP,RvCash:RvCash,InCash:InCash,rvLeft:rvLeft,pr:pr,Sh:Sh,ShC:ShC,Ag:Ag,A:A,S:S,clamped:clamped,total:P+Sh,vat:vat,
       feeBaseAmt:feeBaseAmt,F:F,Fv:Fv,pg:pg,pgGoods:pgGoods,pgShip:pgShip,
       pgGoodsVatIn:pgGoodsVatIn,pgShipVatIn:pgShipVatIn,shipCostVatIn:shipCostVatIn,
       shipNet:shipNet,sellerGoods:sellerGoods,sellerOrder:sellerOrder,
@@ -623,12 +644,12 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
       sellerVatPay:sellerVatPay,sellerNet:sellerNet,sellerKeep:sellerKeep,
       intoOrder:intoOrder,intoNet:intoNet,intoVatPay:intoVatPay,intoCash:intoCash,
       takeGross:takeGross,takeNet:takeNet,realRate:realRate,
-      N:N,Ne:Ne,Nr:Nr,Nfee:Nfee,reviewCnt:reviewCnt,reviewIssued:reviewIssued,RB:RB,RBv:RBv,
+      N:N,Ne:Ne,Nr:Nr,Nfee:Nfee,reviewCnt:reviewCnt,reviewIssued:reviewIssued,reviewIssuedP:reviewIssuedP,RB:RB,RBin:RBin,
       mFee:mFee,mFeeVat:mFeeVat,mSalesBase:mSalesBase,mShipRecv:mShipRecv,
       mSellerPayout:mSellerPayout,mPgGoods:mPgGoods,mPgGoodsSupply:mPgGoodsSupply,
       mReimb:mReimb,mIntoRevenue:mIntoRevenue,mVatPay:mVatPay,mIntoCash:mIntoCash,
       mCustomerPaid:mCustomerPaid,mRefunded:mRefunded,
-      issued:issued,liability:liability,opGeneral:opGeneral,payable:payable,bep:bep,slope:slope};
+      issued:issued,issuedP:issuedP,eventCash:eventCash,liability:liability,liabPl:liabPl,liabSeller:liabSeller,opGeneral:opGeneral,payable:payable,bep:bep,slope:slope};
   }
 
   /* ---------- 조각 ---------- */
@@ -636,7 +657,7 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
     {k:"seller",n:"셀러 정산 (상품)", c:"--s1",on:"--on1",d:"셀러매출 − 판매수수료(VAT 포함) · 부가세 납부 전"},
     {k:"ship",  n:"셀러 배송비 수취", c:"--s2",on:"--on2",d:"배송비에서 배송비분 PG 수수료를 뗀 금액"},
     {k:"disc",  n:"셀러할인",        c:"--s3",on:"--on3",d:"고객이 받은 혜택 · 셀러 부담"},
-    {k:"point", n:"플랫폼 포인트",     c:"--s4",on:"--on4",d:"고객이 받은 혜택 · 플랫폼 부담 → 셀러에게 현금 보전"},
+    {k:"point", n:"포인트 사용분",    c:"--s4",on:"--on4",d:"① 리뷰포인트(1:1) → ② 플랫폼 포인트(환산) 순으로 차감 · 플랫폼 부담 → 셀러에게 현금 보전"},
     {k:"vat",   n:"부가세 (플랫폼분)",  c:"--s5",on:"--on5",d:"수수료 매출세액에서 PG 매입세액을 뺀 납부액"},
     {k:"pg",    n:"PG 결제수수료",   c:"--s6",on:"--on6",d:"총 결제액 기준 · 상품분은 플랫폼이, 배송비분은 셀러가 부담 †"},
     {k:"into",  n:"플랫폼 잔여현금",   c:"--s7",on:"--on7",d:"수수료 − 포인트 보전 − 상품분 PG − 부가세"}
@@ -657,12 +678,12 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
 
     /* --- 경고 --- */
     var al=[];
-    if(m.clamped) al.push('<div class="alert"><b>입력 초과.</b> 셀러할인 + 플랫폼 포인트가 판매가를 넘어서 판매가 한도로 잘라 계산했습니다.</div>');
+    if(m.clamped) al.push('<div class="alert"><b>입력 초과.</b> 셀러할인 + 포인트 결제액이 판매가를 넘어서 판매가 한도로 잘라 계산했습니다.</div>');
     if(m.intoCash<0) al.push('<div class="alert"><b>이 주문은 플랫폼이 손해입니다.</b> 받는 수수료 <span class="num">'+won(m.F+m.Fv)+'원</span>보다 내주는 돈(포인트 보전 '+won(m.Pi)+'원 + 상품분 PG '+won(m.pgGoods)+'원 + 부가세 '+won(m.intoVatPay)+'원)이 커서 건당 <span class="num">'+won(Math.abs(m.intoCash))+'원</span>씩 빠집니다.</div>');
     if(m.ShC>m.shipNet) al.push('<div class="alert warn"><b>셀러가 배송에서 손해를 봅니다.</b> 받는 배송비 <span class="num">'+won(m.shipNet)+'원</span>보다 배송 원가 <span class="num">'+won(m.ShC)+'원</span>이 커서 건당 <span class="num">'+won(m.ShC-m.shipNet)+'원</span> 역마진입니다.</div>');
     if(m.mSellerPayout<0) al.push('<div class="alert warn"><b>셀러 정산금이 마이너스입니다.</b> 이번 달 줄 돈보다 뗄 돈이 <span class="num">'+won(Math.abs(m.mSellerPayout))+'원</span> 많습니다. 예치금·이월·청구 중 어느 쪽으로 처리할지 약관에 정해져 있어야 합니다.</div>');
-    if(m.issued>0&&m.mReimb>m.liability) al.push('<div class="alert warn"><b>포인트 수지가 가정과 어긋납니다.</b> 당월 사용 <span class="num">'+won(m.mReimb)+'원</span>이 부채 설정액 <span class="num">'+won(m.liability)+'원</span>보다 커서, 이 상태가 이어지면 부채 잔액이 매달 <span class="num">'+won(m.mReimb-m.liability)+'원</span>씩 깎여 결국 음수가 됩니다. 실제 사용률은 <span class="num">'+pct(m.mReimb/m.issued)+'</span>에 가깝다는 뜻입니다.</div>');
-    if(m.opGeneral<0) al.push('<div class="alert warn"><b>당월 영업이익이 적자입니다.</b> 포인트 부채 설정액 <span class="num">'+won(m.liability)+'원</span>을 수수료 매출이 덮지 못합니다'+(m.bep!==null?'. 손익분기 주문 건수는 <span class="num">'+cnt(m.bep)+'건</span>입니다':'')+'.</div>');
+    if(m.issued>0&&m.mReimb>m.liability) al.push('<div class="alert warn"><b>포인트 수지가 가정과 어긋납니다.</b> 당월 사용 <span class="num">'+won(m.mReimb)+'원</span>이 부채 설정액 <span class="num">'+won(m.liability)+'원</span>보다 커서, 이 상태가 이어지면 부채 잔액이 매달 <span class="num">'+won(m.mReimb-m.liability)+'원</span>씩 깎여 결국 음수가 됩니다. 실제 사용률은 <span class="num">'+pct(m.mReimb/m.issued)+'</span>에 가깝다는 뜻입니다. 모두 현금 환산 기준입니다.</div>');
+    if(m.opGeneral<0) al.push('<div class="alert warn"><b>당월 영업이익이 적자입니다.</b> 플랫폼 부담 포인트 <span class="num">'+won(m.liabPl)+'원</span>을 수수료 매출이 덮지 못합니다'+(m.bep!==null?'. 손익분기 주문 건수는 <span class="num">'+cnt(m.bep)+'건</span>입니다':'')+'.</div>');
     $("#alerts").innerHTML=al.join("");
 
     /* --- 지표 타일 --- */
@@ -671,7 +692,7 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
       tile("고객 · 실결제","₩"+won(m.A),"", (function(){
         var cuts=[];
         if(m.Ds>0) cuts.push("셀러할인 "+won(m.Ds));
-        if(m.Pi>0) cuts.push("플랫폼 포인트 "+won(m.Pi));
+        if(m.Pi>0) cuts.push("포인트 "+won(m.Pi)+"(리뷰 "+pts(m.RvP)+" + 플랫폼 "+pts(m.InP)+")");
         var d="상품 "+won(m.Ag)+"원"+(m.Sh>0?" + 배송비 "+won(m.Sh)+"원":"")+"<br>"+
               "상품 = 판매가 "+won(m.P);
         d += cuts.length ? " − "+cuts.join(" − ")+" (정상가 대비 <b>"+pct(discRate)+"</b> 할인)" : " (할인 없음)";
@@ -703,10 +724,10 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
     $("#breakdownNote").textContent="주문 1건 기준 · 판매가 "+won(m.P)+"원 + 배송비 "+won(m.Sh)+"원";
     $("#bdTitle").textContent="판매가 + 배송비 "+won(m.total)+"원은 누구에게 가는가";
 
-    var W=860,BX=8,BW=W-16,BY=32,BH=62,G=2;
+    var W=1200,BX=8,BW=W-16,BY=32,BH=62,G=2;
     var svg=['<title id="barTitle">판매가 분배 막대</title>'];
     if(scale<=0){
-      svg.push('<text x="'+BX+'" y="'+(BY+30)+'" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--ink-3)">판매가를 입력하세요</text>');
+      svg.push('<text x="'+BX+'" y="'+(BY+30)+'" font-family="IBM Plex Mono, monospace" font-size="15" fill="var(--ink-3)">판매가를 입력하세요</text>');
     }else{
       var x=BX;
       SEG.forEach(function(s){
@@ -715,8 +736,8 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
         var ww=Math.max(1,w-G);
         svg.push('<rect x="'+x.toFixed(2)+'" y="'+BY+'" width="'+ww.toFixed(2)+'" height="'+BH+'" rx="2" fill="var('+s.c+')"/>');
         if(ww>58){
-          svg.push('<text x="'+(x+8).toFixed(2)+'" y="'+(BY+24)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="500" fill="var('+s.on+')">'+s.n+'</text>');
-          svg.push('<text x="'+(x+8).toFixed(2)+'" y="'+(BY+46)+'" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="var('+s.on+')">'+won(v)+'</text>');
+          svg.push('<text x="'+(x+8).toFixed(2)+'" y="'+(BY+24)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="14" font-weight="500" fill="var('+s.on+')">'+s.n+'</text>');
+          svg.push('<text x="'+(x+8).toFixed(2)+'" y="'+(BY+46)+'" font-family="IBM Plex Mono, monospace" font-size="15" font-weight="600" fill="var('+s.on+')">'+won(v)+'</text>');
         }
         x+=w;
       });
@@ -724,12 +745,12 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
         var px=BX+m.total/scale*BW;
         svg.push('<line x1="'+px.toFixed(2)+'" y1="'+(BY-9)+'" x2="'+px.toFixed(2)+'" y2="'+(BY+BH+9)+'" stroke="var(--ink)" stroke-width="2"/>');
         svg.push('<rect x="'+px.toFixed(2)+'" y="'+BY+'" width="'+(BX+BW-px).toFixed(2)+'" height="'+BH+'" fill="var(--neg)" fill-opacity="0.16" stroke="var(--neg)" stroke-width="1"/>');
-        svg.push('<text x="'+px.toFixed(2)+'" y="'+(BY-15)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--ink)">판매가+배송비 '+won(m.total)+'</text>');
-        svg.push('<text x="'+Math.min(W-10,(px+(BX+BW-px)/2)).toFixed(2)+'" y="'+(BY+BH+26)+'" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="500" fill="var(--neg)">플랫폼 초과 부담 '+won(shortfall)+'원</text>');
+        svg.push('<text x="'+px.toFixed(2)+'" y="'+(BY-15)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--ink)">판매가+배송비 '+won(m.total)+'</text>');
+        svg.push('<text x="'+Math.min(W-10,(px+(BX+BW-px)/2)).toFixed(2)+'" y="'+(BY+BH+26)+'" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="14" font-weight="500" fill="var(--neg)">플랫폼 초과 부담 '+won(shortfall)+'원</text>');
       }else{
-        svg.push('<text x="'+BX+'" y="'+(BY-12)+'" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--ink-3)">0</text>');
-        svg.push('<text x="'+(BX+BW)+'" y="'+(BY-12)+'" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--ink-3)">'+won(m.total)+'원</text>');
-        svg.push('<text x="'+BX+'" y="'+(BY+BH+26)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--ink-3)">고객이 실제로 낸 돈 '+won(m.A)+'원 + 셀러·플랫폼이 깎아준 '+won(m.Ds+m.Pi)+'원</text>');
+        svg.push('<text x="'+BX+'" y="'+(BY-12)+'" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--ink-3)">0</text>');
+        svg.push('<text x="'+(BX+BW)+'" y="'+(BY-12)+'" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="13.5" fill="var(--ink-3)">'+won(m.total)+'원</text>');
+        svg.push('<text x="'+BX+'" y="'+(BY+BH+26)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="14" fill="var(--ink-3)">고객이 실제로 낸 돈 '+won(m.A)+'원 + 셀러·플랫폼이 깎아준 '+won(m.Ds+m.Pi)+'원</text>');
       }
     }
     $("#barSvg").innerHTML=svg.join("");
@@ -747,7 +768,8 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
       table("고객 기준",
         row("구매금액","+",m.P,"정상 판매가 (VAT 포함)")+
         row("셀러할인","−",m.Ds,"셀러 부담")+
-        row("플랫폼 포인트 사용","−",m.Pi,"플랫폼 부담 · 셀러에게는 플랫폼이 보전")+
+        row("① 리뷰포인트 사용","−",m.RvCash,pts(m.RvP)+" × 1:1 · 보유분에서 먼저 차감")+
+        row("② 플랫폼 포인트 사용","−",m.InCash,pts(m.InP)+" ÷ "+m.pr+" · 리뷰포인트 부족분")+
         row("배송비","+",m.Sh,"상품가에 더해 결제")+
         row("실결제금액 (A)","=",m.A,"PG로 결제된 금액","total"))+
       table("셀러 기준",
@@ -765,9 +787,14 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
         row("PG 결제수수료","−",m.pg,"상품분 "+won(m.pgGoods)+" + 배송비분 "+won(m.pgShip))+
         row("셀러 정산금액","−",m.sellerOrder,"지급대행으로 셀러에게 지급")+
         row("플랫폼 실수취","=",m.intoNet,"부가세 납부 전","total"))+
+      table("포인트 배분 · ① 리뷰 → ② 플랫폼",
+        row("포인트 결제액","",m.PiWant,"고객이 포인트로 내겠다고 한 금액")+
+        row("① 리뷰포인트에서","−",m.RvCash,"보유 "+pts(V.rvBal)+" 중 "+pts(m.RvP)+" 차감 · 1:1 · 잔여 "+pts(m.rvLeft))+
+        row("② 플랫폼 포인트에서","−",m.InCash,"부족분 · "+pts(m.InP)+" 필요 ("+m.pr+":1)")+
+        row("배분 합계","=",m.Pi,"플랫폼가 셀러에게 보전하는 현금","total"))+
       table("플랫폼 잔여현금",
         row("판매수수료 (부가세 포함)","+",m.F+m.Fv,"")+
-        row("플랫폼 포인트 사용분 보전","−",m.Pi,"셀러에게 대신 지급 → 포인트부채 상계")+
+        row("포인트 사용분 보전","−",m.Pi,"① 리뷰 "+won(m.RvCash)+" + ② 플랫폼 "+won(m.InCash)+" · 부채 상계")+
         row("PG 결제수수료 (상품분)","−",m.pgGoods,"상품 결제액 "+won(m.Ag)+" × "+V.pgRate.toFixed(1)+"% †")+
         row("부가세 납부","−",m.intoVatPay,"매출세액 "+won(m.Fv)+" − PG 매입세액 "+won(m.pgGoodsVatIn))+
         row("플랫폼 잔여현금","=",m.intoCash,"이 주문으로 플랫폼에 남는 돈","total"));
@@ -787,15 +814,14 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
 
     /* --- 세금계산서 --- */
     $("#taxinv").innerHTML='<div class="ledgers">'+
-      table("공급가액",
-        row("판매수수료","",m.mFee,won(m.F)+"원 × "+cnt(m.Nfee)+"건")+
-        row("리뷰비","+",m.RB,"셀러 부담분만 · 플랫폼 부담분은 발행 대상 아님")+
-        row("공급가액 합계","=",m.mFee+m.RB,"","total"))+
-      table("세액 · 합계",
-        row("판매수수료 부가세","",m.mFeeVat,"")+
-        row("리뷰비 부가세","+",m.RBv,"")+
-        row("세액 합계","=",m.mFeeVat+m.RBv,"")+
-        row("세금계산서 합계금액","=",m.mFee+m.RB+m.mFeeVat+m.RBv,"플랫폼 → 셀러 발행","total"))+
+      table("발행 대상",
+        row("판매수수료 (공급가)","",m.mFee,won(m.F)+"원 × "+cnt(m.Nfee)+"건")+
+        row("판매수수료 부가세","+",m.mFeeVat,"")+
+        row("세금계산서 합계금액","=",m.mFee+m.mFeeVat,"플랫폼 → 셀러 발행","total"))+
+      table("발행 대상 아님",
+        row("리뷰비 (셀러 부담분)","",m.RB,"셀러가 고객에게 주는 포인트를 플랫폼가 대신 보관 → 예수금")+
+        row("리뷰포인트 플랫폼 부담분","",m.RBin,"무상지급 · 과세 대상 아님")+
+        row("부가세","",0,"매출이 아니므로 세액 없음","total"))+
       '</div>';
 
     /* --- 월 --- */
@@ -804,30 +830,35 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
       table("셀러 월 정산",
         row("셀러 매출 합계","",m.mSalesBase,won(m.S)+"원 × 유효 "+cnt(m.Ne)+"건")+
         row("판매수수료 (VAT 포함)","−",m.mFee+m.mFeeVat,(V.feeRefund==="yes"?"환불분 반환":"환불분도 유지")+" · "+cnt(m.Nfee)+"건")+
-        row("리뷰비 (VAT 포함)","−",m.RB+m.RBv,cnt(m.reviewCnt)+"건 × "+won(V.reviewPt)+"원 × 셀러부담 "+pct(V.sellerShare/100,0))+
+        row("리뷰비 (VAT 없음)","−",m.RB,cnt(m.reviewCnt)+"건 × "+pts(V.reviewPt)+" (1:1) × 셀러부담 "+pct(V.sellerShare/100,0)+" · 예수금")+
         row("배송비 수취 (PG 차감 후)","+",m.mShipRecv,"배송비는 유효건만, 배송비분 PG는 전건")+
         row("최종 정산금액","=",m.mSellerPayout,"부가세 납부 전","total")+
         row("미지급금 (운전자본)","",m.payable,"정산 주기 "+V.payDays+"일 기준 근사"))+
       table("플랫폼 월 현금",
-        row("수수료·리뷰비 수취 (VAT 포함)","+",m.mFee+m.mFeeVat+m.RB+m.RBv,"")+
+        row("수수료 수취 (VAT 포함)","+",m.mFee+m.mFeeVat,"")+
+        row("리뷰비 수취 (예수금)","+",m.RB,"매출 아님 · 포인트부채 재원")+
         row("포인트 사용분 보전","−",m.mReimb,"부채 상계 · 손익 아님")+
         row("PG 결제수수료 (상품분)","−",m.mPgGoods,"† 환불 건도 부과·미반환 · 전 "+cnt(m.N)+"건")+
-        row("부가세 납부","−",m.mVatPay,"매출세액 − PG 매입세액")+
+        row("부가세 납부","−",m.mVatPay,"수수료 매출세액 "+won(m.mFeeVat)+" − PG 매입세액")+
         row("플랫폼 잔여현금","=",m.mIntoCash,"","total"))+
-      table("포인트 부채 (당월)",
-        row("리뷰포인트 지급","",m.reviewIssued,"셀러 부담분 포함 전체")+
-        row("이벤트포인트 지급","+",V.eventPt,"플랫폼 100% 부담")+
-        row("당월 지급 합계","=",m.issued,"")+
-        row("부채 설정액","",m.liability,"지급 합계 × 예상 사용률 "+pct(V.useRate/100,0),"total")+
-        row("당월 사용 (부채 상계)","",m.mReimb,""));
+      table("포인트 부채 (당월 · 현금 환산 기준)",
+        row("리뷰포인트 지급","",m.reviewIssued,pts(m.reviewIssuedP)+" × 1:1 · 전체")+
+        row("  ├ 셀러 부담분","",m.RB,"셀러에게 받아둔 예수금 — 손익 아님")+
+        row("  └ 플랫폼 부담분","",m.RBin,"플랫폼 비용")+
+        row("플랫폼 포인트 지급","+",m.eventCash,pts(V.eventPt)+" ÷ "+m.pr+" · 플랫폼 100% 부담")+
+        row("당월 지급 합계","=",m.issued,"지갑 단위가 달라 현금으로만 합산한다")+
+        row("부채 설정액 (BS)","",m.liability,"지급 합계 × 예상 사용률 "+pct(V.useRate/100,0),"total")+
+        row("  ├ 손익 반영분","",m.liabPl,"플랫폼 부담 포인트만 비용")+
+        row("  └ 예수금 성격","",m.liabSeller,"셀러에게서 받아둔 몫")+
+        row("당월 사용 (부채 상계)","",m.mReimb,pts(m.RvP*m.Ne)+" + "+pts(m.InP*m.Ne)+" 사용"));
 
-    var netRevI=m.mIntoRevenue-m.liability;
+    var netRevI=m.mIntoRevenue-m.liabPl;
     $("#pnl").innerHTML=
       '<thead><tr><th>항목</th><th>일반기준</th><th>K-IFRS</th><th class="memo" style="text-align:left">비고</th></tr></thead><tbody>'+
-      '<tr><td>수수료·리뷰비 매출</td><td>'+won(m.mIntoRevenue)+'</td><td>'+won(m.mIntoRevenue)+'</td><td class="memo">공급가 기준</td></tr>'+
-      '<tr><td>포인트 매출차감</td><td>0</td><td class="neg">'+won(-m.liability)+'</td><td class="memo">K-IFRS 1115 문단 70~72 · 고객에게 지급할 대가</td></tr>'+
+      '<tr><td>판매수수료 매출</td><td>'+won(m.mIntoRevenue)+'</td><td>'+won(m.mIntoRevenue)+'</td><td class="memo">공급가 기준 · 리뷰비는 예수금이라 매출 아님</td></tr>'+
+      '<tr><td>포인트 매출차감</td><td>0</td><td class="neg">'+won(-m.liabPl)+'</td><td class="memo">K-IFRS 1115 문단 70~72 · 고객에게 지급할 대가</td></tr>'+
       '<tr><td>순매출</td><td>'+won(m.mIntoRevenue)+'</td><td>'+won(netRevI)+'</td><td class="memo"></td></tr>'+
-      '<tr><td>판매촉진비 (포인트)</td><td class="neg">'+won(-m.liability)+'</td><td>0</td><td class="memo">일반기준만 비용 · 계정은 포인트충당부채</td></tr>'+
+      '<tr><td>판매촉진비 (포인트)</td><td class="neg">'+won(-m.liabPl)+'</td><td>0</td><td class="memo">플랫폼 부담분만 · 셀러 부담분은 예수금</td></tr>'+
       '<tr><td>PG 결제수수료 <span class="dagger">†</span></td><td class="neg">'+won(-m.mPgGoodsSupply)+'</td><td class="neg">'+won(-m.mPgGoodsSupply)+'</td><td class="memo">공급가 기준 (매입세액 제외)</td></tr>'+
       '<tr class="total"><td>영업이익 영향</td><td class="'+(m.opGeneral<0?"neg":"pos")+'">'+won(m.opGeneral)+'</td><td class="'+(m.opGeneral<0?"neg":"pos")+'">'+won(m.opGeneral)+'</td><td class="memo">동일 — 매출 규모만 다르다</td></tr>'+
       '</tbody>';
@@ -837,7 +868,7 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
 
   /* ---------- 손익분기 차트 ---------- */
   function drawBep(m){
-    var W=860,H=280,L=84,R=18,T=22,B=44;
+    var W=1200,H=300,L=92,R=20,T=24,B=48;
     var iw=W-L-R, ih=H-T-B;
     var fixed=-V.eventPt*(V.useRate/100);
     var slope=m.slope;
@@ -857,27 +888,27 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
       var v=lo+(hi-lo)*i/5, y=Y(v);
       g.push('<line x1="'+L+'" y1="'+y.toFixed(1)+'" x2="'+(L+iw)+'" y2="'+y.toFixed(1)+'" stroke="var(--line)" stroke-width="1"/>');
       var lbl=U.d===1?won(Math.round(v)):(v/U.d).toFixed(1).replace("-","−")+U.s;
-      g.push('<text x="'+(L-10)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--ink-3)">'+lbl+'</text>');
+      g.push('<text x="'+(L-10)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink-3)">'+lbl+'</text>');
     }
     if(lo<0&&hi>0) g.push('<line x1="'+L+'" y1="'+Y(0).toFixed(1)+'" x2="'+(L+iw)+'" y2="'+Y(0).toFixed(1)+'" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="4 3"/>');
     for(var j=0;j<=4;j++){
       var n=Math.round(maxN*j/4);
-      g.push('<text x="'+X(n).toFixed(1)+'" y="'+(T+ih+20)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--ink-3)">'+cnt(n)+'</text>');
+      g.push('<text x="'+X(n).toFixed(1)+'" y="'+(T+ih+20)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink-3)">'+cnt(n)+'</text>');
     }
-    g.push('<text x="'+(L+iw)+'" y="'+(T+ih+38)+'" text-anchor="end" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" fill="var(--ink-3)">당월 주문 건수 (건)</text>');
-    g.push('<text x="'+L+'" y="'+(T-6)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" fill="var(--ink-3)">영업이익 영향 · 리뷰는 주문에 연동</text>');
+    g.push('<text x="'+(L+iw)+'" y="'+(T+ih+38)+'" text-anchor="end" font-family="IBM Plex Sans KR, sans-serif" font-size="13.5" fill="var(--ink-3)">당월 주문 건수 (건)</text>');
+    g.push('<text x="'+L+'" y="'+(T-6)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13.5" fill="var(--ink-3)">영업이익 영향 · 리뷰는 주문에 연동</text>');
     g.push('<path d="M'+X(0).toFixed(1)+' '+Y(f(0)).toFixed(1)+' L'+X(maxN).toFixed(1)+' '+Y(f(maxN)).toFixed(1)+'" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round"/>');
     if(m.bep!==null&&m.bep>0&&m.bep<=maxN){
       var bx=X(m.bep);
       g.push('<line x1="'+bx.toFixed(1)+'" y1="'+T+'" x2="'+bx.toFixed(1)+'" y2="'+(T+ih)+'" stroke="var(--s2)" stroke-width="1.5" stroke-dasharray="3 3"/>');
       g.push('<circle cx="'+bx.toFixed(1)+'" cy="'+Y(0).toFixed(1)+'" r="5" fill="var(--s2)" stroke="var(--surface)" stroke-width="2"/>');
       var anch=bx>L+iw*0.62?"end":"start", dx=bx>L+iw*0.62?-9:9;
-      g.push('<text x="'+(bx+dx).toFixed(1)+'" y="'+(T+15)+'" text-anchor="'+anch+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="var(--s2)">손익분기 '+cnt(m.bep)+'건</text>');
+      g.push('<text x="'+(bx+dx).toFixed(1)+'" y="'+(T+15)+'" text-anchor="'+anch+'" font-family="IBM Plex Sans KR, sans-serif" font-size="14" font-weight="600" fill="var(--s2)">손익분기 '+cnt(m.bep)+'건</text>');
     }
     var cy=Y(f(m.N)), cx=X(Math.min(m.N,maxN));
     g.push('<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="6" fill="var(--s1)" stroke="var(--surface)" stroke-width="2"/>');
     var ca=cx>L+iw*0.7?"end":"start", cdx=cx>L+iw*0.7?-12:12;
-    g.push('<text x="'+(cx+cdx).toFixed(1)+'" y="'+(cy-10).toFixed(1)+'" text-anchor="'+ca+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="var(--ink)">현재 '+cnt(m.N)+'건 · '+won(m.opGeneral)+'원</text>');
+    g.push('<text x="'+(cx+cdx).toFixed(1)+'" y="'+(cy-10).toFixed(1)+'" text-anchor="'+ca+'" font-family="IBM Plex Sans KR, sans-serif" font-size="14" font-weight="600" fill="var(--ink)">현재 '+cnt(m.N)+'건 · '+won(m.opGeneral)+'원</text>');
     $("#bepSvg").innerHTML=g.join("");
   }
 
@@ -911,13 +942,13 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
     var fee=m.mFee+m.mFeeVat;           // 입점 수수료 (VAT 포함)
     var disc=m.Ds*m.Ne;                 // 셀러 부담 할인액
     var ship=m.mShipRecv;               // 일반배송비 (PG 차감 후)
-    var pointDeduct=-(m.RB+m.RBv);      // 셀러 부담 적립금 차감
+    var pointDeduct=-m.RB;              // 셀러 부담 적립금 차감 (예수금 · VAT 없음)
     var total=sales-fee-disc+ship+pointDeduct;
     var rows=[
       ["정산 대상 (상품) 판매액",sales,"셀러할인 차감 전 · 유효 "+cnt(m.Ne)+"건"],
       ["입점 수수료 (VAT 포함)",-fee,"공급가 "+won(m.mFee)+" + 세액 "+won(m.mFeeVat)],
-      ["세금계산서 조정금액",m.RB,"리뷰비 공급가 · 발행 대상"],
-      ["세금계산서 발행금액",m.mFee+m.RB,"수수료 + 리뷰비 공급가"],
+      ["세금계산서 조정금액",0,"리뷰비는 예수금이라 발행 대상 아님"],
+      ["세금계산서 발행금액",m.mFee,"판매수수료 공급가만"],
       ["총 셀러부담할인액",-disc,won(m.Ds)+"원 × "+cnt(m.Ne)+"건"],
       ["GAP"],
       ["일반배송비",ship,"배송비 "+won(m.Sh*m.Ne)+" − 배송비분 PG "+won(m.pgShip*m.N)],
@@ -927,7 +958,7 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
       ["무료 교환 행사 보상",0,"해당 없음"],
       ["선환불 대손 처리 보상",0,"해당 없음"],
       ["페널티 정산금 차감",0,"해당 없음"],
-      ["셀러 부담 적립금 차감",pointDeduct,"리뷰비 "+won(m.RB)+" + VAT "+won(m.RBv)],
+      ["셀러 부담 적립금 차감",pointDeduct,"리뷰포인트 셀러 부담분 "+won(m.RB)+" · 부가세 없음"],
       ["조정액 (기타 예외 등)",0,""]
     ];
     return {title:"입점 수수료 월 정산서", sub:M.issuer+" → "+M.seller+" · "+P.from+" ~ "+P.to,
@@ -938,7 +969,8 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
       check:["모델의 셀러 최종 정산금액",m.mSellerPayout],
       notes:["※ 정산 대상 기준: 정산 대상 기간 내 구매확정이 된 주문의 판매액",
              "※ 구매확정: 상품 배송완료 후 "+(V.payDays||0)+"일 경과",
-             "※ 반품·교환배송비, 보상·페널티 항목은 시뮬레이터 모델에 없어 0으로 둡니다."]};
+             "※ 반품·교환배송비, 보상·페널티 항목은 시뮬레이터 모델에 없어 0으로 둡니다.",
+             "※ 리뷰포인트는 셀러가 고객에게 주는 대가를 플랫폼가 대신 보관하는 예수금이므로 매출·세금계산서 대상이 아닙니다."]};
   }
 
   // 업체B 일별 정산 — 월 수치를 일수로 균등 배분
@@ -958,7 +990,7 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
       var amt=per(mnum(m.mSellerPayout),i);
       rows.push([day, done.getFullYear()+"-"+pad(done.getMonth()+1)+"-"+pad(done.getDate()),
         amt, amt, 0, per(mnum(m.mSalesBase),i), per(mnum(m.mFee+m.mFeeVat),i),
-        0, per(mnum(-(m.RB+m.RBv)),i), 0, 0, 0, 0, "일반정산"]);
+        0, per(mnum(-m.RB),i), 0, 0, 0, 0, "일반정산"]);
     }
     return {grid:true, title:"가맹점별 일별 정산내역 - 일별",
       sub:meta().seller+" · "+P.from+" ~ "+P.to+" · "+D+"일 균등 배분",
@@ -967,24 +999,24 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
       check:["모델의 셀러 최종 정산금액",m.mSellerPayout],
       notes:["※ 시뮬레이터는 월 단위 모델이라 일자별 실적이 없습니다. 월 합계를 "+D+"일로 균등 배분하고 잔차는 말일에 반영했습니다.",
              "※ 정산완료일 = 각 일자 + 정산 주기 "+(V.payDays||0)+"일",
-             "※ 빠른정산·지급보류·반품안심케어·우대수수료환급은 모델에 없어 0입니다."]};
+             "※ 빠른정산·지급보류·반품안심케어·우대수수료환급은 모델에 없어 0입니다.",
+             "※ 일별 공제/환급은 리뷰포인트 셀러 부담분(예수금)입니다. 부가세가 붙지 않습니다."]};
   }
 
   // 세금계산서 (발행사 → 입점사)
   function docTax(m){
     var P=period(), M=meta();
     var rows=[
-      ["판매수수료",m.mFee,m.mFeeVat,won(m.F)+"원 × "+cnt(m.Nfee)+"건"],
-      ["리뷰비",m.RB,m.RBv,cnt(m.reviewCnt)+"건 × "+won(V.reviewPt)+"원 × 셀러부담 "+pct(V.sellerShare/100,0)]
+      ["판매수수료",m.mFee,m.mFeeVat,won(m.F)+"원 × "+cnt(m.Nfee)+"건"]
     ];
     return {tax:true, title:"세금계산서 (공급자 → 공급받는자)",
       sub:M.issuer+" → "+M.seller+" · 작성일자 "+P.issue,
       head:[["작성일자",P.issue],["공급 기간",P.from+" ~ "+P.to],
             ["공급자 (등록번호)",M.issuer+" ("+M.issuerNo+")"],
             ["공급받는자 (등록번호)",M.seller+" ("+M.sellerNo+")"]],
-      rows:rows, supply:m.mFee+m.RB, taxAmt:m.mFeeVat+m.RBv,
-      notes:["※ 플랫폼 부담 포인트는 무상지급이라 세금계산서·부가세 대상이 아닙니다.",
-             "※ 리뷰비는 셀러 부담분만 발행 대상입니다.",
+      rows:rows, supply:m.mFee, taxAmt:m.mFeeVat,
+      notes:["※ 리뷰포인트는 셀러가 고객에게 주는 대가를 플랫폼가 대신 보관하는 <b>예수금</b>입니다. 플랫폼 매출이 아니므로 세금계산서를 발행하지 않습니다 — 셀러 부담분 "+won(m.RB)+"원은 정산금에서 차감만 합니다.",
+             "※ 플랫폼 부담 포인트는 무상지급이라 세금계산서·부가세 대상이 아닙니다.",
              VEN==="B"?"※ 업체B(일별 정산형)는 별도 세금계산서 양식이 없어 표준 양식으로 작성합니다.":""].filter(Boolean)};
   }
 
