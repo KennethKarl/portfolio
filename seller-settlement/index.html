@@ -658,7 +658,15 @@ footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-
     /* --- 지표 타일 --- */
     var discRate=m.P?(m.Ds+m.Pi)/m.P:0;
     $("#stats").innerHTML=
-      tile("고객 · 실결제","₩"+won(m.A),"", "상품 "+won(m.Ag)+"원 + 배송비 "+won(m.Sh)+"원 · 정상가 대비 <b>"+pct(discRate)+"</b> 할인")+
+      tile("고객 · 실결제","₩"+won(m.A),"", (function(){
+        var cuts=[];
+        if(m.Ds>0) cuts.push("셀러할인 "+won(m.Ds));
+        if(m.Pi>0) cuts.push("플랫폼 포인트 "+won(m.Pi));
+        var d="상품 "+won(m.Ag)+"원"+(m.Sh>0?" + 배송비 "+won(m.Sh)+"원":"")+"<br>"+
+              "상품 = 판매가 "+won(m.P);
+        d += cuts.length ? " − "+cuts.join(" − ")+" (정상가 대비 <b>"+pct(discRate)+"</b> 할인)" : " (할인 없음)";
+        return d;
+      })())+
       tile("셀러 · 부가세·배송원가 후","₩"+won(m.sellerNet),m.sellerNet<0?"neg":"", "정산 "+won(m.sellerOrder)+"원 − 부가세 "+won(m.sellerVatPay)+"원 − 배송원가 "+won(m.ShC)+"원 · 판매가의 <b>"+pct(m.sellerKeep)+"</b>")+
       tile("플랫폼 · 건당 남는 현금","₩"+won(m.intoCash),m.intoCash<0?"neg":"pos",
         "테이크레이트 <b>"+pct(m.takeGross)+"</b> → 순 <b>"+pct(m.takeNet)+"</b> → 실질 <b>"+pct(m.realRate)+"</b>");
