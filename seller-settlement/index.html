@@ -18,12 +18,12 @@ img{max-width:100%}
 <style>
 :root{
   --bg:#f1f4f4; --surface:#ffffff; --surface-2:#e7ecec; --surface-3:#f7f9f9;
-  --ink:#131e1d; --ink-2:#4b5b59; --ink-3:#7d8b89;
+  --ink:#131e1d; --ink-2:#44534f; --ink-3:#5b6a68;
   --line:#d6dedd; --line-2:#c2cdcb;
   --accent:#1f5f5a; --accent-2:#2c807a; --accent-soft:#e2ecea;
   --pos:#16704f; --neg:#b0342c; --warn:#9a6300; --warn-soft:#fbf2df;
-  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#4a3aa7;
-  --on1:#ffffff; --on2:#ffffff; --on3:#0c2b21; --on4:#33240a; --on5:#3a1524; --on6:#ffffff;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7;
+  --on1:#ffffff; --on2:#ffffff; --on3:#0c2b21; --on4:#33240a; --on5:#3a1524; --on6:#ffffff; --on7:#ffffff;
   --shadow:0 1px 2px rgba(19,30,29,.06), 0 8px 24px -16px rgba(19,30,29,.28);
   --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -31,27 +31,27 @@ img{max-width:100%}
 }
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
   --bg:#121818; --surface:#1a2222; --surface-2:#202a2a; --surface-3:#172020;
-  --ink:#ecf2f1; --ink-2:#a6b5b3; --ink-3:#778684;
+  --ink:#ecf2f1; --ink-2:#b4c2bf; --ink-3:#8d9c99;
   --line:#2c3837; --line-2:#3a4746;
   --accent:#52b0a6; --accent-2:#6cc4ba; --accent-soft:#1e2e2c;
   --pos:#47c99a; --neg:#e58279; --warn:#d9a441; --warn-soft:#2a2418;
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#9085e9;
-  --on1:#ffffff; --on2:#ffffff; --on3:#04170f; --on4:#1e1503; --on5:#ffffff; --on6:#160f3a;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9;
+  --on1:#ffffff; --on2:#ffffff; --on3:#04170f; --on4:#1e1503; --on5:#ffffff; --on6:#ffffff; --on7:#160f3a;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
 }}
 :root[data-theme="dark"]{
   --bg:#121818; --surface:#1a2222; --surface-2:#202a2a; --surface-3:#172020;
-  --ink:#ecf2f1; --ink-2:#a6b5b3; --ink-3:#778684;
+  --ink:#ecf2f1; --ink-2:#b4c2bf; --ink-3:#8d9c99;
   --line:#2c3837; --line-2:#3a4746;
   --accent:#52b0a6; --accent-2:#6cc4ba; --accent-soft:#1e2e2c;
   --pos:#47c99a; --neg:#e58279; --warn:#d9a441; --warn-soft:#2a2418;
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#9085e9;
-  --on1:#ffffff; --on2:#ffffff; --on3:#04170f; --on4:#1e1503; --on5:#ffffff; --on6:#160f3a;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9;
+  --on1:#ffffff; --on2:#ffffff; --on3:#04170f; --on4:#1e1503; --on5:#ffffff; --on6:#ffffff; --on7:#160f3a;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:400;
-  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
 .page{max-width:1280px;margin:0 auto;padding-inline:20px;padding-block:28px 64px}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
@@ -61,8 +61,8 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:4
   color:var(--accent);font-weight:500;margin:0 0 8px}
 h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4.4vw,38px);line-height:1.2;
   margin:0 0 10px;letter-spacing:-.01em;text-wrap:balance}
-.dek{margin:0;color:var(--ink-2);max-width:62ch;font-weight:300;font-size:15px}
-.srcline{margin:14px 0 0;font-size:12px;color:var(--ink-3);font-family:var(--mono)}
+.dek{margin:0;color:var(--ink-2);max-width:62ch;font-weight:300;font-size:16px}
+.srcline{margin:14px 0 0;font-size:12.5px;color:var(--ink-3);font-family:var(--mono)}
 
 /* ---------- layout ---------- */
 .layout{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:24px;align-items:start}
@@ -76,19 +76,19 @@ h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4.4vw,38px);lin
   padding:14px 16px;border-bottom:1px solid var(--line);background:var(--surface-3)}
 .panel-head h2{margin:0;font-size:13px;font-weight:600;letter-spacing:.02em}
 .presets{display:flex;gap:6px}
-.preset{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;padding:4px 8px;
+.preset{font-family:var(--mono);font-size:11px;letter-spacing:.02em;padding:4px 8px;
   border:1px solid var(--line-2);border-radius:3px;background:var(--surface);color:var(--ink-2);
   cursor:pointer}
 .preset:hover{border-color:var(--accent);color:var(--accent)}
 .preset:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 .grp{padding:4px 16px 0}
-.grp-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+.grp-label{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--ink-3);padding:16px 0 6px;font-weight:500}
 .ctl{padding:12px 0;border-top:1px solid var(--line)}
 .grp .ctl:first-of-type{border-top:none}
 .ctl-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
-.ctl-top label{font-size:13px;font-weight:500;color:var(--ink)}
+.ctl-top label{font-size:13.5px;font-weight:500;color:var(--ink)}
 .ctl-val{display:flex;align-items:baseline;gap:2px}
 .ctl-val input{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;
   font-weight:600;color:var(--ink);background:transparent;border:none;border-bottom:1px solid transparent;
@@ -97,7 +97,7 @@ h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,4.4vw,38px);lin
 .ctl-val input:hover{border-bottom-color:var(--line-2)}
 .ctl-val input:focus{outline:none;border-bottom-color:var(--accent)}
 .ctl-val .u{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
-.ctl-help{margin:8px 0 0;font-size:11.5px;color:var(--ink-3);line-height:1.5}
+.ctl-help{margin:8px 0 0;font-size:12.5px;color:var(--ink-3);line-height:1.55}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;
   background:linear-gradient(to right,var(--accent) 0 var(--pct,50%),var(--surface-2) var(--pct,50%) 100%);
   cursor:pointer;display:block}
@@ -108,13 +108,13 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 
 .seg{display:flex;gap:0;border:1px solid var(--line-2);border-radius:4px;overflow:hidden}
-.seg button{flex:1;padding:8px 6px;font-family:var(--sans);font-size:12px;font-weight:500;
+.seg button{flex:1;padding:9px 6px;font-family:var(--sans);font-size:12.5px;font-weight:500;
   background:var(--surface);color:var(--ink-2);border:none;cursor:pointer;line-height:1.35}
 .seg button+button{border-left:1px solid var(--line-2)}
 .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
 
 .flag{margin:10px 0 0;padding:9px 11px;border-left:3px solid var(--warn);background:var(--warn-soft);
-  border-radius:0 3px 3px 0;font-size:11.5px;line-height:1.55;color:var(--ink-2)}
+  border-radius:0 3px 3px 0;font-size:12.5px;line-height:1.6;color:var(--ink-2)}
 .flag b{color:var(--warn);font-weight:600}
 
 /* ---------- results ---------- */
@@ -123,75 +123,75 @@ section{background:var(--surface);border:1px solid var(--line);border-radius:6px
 .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;
   padding:15px 18px;border-bottom:1px solid var(--line)}
 .sec-head h2{margin:0;font-size:15px;font-weight:600;letter-spacing:-.005em}
-.sec-head .note{font-size:11.5px;color:var(--ink-3);font-family:var(--mono)}
-.sec-body{padding:18px}
+.sec-head .note{font-size:12px;color:var(--ink-3);font-family:var(--mono)}
+.sec-body{padding:20px}
 
 /* stat row */
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line)}
 @media (max-width:700px){.stats{grid-template-columns:minmax(0,1fr)}}
 .stat{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:3px}
-.stat .who{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.stat .who{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
 .stat .big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;
   line-height:1.15;letter-spacing:-.02em}
-.stat .sub{font-size:12px;color:var(--ink-2)}
+.stat .sub{font-size:13px;color:var(--ink-2);line-height:1.5}
 .stat .sub b{font-family:var(--mono);font-weight:600;color:var(--ink)}
 .pos{color:var(--pos)} .neg{color:var(--neg)}
 
 /* chart */
 .chartwrap{width:100%;overflow-x:auto}
 svg{display:block;width:100%;height:auto}
-#barSvg{min-width:600px}
-#bepSvg{min-width:600px}
-.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;
+#barSvg{min-width:660px}
+#bepSvg{min-width:660px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:1px;
   background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-top:16px}
-.lg{background:var(--surface);padding:10px 12px;display:flex;gap:9px;align-items:flex-start}
+.lg{background:var(--surface);padding:11px 13px;display:flex;gap:9px;align-items:flex-start}
 .sw{width:10px;height:10px;border-radius:2px;flex:none;margin-top:5px}
 .lg-t{min-width:0;flex:1}
-.lg-n{font-size:12.5px;font-weight:500;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.lg-n{font-size:13px;font-weight:500;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .lg-n .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600}
-.lg-d{font-size:11px;color:var(--ink-3);margin-top:2px;line-height:1.45;word-break:keep-all}
+.lg-d{font-size:12px;color:var(--ink-3);margin-top:3px;line-height:1.5;word-break:keep-all}
 
 /* ledger tables */
-.ledger{width:100%;border-collapse:collapse;font-size:13px}
-.ledger caption{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+.ledger{width:100%;border-collapse:collapse;font-size:13.5px}
+.ledger caption{text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.12em;
   text-transform:uppercase;color:var(--accent);padding:0 0 8px;font-weight:500}
-.ledger td,.ledger th{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:baseline;text-align:left;word-break:keep-all}
-.ledger th{font-weight:500;color:var(--ink-3);font-size:11px;letter-spacing:.04em}
+.ledger td,.ledger th{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:baseline;text-align:left;word-break:keep-all}
+.ledger th{font-weight:500;color:var(--ink-3);font-size:11.5px;letter-spacing:.04em}
 .ledger .op{width:1.6em;text-align:center;font-family:var(--mono);color:var(--ink-3);font-weight:500}
 .ledger .amt{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;
   white-space:nowrap;width:1%;font-weight:500}
-.ledger .desc{color:var(--ink-3);font-size:11.5px;line-height:1.45}
+.ledger .desc{color:var(--ink-3);font-size:12px;line-height:1.5}
 .ledger tr.total td{border-top:1.5px solid var(--ink-3);border-bottom:none;font-weight:600;padding-top:9px}
 .ledger tr.total .amt{font-size:14.5px}
 .ledger tr.total .nm{font-weight:600}
-.ledgers{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:26px}
+.ledgers{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:30px}
 
 /* pnl table */
-.pnl{width:100%;border-collapse:collapse;font-size:13px}
-.pnl th,.pnl td{padding:8px;border-bottom:1px solid var(--line);text-align:right;
+.pnl{width:100%;border-collapse:collapse;font-size:13.5px}
+.pnl th,.pnl td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;
   font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 .pnl th:first-child,.pnl td:first-child{text-align:left;font-family:var(--sans);white-space:normal;word-break:keep-all}
-.pnl thead th{font-size:11px;letter-spacing:.06em;color:var(--ink-3);font-weight:500;font-family:var(--mono)}
+.pnl thead th{font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);font-weight:500;font-family:var(--mono)}
 .pnl tr.total td{border-top:1.5px solid var(--ink-3);border-bottom:none;font-weight:600;padding-top:10px}
-.pnl td.memo{font-family:var(--sans);font-size:11px;color:var(--ink-3);text-align:left;white-space:normal;line-height:1.45}
+.pnl td.memo{font-family:var(--sans);font-size:12px;color:var(--ink-3);text-align:left;white-space:normal;line-height:1.45}
 .scrollx{overflow-x:auto}
 
 .alerts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.alert{padding:10px 13px;border-radius:4px;font-size:12.5px;line-height:1.55;
+.alert{padding:11px 14px;border-radius:4px;font-size:13px;line-height:1.6;
   border-left:3px solid var(--neg);background:color-mix(in srgb,var(--neg) 9%,var(--surface))}
 .alert.warn{border-left-color:var(--warn);background:var(--warn-soft)}
 .alert b{font-weight:600}
 .alert .num{font-weight:600}
 
-.memos{font-size:12.5px;color:var(--ink-2);line-height:1.7}
+.memos{font-size:13.5px;color:var(--ink-2);line-height:1.75}
 .memos ul{margin:0;padding-left:1.1em}
 .memos li{margin:0 0 6px}
 .memos li::marker{color:var(--accent)}
-.memos h3{font-size:12px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;
+.memos h3{font-size:12.5px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;
   color:var(--accent);margin:0 0 8px;font-weight:500}
 .memos .blk+.blk{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
 .dagger{color:var(--warn);font-weight:600}
-footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-family:var(--mono)}
+footer{margin-top:28px;font-size:12.5px;color:var(--ink-3);line-height:1.6;font-family:var(--mono)}
 @media (prefers-reduced-motion:no-preference){
   rect,circle,path,line{transition:none}
 }
@@ -225,12 +225,12 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
 
       <section>
         <div class="sec-head">
-          <h2 id="bdTitle">판매가 20,000원은 누구에게 가는가</h2>
+          <h2 id="bdTitle">판매가 + 배송비 23,000원은 누구에게 가는가</h2>
           <span class="note" id="breakdownNote">주문 1건 기준</span>
         </div>
         <div class="sec-body">
           <div id="alerts" class="alerts"></div>
-          <div class="chartwrap"><svg id="barSvg" viewBox="0 0 860 132" role="img" aria-labelledby="barTitle"><title id="barTitle">판매가 분배 막대</title></svg></div>
+          <div class="chartwrap"><svg id="barSvg" viewBox="0 0 860 148" role="img" aria-labelledby="barTitle"><title id="barTitle">판매가 분배 막대</title></svg></div>
           <div class="legend" id="legend"></div>
         </div>
       </section>
@@ -317,18 +317,19 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
   var won=function(x){return (x<0?"−":"")+Math.abs(Math.round(x)).toLocaleString("ko-KR")};
   var pct=function(x,d){return (x*100).toFixed(d===undefined?1:d)+"%"};
 
-  // 화면 기본값은 중립 예시다. 실제 운영 조건은 코드에 두지 않고
-  // ?p=&d=&pt=&fee=&pg=&vat=&n=&rc=&rp=&rs=&ev=&ur=&base= 로 임베드 주소에만 싣는다.
-  var BASE={price:20000,sellerDisc:2000,intoPoint:1000,feeRate:10,pgRate:2.5,vat:10,
+// 화면 기본값은 중립 예시다. 실제 운영 조건은 코드에 두지 않고 임베드 주소에만 싣는다.
+  var BASE={price:20000,sellerDisc:2000,intoPoint:1000,ship:3000,feeRate:10,pgRate:2.5,vat:10,
             orders:1000,reviewCnt:200,reviewPt:500,sellerShare:50,eventPt:1000000,useRate:80,feeBase:"sales"};
+
   var SPEC=[
     {grp:"주문 1건"},
     {id:"price",label:"판매가",min:0,max:200000,step:500,unit:"원",help:"셀러가 등록한 정상 판매가"},
     {id:"sellerDisc",label:"셀러할인",min:0,max:100000,step:100,unit:"원",help:"셀러가 부담하는 즉시할인 — 셀러 발행 포인트가 상품에 부여된 것"},
     {id:"intoPoint",label:"플랫폼 포인트 사용",min:0,max:100000,step:100,unit:"원",help:"고객이 플랫폼 발행 포인트(리뷰·이벤트 등)로 결제한 금액. 셀러에게는 플랫폼이 현금으로 보전한다"},
-    {id:"feeRate",label:"판매수수료율",min:0,max:30,step:0.5,unit:"%",help:"아래 부과 기준에 곱한다"},
+    {id:"ship",label:"배송비",min:0,max:50000,step:500,unit:"원",help:"고객이 상품가에 더해 결제한다. 판매수수료는 붙지 않고, 배송비 몫의 PG 수수료만 차감해 셀러에게 전달한다"},
+    {id:"feeRate",label:"판매수수료율",min:0,max:30,step:0.5,unit:"%",help:"아래 부과 기준에 곱한다. 배송비에는 붙지 않는다"},
     {id:"feeBaseToggle"},
-    {id:"pgRate",label:"PG 결제수수료율",min:0,max:6,step:0.1,unit:"%",help:"실결제금액 기준 · 플랫폼이 부담. † 실제 계약 요율로 바꿔 쓰세요"},
+    {id:"pgRate",label:"PG 결제수수료율",min:0,max:6,step:0.1,unit:"%",help:"배송비를 포함한 총 결제액에 부과. 상품분은 플랫폼이, 배송비분은 셀러가 부담. † 실제 계약 요율로 바꿔 쓰세요"},
     {id:"vat",label:"부가세율",min:0,max:20,step:1,unit:"%"},
     {grp:"월간"},
     {id:"orders",label:"당월 주문 건수",min:0,max:5000,step:10,unit:"건",help:"위 주문 1건이 이만큼 반복된다고 가정"},
@@ -339,8 +340,9 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
     {id:"useRate",label:"포인트 예상 사용률",min:0,max:100,step:5,unit:"%",help:"부채 설정용. 실적이 쌓이기 전에는 100%가 보수적이다"}
   ];
 
-  // 슬라이더 범위 안으로 잘라 넣는다 — 값과 손잡이 위치가 어긋나지 않게.
-  var QMAP={price:"p",sellerDisc:"d",intoPoint:"pt",feeRate:"fee",pgRate:"pg",vat:"vat",
+  // ?p=&d=&pt=&sh=&fee=&pg=&vat=&n=&rc=&rp=&rs=&ev=&ur=&base= 로 덮어쓴다.
+  // 슬라이더 범위 안으로 잘라 넣어 값과 손잡이 위치가 어긋나지 않게 한다.
+  var QMAP={price:"p",sellerDisc:"d",intoPoint:"pt",ship:"sh",feeRate:"fee",pgRate:"pg",vat:"vat",
             orders:"n",reviewCnt:"rc",reviewPt:"rp",sellerShare:"rs",eventPt:"ev",useRate:"ur"};
   try{
     var q=new URLSearchParams(location.search), RANGE={};
@@ -412,14 +414,20 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
     var Pi=Math.min(V.intoPoint,Math.max(0,P-Ds));
     var clamped=(Ds!==V.sellerDisc)||(Pi!==V.intoPoint);
     var vat=V.vat/100, fr=V.feeRate/100, pgr=V.pgRate/100;
-    var A=P-Ds-Pi;              // 실결제금액
-    var S=P-Ds;                 // 셀러 매출 (과세표준)
+    var Sh=V.ship;
+    var Ag=P-Ds-Pi;             // 상품 실결제
+    var A=Ag+Sh;                // 고객 실결제 (배송비 포함)
+    var S=P-Ds;                 // 셀러 매출 (과세표준) — 배송비 제외
     var feeBaseAmt=V.feeBase==="price"?P:S;
     var F=r0(feeBaseAmt*fr), Fv=r0(F*vat);
-    var pg=r0(A*pgr);
-    var sellerOrder=S-F-Fv;           // 주문분 셀러 정산 (리뷰비 제외)
-    var intoOrder=F+Fv-Pi;            // 플랫폼 정산금액
-    var intoNet=intoOrder-pg;         // PG 차감 후
+    var pgGoods=r0(Ag*pgr);           // 상품분 PG — 플랫폼 부담
+    var pgShip=r0(Sh*pgr);            // 배송비분 PG — 배송비에서 차감 → 셀러 부담
+    var pg=pgGoods+pgShip;
+    var shipNet=Sh-pgShip;            // 셀러가 실제로 받는 배송비
+    var sellerGoods=S-F-Fv;           // 주문분 셀러 정산 (상품, 리뷰비 제외)
+    var sellerOrder=sellerGoods+shipNet;
+    var intoOrder=F+Fv-Pi;            // PG 차감 전 플랫폼 몫
+    var intoNet=intoOrder-pgGoods;    // 상품분 PG 차감 후
     var intoCash=intoNet-Fv;          // 부가세 예수금까지 빼면 남는 현금
 
     var N=V.orders;
@@ -428,22 +436,24 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
     var RBv=r0(RB*vat);
     var mSalesBase=S*N;
     var mFee=F*N, mFeeVat=Fv*N;
-    var mSellerPayout=mSalesBase-mFee-mFeeVat-RB-RBv;
+    var mShip=shipNet*N;
+    var mSellerPayout=mSalesBase-mFee-mFeeVat-RB-RBv+mShip;
     var mIntoRevenue=mFee+RB;
     var mVat=mFeeVat+RBv;
     var mReimb=Pi*N;
-    var mPg=pg*N;
+    var mPg=pgGoods*N;
     var mIntoCash=(mFee+mFeeVat)+(RB+RBv)-mReimb-mPg-mVat;
     var mCustomerPaid=A*N;
 
     var issued=reviewIssued+V.eventPt;
     var liability=r0(issued*(V.useRate/100));
     var opGeneral=mIntoRevenue-liability-mPg;
-    var unit=F-pg;
+    var unit=F-pgGoods;
     var bep=(liability-RB)<=0?0:(unit>0?Math.ceil((liability-RB)/unit):null);
 
-    return {P:P,Ds:Ds,Pi:Pi,clamped:clamped,A:A,S:S,feeBaseAmt:feeBaseAmt,F:F,Fv:Fv,pg:pg,vat:vat,
-      sellerOrder:sellerOrder,intoOrder:intoOrder,intoNet:intoNet,intoCash:intoCash,
+    return {P:P,Ds:Ds,Pi:Pi,Sh:Sh,Ag:Ag,clamped:clamped,A:A,S:S,feeBaseAmt:feeBaseAmt,F:F,Fv:Fv,
+      pg:pg,pgGoods:pgGoods,pgShip:pgShip,shipNet:shipNet,mShip:mShip,total:P+Sh,vat:vat,
+      sellerGoods:sellerGoods,sellerOrder:sellerOrder,intoOrder:intoOrder,intoNet:intoNet,intoCash:intoCash,
       N:N,reviewIssued:reviewIssued,RB:RB,RBv:RBv,mSalesBase:mSalesBase,mFee:mFee,mFeeVat:mFeeVat,
       mSellerPayout:mSellerPayout,mIntoRevenue:mIntoRevenue,mVat:mVat,mReimb:mReimb,mPg:mPg,
       mIntoCash:mIntoCash,mCustomerPaid:mCustomerPaid,issued:issued,liability:liability,
@@ -452,12 +462,13 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
 
   /* ---------- pieces ---------- */
   var SEG=[
-    {k:"seller",n:"셀러 정산",   c:"--s1",on:"--on1",d:"판매가 − 셀러할인 − 수수료(VAT 포함)"},
-    {k:"disc",  n:"셀러할인",     c:"--s2",on:"--on2",d:"고객이 받은 혜택 · 셀러 부담 (에누리)"},
-    {k:"point", n:"플랫폼 포인트",  c:"--s3",on:"--on3",d:"고객이 받은 혜택 · 플랫폼 부담 → 셀러에게 현금 보전"},
-    {k:"vat",   n:"부가세 예수금", c:"--s4",on:"--on4",d:"수수료에 붙은 VAT · 국세청 납부분"},
-    {k:"pg",    n:"PG 결제수수료", c:"--s5",on:"--on5",d:"실결제금액 기준 · 플랫폼 부담 †"},
-    {k:"into",  n:"플랫폼 잔여현금", c:"--s6",on:"--on6",d:"수수료 − 포인트 보전 − PG · 플랫폼에 실제로 남는 돈"}
+    {k:"seller",n:"셀러 정산 (상품)", c:"--s1",on:"--on1",d:"셀러매출 − 판매수수료(VAT 포함)"},
+    {k:"ship",  n:"셀러 배송비 수취", c:"--s2",on:"--on2",d:"배송비에서 배송비분 PG 수수료를 뗀 금액"},
+    {k:"disc",  n:"셀러할인",        c:"--s3",on:"--on3",d:"고객이 받은 혜택 · 셀러 부담 (에누리)"},
+    {k:"point", n:"플랫폼 포인트",     c:"--s4",on:"--on4",d:"고객이 받은 혜택 · 플랫폼 부담 → 셀러에게 현금 보전"},
+    {k:"vat",   n:"부가세 예수금",   c:"--s5",on:"--on5",d:"수수료에 붙은 VAT · 국세청 납부분"},
+    {k:"pg",    n:"PG 결제수수료",   c:"--s6",on:"--on6",d:"총 결제액 기준 · 상품분은 플랫폼이, 배송비분은 셀러가 부담 †"},
+    {k:"into",  n:"플랫폼 잔여현금",   c:"--s7",on:"--on7",d:"수수료 − 포인트 보전 − 상품분 PG · 플랫폼에 실제로 남는 돈"}
   ];
 
   function tile(who,big,cls,sub){
@@ -478,33 +489,33 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
     /* --- alerts --- */
     var al=[];
     if(m.clamped) al.push('<div class="alert"><b>입력 초과.</b> 셀러할인 + 플랫폼 포인트가 판매가를 넘어서 판매가 한도로 잘라 계산했습니다.</div>');
-    if(m.intoCash<0) al.push('<div class="alert"><b>이 주문은 플랫폼이 손해입니다.</b> 받는 수수료 <span class="num">'+won(m.F+m.Fv)+'원</span>보다 내주는 돈(포인트 보전 '+won(m.Pi)+'원 + PG '+won(m.pg)+'원 + 부가세 '+won(m.Fv)+'원)이 커서 건당 <span class="num">'+won(Math.abs(m.intoCash))+'원</span>씩 빠집니다.</div>');
+    if(m.intoCash<0) al.push('<div class="alert"><b>이 주문은 플랫폼이 손해입니다.</b> 받는 수수료 <span class="num">'+won(m.F+m.Fv)+'원</span>보다 내주는 돈(포인트 보전 '+won(m.Pi)+'원 + 상품분 PG '+won(m.pgGoods)+'원 + 부가세 '+won(m.Fv)+'원)이 커서 건당 <span class="num">'+won(Math.abs(m.intoCash))+'원</span>씩 빠집니다.</div>');
     if(m.mSellerPayout<0) al.push('<div class="alert warn"><b>셀러 정산금이 마이너스입니다.</b> 이번 달 줄 돈보다 뗄 돈이 <span class="num">'+won(Math.abs(m.mSellerPayout))+'원</span> 많습니다. 예치금·이월·청구 중 어느 쪽으로 처리할지 약관에 정해져 있어야 합니다.</div>');
     if(m.opGeneral<0) al.push('<div class="alert warn"><b>당월 영업이익이 적자입니다.</b> 포인트 부채 설정액 <span class="num">'+won(m.liability)+'원</span>을 수수료 매출이 덮지 못합니다'+(m.bep!==null?'. 손익분기 주문 건수는 <span class="num">'+m.bep.toLocaleString("ko-KR")+'건</span>입니다':'')+'.</div>');
     $("#alerts").innerHTML=al.join("");
 
     /* --- stat tiles --- */
     var discRate=m.P?(m.Ds+m.Pi)/m.P:0;
-    var sellerRate=m.P?m.sellerOrder/m.P:0;
-    var takeRate=m.A?m.intoOrder/m.A:0;
-    var netRate=m.A?m.intoCash/m.A:0;
+    var sellerRate=m.P?m.sellerGoods/m.P:0;
+    var takeRate=m.Ag?m.intoOrder/m.Ag:0;
+    var netRate=m.Ag?m.intoCash/m.Ag:0;
     $("#stats").innerHTML=
-      tile("고객 · 실결제","₩"+won(m.A),"", "정상가 대비 <b>"+pct(discRate)+"</b> 할인 · 셀러 "+won(m.Ds)+"원 + 플랫폼 "+won(m.Pi)+"원")+
-      tile("셀러 · 주문분 정산","₩"+won(m.sellerOrder),m.sellerOrder<0?"neg":"", "판매가의 <b>"+pct(sellerRate)+"</b> · 리뷰비는 월 합산 별도 차감")+
+      tile("고객 · 실결제","₩"+won(m.A),"", "상품 "+won(m.Ag)+"원 + 배송비 "+won(m.Sh)+"원 · 정상가 대비 <b>"+pct(discRate)+"</b> 할인")+
+      tile("셀러 · 주문분 정산","₩"+won(m.sellerOrder),m.sellerOrder<0?"neg":"", "상품 "+won(m.sellerGoods)+"원(판매가의 <b>"+pct(sellerRate)+"</b>) + 배송비 "+won(m.shipNet)+"원")+
       tile("플랫폼 · 건당 남는 현금","₩"+won(m.intoCash),m.intoCash<0?"neg":"pos",
-        "수수료율 <b>"+V.feeRate.toFixed(1)+"%</b> → 플랫폼 실질 <b>"+pct(netRate)+"</b> · 테이크레이트 <b>"+pct(takeRate)+"</b>");
+        "수수료율 <b>"+V.feeRate.toFixed(1)+"%</b> → 플랫폼 실질 <b>"+pct(netRate)+"</b> · 테이크레이트 <b>"+pct(takeRate)+"</b> (상품 결제액 대비)");
 
     /* --- breakdown bar --- */
-    var vals={seller:m.sellerOrder,disc:m.Ds,point:m.Pi,vat:m.Fv,pg:m.pg,into:m.intoCash};
+    var vals={seller:m.sellerGoods,ship:m.shipNet,disc:m.Ds,point:m.Pi,vat:m.Fv,pg:m.pg,into:m.intoCash};
     var shortfall=Math.max(0,-m.intoCash);
-    var scale=m.P+shortfall;
-    $("#breakdownNote").textContent="주문 1건 기준 · 판매가 "+won(m.P)+"원";
-    $("#bdTitle").textContent="판매가 "+won(m.P)+"원은 누구에게 가는가";
+    var scale=m.total+shortfall;
+    $("#breakdownNote").textContent="주문 1건 기준 · 판매가 "+won(m.P)+"원 + 배송비 "+won(m.Sh)+"원";
+    $("#bdTitle").textContent="판매가 + 배송비 "+won(m.total)+"원은 누구에게 가는가";
 
-    var W=860,BX=8,BW=W-16,BY=30,BH=52,G=2;
+    var W=860,BX=8,BW=W-16,BY=32,BH=62,G=2;
     var svg=['<title id="barTitle">판매가 분배 막대</title>'];
     if(scale<=0){
-      svg.push('<text x="'+BX+'" y="'+(BY+30)+'" font-family="IBM Plex Mono, monospace" font-size="13" fill="var(--ink-3)">판매가를 입력하세요</text>');
+      svg.push('<text x="'+BX+'" y="'+(BY+30)+'" font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--ink-3)">판매가를 입력하세요</text>');
     }else{
       var x=BX;
       SEG.forEach(function(s){
@@ -514,23 +525,23 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
         svg.push('<rect x="'+x.toFixed(2)+'" y="'+BY+'" width="'+ww.toFixed(2)+'" height="'+BH+
           '" rx="2" fill="var('+s.c+')"/>');
         if(ww>58){
-          svg.push('<text x="'+(x+8).toFixed(2)+'" y="'+(BY+21)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" font-weight="500" fill="var('+s.on+')">'+s.n+'</text>');
-          svg.push('<text x="'+(x+8).toFixed(2)+'" y="'+(BY+40)+'" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" fill="var('+s.on+')">'+won(v)+'</text>');
+          svg.push('<text x="'+(x+8).toFixed(2)+'" y="'+(BY+24)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="500" fill="var('+s.on+')">'+s.n+'</text>');
+          svg.push('<text x="'+(x+8).toFixed(2)+'" y="'+(BY+46)+'" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="var('+s.on+')">'+won(v)+'</text>');
         }
         x+=w;
       });
       if(shortfall>0){
-        var px=BX+m.P/scale*BW;
+        var px=BX+m.total/scale*BW;
         svg.push('<line x1="'+px.toFixed(2)+'" y1="'+(BY-9)+'" x2="'+px.toFixed(2)+'" y2="'+(BY+BH+9)+
           '" stroke="var(--ink)" stroke-width="2"/>');
         svg.push('<rect x="'+px.toFixed(2)+'" y="'+BY+'" width="'+(BX+BW-px).toFixed(2)+'" height="'+BH+
           '" fill="var(--neg)" fill-opacity="0.16" stroke="var(--neg)" stroke-width="1"/>');
-        svg.push('<text x="'+px.toFixed(2)+'" y="'+(BY-15)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--ink)">판매가 '+won(m.P)+'</text>');
-        svg.push('<text x="'+Math.min(W-10,(px+(BX+BW-px)/2)).toFixed(2)+'" y="'+(BY+BH+26)+'" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" font-weight="500" fill="var(--neg)">플랫폼 초과 부담 '+won(shortfall)+'원</text>');
+        svg.push('<text x="'+px.toFixed(2)+'" y="'+(BY-15)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--ink)">판매가+배송비 '+won(m.total)+'</text>');
+        svg.push('<text x="'+Math.min(W-10,(px+(BX+BW-px)/2)).toFixed(2)+'" y="'+(BY+BH+26)+'" text-anchor="middle" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="500" fill="var(--neg)">플랫폼 초과 부담 '+won(shortfall)+'원</text>');
       }else{
-        svg.push('<text x="'+BX+'" y="'+(BY-12)+'" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--ink-3)">0</text>');
-        svg.push('<text x="'+(BX+BW)+'" y="'+(BY-12)+'" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--ink-3)">'+won(m.P)+'원</text>');
-        svg.push('<text x="'+BX+'" y="'+(BY+BH+26)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" fill="var(--ink-3)">고객이 실제로 낸 돈 '+won(m.A)+'원 + 셀러·플랫폼이 깎아준 '+won(m.Ds+m.Pi)+'원</text>');
+        svg.push('<text x="'+BX+'" y="'+(BY-12)+'" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--ink-3)">0</text>');
+        svg.push('<text x="'+(BX+BW)+'" y="'+(BY-12)+'" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="var(--ink-3)">'+won(m.total)+'원</text>');
+        svg.push('<text x="'+BX+'" y="'+(BY+BH+26)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--ink-3)">고객이 실제로 낸 돈 '+won(m.A)+'원 + 셀러·플랫폼이 깎아준 '+won(m.Ds+m.Pi)+'원</text>');
       }
     }
     $("#barSvg").innerHTML=svg.join("");
@@ -539,7 +550,7 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
       var v=vals[s.k];
       return '<div class="lg"><span class="sw" style="background:var('+s.c+')"></span><div class="lg-t">'+
         '<div class="lg-n"><span>'+s.n+'</span><span class="v'+(v<0?" neg":"")+'">'+won(v)+'원'+
-        (m.P?' · '+pct(v/m.P):'')+'</span></div><div class="lg-d">'+s.d+'</div></div></div>';
+        (m.total?' · '+pct(v/m.total):'')+'</span></div><div class="lg-d">'+s.d+'</div></div></div>';
     }).join("");
 
     /* --- ledgers --- */
@@ -549,6 +560,7 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
         row("구매금액","+",m.P,"정상 판매가")+
         row("셀러할인","−",m.Ds,"셀러 부담")+
         row("플랫폼 포인트 사용","−",m.Pi,"플랫폼 부담 · 셀러에게는 플랫폼이 보전")+
+        row("배송비","+",m.Sh,"상품가에 더해 결제")+
         row("실결제금액 (A)","=",m.A,"PG로 결제된 금액","total"))+
       table("셀러 기준",
         row("판매가","",m.P,"")+
@@ -556,15 +568,19 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
         row("셀러 매출 (부가세 과세표준)","=",m.S,"실결제 + 플랫폼 포인트 보전분")+
         row("판매수수료 (공급가)","−",m.F,baseLabel+" × "+V.feeRate.toFixed(1)+"%")+
         row("판매수수료 부가세","−",m.Fv,"세금계산서 발행 · 플랫폼 매출")+
+        row("상품분 정산","=",m.sellerGoods,"")+
+        row("배송비","+",m.Sh,"판매수수료는 붙지 않는다")+
+        row("배송비분 PG 수수료","−",m.pgShip,"배송비 "+won(m.Sh)+" × "+V.pgRate.toFixed(1)+"% · 셀러 부담")+
         row("주문분 정산금액","=",m.sellerOrder,"리뷰비는 월 합산으로 별도 차감","total"))+
       table("PG 기준",
         row("입금금액","",m.A,"고객이 최종 지불한 금액")+
+        row("PG 결제수수료","−",m.pg,"상품분 "+won(m.pgGoods)+" + 배송비분 "+won(m.pgShip))+
         row("셀러 정산금액","−",m.sellerOrder,"지급대행으로 셀러에게 지급")+
-        row("플랫폼 정산금액","=",m.intoOrder,"테이크레이트 "+pct(takeRate)+" · PG 결제수수료 차감 전","total"))+
+        row("플랫폼 실수취","=",m.intoNet,"테이크레이트 "+pct(takeRate)+" (상품 결제액 대비)","total"))+
       table("플랫폼 정산금액 구성",
         row("판매수수료 (부가세 포함)","+",m.F+m.Fv,"")+
         row("플랫폼 포인트 사용분 보전","−",m.Pi,"셀러에게 대신 지급 → 포인트부채 상계")+
-        row("PG 결제수수료","−",m.pg,"실결제 "+won(m.A)+" × "+V.pgRate.toFixed(1)+"% †")+
+        row("PG 결제수수료 (상품분)","−",m.pgGoods,"상품 결제액 "+won(m.Ag)+" × "+V.pgRate.toFixed(1)+"% † · 배송비분은 셀러가 부담")+
         row("부가세 예수금","−",m.Fv,"국세청 납부분")+
         row("플랫폼 잔여현금","=",m.intoCash,"이 주문으로 플랫폼에 남는 돈","total"));
 
@@ -589,11 +605,12 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
         row("셀러 매출 합계","",m.mSalesBase,won(m.S)+"원 × "+m.N.toLocaleString("ko-KR")+"건")+
         row("판매수수료 (VAT 포함)","−",m.mFee+m.mFeeVat,"")+
         row("리뷰비 (VAT 포함)","−",m.RB+m.RBv,V.reviewCnt+"건 × "+won(V.reviewPt)+"원 × 셀러부담 "+pct(V.sellerShare/100,0))+
+        row("배송비 수취 (PG 차감 후)","+",m.mShip,won(m.shipNet)+"원 × "+m.N.toLocaleString("ko-KR")+"건")+
         row("최종 정산금액","=",m.mSellerPayout,"지급대행으로 셀러에게 지급","total"))+
       table("플랫폼 월 현금",
         row("수수료·리뷰비 수취 (VAT 포함)","+",m.mFee+m.mFeeVat+m.RB+m.RBv,"")+
         row("포인트 사용분 보전","−",m.mReimb,"부채 상계 · 손익 아님")+
-        row("PG 결제수수료","−",m.mPg,"†")+
+        row("PG 결제수수료 (상품분)","−",m.mPg,"† 배송비분은 셀러 정산에서 차감")+
         row("부가세 예수금 납부","−",m.mVat,"")+
         row("플랫폼 잔여현금","=",m.mIntoCash,"","total"))+
       table("포인트 부채 (당월)",
@@ -642,7 +659,7 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
       var v=lo+(hi-lo)*i/ticks, y=Y(v);
       g.push('<line x1="'+L+'" y1="'+y.toFixed(1)+'" x2="'+(L+iw)+'" y2="'+y.toFixed(1)+'" stroke="var(--line)" stroke-width="1"/>');
       var lbl=U.d===1?won(Math.round(v)):(v/U.d).toFixed(1).replace("-","\u2212")+U.s;
-      g.push('<text x="'+(L-10)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--ink-3)">'+lbl+'</text>');
+      g.push('<text x="'+(L-10)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--ink-3)">'+lbl+'</text>');
     }
     // zero line
     if(lo<0&&hi>0){
@@ -651,10 +668,10 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
     // x ticks
     for(var j=0;j<=4;j++){
       var n=Math.round(maxN*j/4);
-      g.push('<text x="'+X(n).toFixed(1)+'" y="'+(T+ih+20)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--ink-3)">'+n.toLocaleString("ko-KR")+'</text>');
+      g.push('<text x="'+X(n).toFixed(1)+'" y="'+(T+ih+20)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="var(--ink-3)">'+n.toLocaleString("ko-KR")+'</text>');
     }
-    g.push('<text x="'+(L+iw)+'" y="'+(T+ih+38)+'" text-anchor="end" font-family="IBM Plex Sans KR, sans-serif" font-size="11" fill="var(--ink-3)">당월 주문 건수 (건)</text>');
-    g.push('<text x="'+L+'" y="'+(T-6)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="11" fill="var(--ink-3)">영업이익 영향</text>');
+    g.push('<text x="'+(L+iw)+'" y="'+(T+ih+38)+'" text-anchor="end" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" fill="var(--ink-3)">당월 주문 건수 (건)</text>');
+    g.push('<text x="'+L+'" y="'+(T-6)+'" font-family="IBM Plex Sans KR, sans-serif" font-size="12.5" fill="var(--ink-3)">영업이익 영향</text>');
     // line
     g.push('<path d="M'+X(0).toFixed(1)+' '+Y(f(0)).toFixed(1)+' L'+X(maxN).toFixed(1)+' '+Y(f(maxN)).toFixed(1)+
       '" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round"/>');
@@ -663,13 +680,13 @@ footer{margin-top:28px;font-size:11.5px;color:var(--ink-3);line-height:1.6;font-
       g.push('<line x1="'+X(m.bep).toFixed(1)+'" y1="'+T+'" x2="'+X(m.bep).toFixed(1)+'" y2="'+(T+ih)+'" stroke="var(--s2)" stroke-width="1.5" stroke-dasharray="3 3"/>');
       g.push('<circle cx="'+X(m.bep).toFixed(1)+'" cy="'+Y(0).toFixed(1)+'" r="5" fill="var(--s2)" stroke="var(--surface)" stroke-width="2"/>');
       var bx=X(m.bep), anch=bx>L+iw*0.62?"end":"start", dx=bx>L+iw*0.62?-9:9;
-      g.push('<text x="'+(bx+dx).toFixed(1)+'" y="'+(T+15)+'" text-anchor="'+anch+'" font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" font-weight="600" fill="var(--s2)">손익분기 '+m.bep.toLocaleString("ko-KR")+'건</text>');
+      g.push('<text x="'+(bx+dx).toFixed(1)+'" y="'+(T+15)+'" text-anchor="'+anch+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="var(--s2)">손익분기 '+m.bep.toLocaleString("ko-KR")+'건</text>');
     }
     // current N
     var cy=Y(f(m.N)), cx=X(Math.min(m.N,maxN));
     g.push('<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="6" fill="var(--s1)" stroke="var(--surface)" stroke-width="2"/>');
     var ca=cx>L+iw*0.7?"end":"start", cdx=cx>L+iw*0.7?-12:12;
-    g.push('<text x="'+(cx+cdx).toFixed(1)+'" y="'+(cy-10).toFixed(1)+'" text-anchor="'+ca+'" font-family="IBM Plex Sans KR, sans-serif" font-size="11.5" font-weight="600" fill="var(--ink)">현재 '+m.N.toLocaleString("ko-KR")+'건 · '+won(m.opGeneral)+'원</text>');
+    g.push('<text x="'+(cx+cdx).toFixed(1)+'" y="'+(cy-10).toFixed(1)+'" text-anchor="'+ca+'" font-family="IBM Plex Sans KR, sans-serif" font-size="13" font-weight="600" fill="var(--ink)">현재 '+m.N.toLocaleString("ko-KR")+'건 · '+won(m.opGeneral)+'원</text>');
 
     $("#bepSvg").innerHTML=g.join("");
   }
